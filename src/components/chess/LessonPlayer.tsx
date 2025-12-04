@@ -251,6 +251,17 @@ export function LessonPlayer({ lesson, nextLesson }: LessonPlayerProps) {
     }
   }
 
+  // Build highlights map for new Chessboard API
+  const highlights: Record<string, "selected" | "target" | "warning" | "hint"> = {};
+  if (selectedSquare) {
+    highlights[selectedSquare] = "selected";
+  }
+  highlightSquares.forEach((sq) => {
+    if (sq !== selectedSquare) {
+      highlights[sq] = "target";
+    }
+  });
+
   if (!currentTask) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
@@ -258,6 +269,16 @@ export function LessonPlayer({ lesson, nextLesson }: LessonPlayerProps) {
       </div>
     );
   }
+
+  // Wrapper to handle both click and "move" via two clicks
+  const handleBoardClick = (square: string) => {
+    if (selectedSquare && selectedSquare !== square) {
+      // Second click - treat as move attempt
+      handleMove(selectedSquare, square);
+    } else {
+      handleSquareClick(square);
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -273,11 +294,8 @@ export function LessonPlayer({ lesson, nextLesson }: LessonPlayerProps) {
         <div className="flex justify-center lg:order-2">
           <Chessboard
             fen={currentFen}
-            onSquareClick={handleSquareClick}
-            onMove={handleMove}
-            selectedSquare={selectedSquare}
-            highlightSquares={highlightSquares}
-            interactive={true}
+            onSquareClick={handleBoardClick}
+            highlights={highlights}
           />
         </div>
 

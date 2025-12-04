@@ -7,11 +7,19 @@
 
 export type TaskKind = "select-square" | "move-piece";
 
+/** Optional feedback messages for tasks */
+export type TaskMessages = {
+  success?: string; // Shown on correct attempt
+  failure?: string; // Shown on incorrect attempt
+  hint?: string;    // Shown when user requests hint
+};
+
 type BaseTask = {
   id: string;
   kind: TaskKind;
   prompt: string; // Copy shown to the user ("Click on e4")
   initialFen: string; // Board position before any interaction
+  messages?: TaskMessages; // Optional custom feedback copy
 };
 
 export type SelectSquareTask = BaseTask & {
@@ -43,6 +51,33 @@ export type Lesson = {
   xpReward: number;
   tasks: LessonTask[];
 };
+
+// ============================================
+// DEFAULT MESSAGES (used when task.messages is not set)
+// ============================================
+
+export const DEFAULT_MESSAGES = {
+  "select-square": {
+    success: "Nice, that's the right square!",
+    failure: "Not quite — try a different square.",
+    hint: "Look carefully at the board coordinates.",
+  },
+  "move-piece": {
+    success: "Nice, that's the correct move!",
+    failure: "Try finding the correct piece first, then move it.",
+    hint: "Remember how this piece moves.",
+  },
+} as const;
+
+/**
+ * Get the feedback message for a task
+ */
+export function getTaskMessage(
+  task: LessonTask,
+  type: keyof TaskMessages
+): string {
+  return task.messages?.[type] ?? DEFAULT_MESSAGES[task.kind][type];
+}
 
 // ============================================
 // LEVEL 0 LESSONS

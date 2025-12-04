@@ -24,3 +24,75 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* ============================================
+   CHESSBOARD ANIMATIONS & HIGHLIGHTS
+   Per Lyra's design spec for P0.2
+   ============================================ */
+
+/* Shake animation for incorrect attempts */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-2px); }
+  75% { transform: translateX(2px); }
+}
+
+.animate-shake {
+  animation: shake 0.2s ease-in-out;
+}
+
+/* ============================================
+   CHESSBOARD SQUARE HIGHLIGHTS
+   Uses rings (halos) not borders to avoid layout shift
+   ============================================ */
+
+/* Selected piece - soft indigo glow */
+.chessboard-square--selected {
+  box-shadow: inset 0 0 0 4px rgba(79, 70, 229, 0.5); /* chessio-primary */
+}
+
+/* Warning/error state - orange glow + shake */
+.chessboard-square--warning {
+  box-shadow: inset 0 0 0 4px rgba(249, 115, 22, 0.5); /* chessio-warning */
+}
+
+/* Target square - dot indicator */
+.chessboard-square--target {
+  position: relative;
+}
+
+.chessboard-square--target::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 30%;
+  height: 30%;
+  border-radius: 50%;
+  background-color: rgba(79, 70, 229, 0.4); /* chessio-primary */
+  pointer-events: none;
+}
+
+/* Hint square - subtle dot */
+.chessboard-square--hint {
+  position: relative;
+}
+
+.chessboard-square--hint::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 25%;
+  height: 25%;
+  border-radius: 50%;
+  background-color: rgba(34, 197, 94, 0.4); /* chessio-success */
+  pointer-events: none;
+}
+
+/* Success state - green glow */
+.chessboard-square--success {
+  box-shadow: inset 0 0 0 4px rgba(34, 197, 94, 0.5); /* chessio-success */
+}
