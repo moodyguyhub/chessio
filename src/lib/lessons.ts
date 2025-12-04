@@ -1,172 +1,189 @@
 // Data structure for Level 0 Lessons
 // TODO (Phase 2+): Migrate to DB-driven lessons or generate this file from admin tooling.
 
-export type Task = {
-  id: number;
-  instruction: string;
-  startingFen: string; // Using standard FEN notation
-  goal: {
-    type: "move" | "capture" | "select";
-    targetSquare: string; // e.g., "a5"
-    startSquare?: string; // e.g., "a1"
-  };
-  validMoves?: string[]; // "a1-a5"
-  messages: {
-    success: string;
-    failure: {
-      default: string;
-      specific?: Record<string, string>; // { "e1-h4": "No diagonals!" }
-    };
-    hint: string;
-  };
+// ============================================
+// TASK TYPES - Discriminated Union
+// ============================================
+
+export type TaskKind = "select-square" | "move-piece";
+
+type BaseTask = {
+  id: string;
+  kind: TaskKind;
+  prompt: string; // Copy shown to the user ("Click on e4")
+  initialFen: string; // Board position before any interaction
 };
+
+export type SelectSquareTask = BaseTask & {
+  kind: "select-square";
+  targetSquare: string; // e.g. "e4"
+  // Future: could add allowedSquares / hintSquares
+};
+
+export type MovePieceTask = BaseTask & {
+  kind: "move-piece";
+  expectedMove: {
+    from: string; // "a1"
+    to: string; // "a4"
+  };
+  // Future: we could add `allowedAlternatives` or `promotion` info.
+};
+
+export type LessonTask = SelectSquareTask | MovePieceTask;
+
+// ============================================
+// LESSON TYPE
+// ============================================
 
 export type Lesson = {
   slug: string;
   title: string;
-  pieceType: string;
-  introText: string;
-  order: number;
-  tasks: Task[];
+  description: string;
+  level: number;
+  xpReward: number;
+  tasks: LessonTask[];
 };
 
-export const level0Lessons: Lesson[] = [
+// ============================================
+// LEVEL 0 LESSONS
+// ============================================
+
+export const lessons: Lesson[] = [
+  // ----------------------------------------
+  // Lesson 1: Board Basics (select-square only)
+  // ----------------------------------------
   {
     slug: "level-0-lesson-1-board",
-    title: "Welcome to the Board",
-    pieceType: "Board",
-    introText: "The chessboard is a grid of 64 squares, alternating between light and dark colors. The board has vertical columns (called files) and horizontal rows (called ranks). Every square has a unique name, like a1 or e4.",
-    order: 1,
+    title: "Meet the Board",
+    description:
+      "Learn how to read ranks, files, and squares like e4.",
+    level: 0,
+    xpReward: 10,
     tasks: [
       {
-        id: 1,
-        instruction: "Click on any square in the highlighted row (Rank 4).",
-        startingFen: "8/8/8/8/8/8/8/8 w - - 0 1", // Empty board
-        goal: { type: "select", targetSquare: "rank-4" }, // Special logic for generic rank selection
-        messages: {
-          success: "Perfect. That horizontal line is called a 'Rank'.",
-          failure: { default: "That square isn't in the highlighted row. Try clicking inside the glow." },
-          hint: "Look for the horizontal row labeled with the number '4' on the side."
-        }
+        id: "board-1",
+        kind: "select-square",
+        prompt: "Tap the square e4.",
+        initialFen: "8/8/8/8/8/8/8/8 w - - 0 1", // empty board
+        targetSquare: "e4",
       },
       {
-        id: 2,
-        instruction: "Click on any square in the highlighted column (the 'e' file).",
-        startingFen: "8/8/8/8/8/8/8/8 w - - 0 1",
-        goal: { type: "select", targetSquare: "file-e" },
-        messages: {
-          success: "You got it. That vertical line is called a 'File'.",
-          failure: { default: "That square isn't in the highlighted column. Look for the vertical strip." },
-          hint: "Look for the letter 'e' at the bottom of the board and follow it up."
-        }
+        id: "board-2",
+        kind: "select-square",
+        prompt: "Now tap the square a1.",
+        initialFen: "8/8/8/8/8/8/8/8 w - - 0 1",
+        targetSquare: "a1",
       },
       {
-        id: 3,
-        instruction: "Find and click the square named e4.",
-        startingFen: "8/8/8/8/8/8/8/8 w - - 0 1",
-        goal: { type: "select", targetSquare: "e4" },
-        messages: {
-          success: "Nice work! That is one of the most important squares in chess.",
-          failure: { default: "Not quite. Look for where column 'e' and row '4' meet." },
-          hint: "Find the letter 'e' at the bottom and the number '4' on the side. The square is where they cross."
-        }
-      }
-    ]
+        id: "board-3",
+        kind: "select-square",
+        prompt: "Tap the square h8.",
+        initialFen: "8/8/8/8/8/8/8/8 w - - 0 1",
+        targetSquare: "h8",
+      },
+    ],
   },
+
+  // ----------------------------------------
+  // Lesson 2: Rook Movement (move-piece)
+  // ----------------------------------------
   {
     slug: "level-0-lesson-2-rook",
     title: "How the Rook Moves",
-    pieceType: "Rook",
-    introText: "The Rook looks like a castle tower. It moves in straight lines: up, down, left, or right. It can move as far as it wants until it hits the edge of the board or another piece.",
-    order: 2,
+    description:
+      "Practice moving the rook in straight lines.",
+    level: 0,
+    xpReward: 10,
     tasks: [
       {
-        id: 1,
-        instruction: "Move the Rook forward to the star on a5.",
-        startingFen: "8/8/8/8/8/8/8/R7 w - - 0 1", // White rook on a1
-        goal: { type: "move", startSquare: "a1", targetSquare: "a5" },
-        validMoves: ["a1-a5"],
-        messages: {
-          success: "Great start. Rooks are powerful on open lines.",
-          failure: { default: "That move isn't allowed. Rooks must stay in a straight line." },
-          hint: "Click the Rook, then click the square with the star (a5)."
-        }
+        id: "rook-1",
+        kind: "move-piece",
+        prompt: "Move the rook from a1 to a4.",
+        initialFen: "8/8/8/8/8/8/8/R7 w - - 0 1", // white rook on a1
+        expectedMove: { from: "a1", to: "a4" },
       },
       {
-        id: 2,
-        instruction: "Now, move the Rook sideways to h5.",
-        startingFen: "8/8/8/3R4/8/8/8/8 w - - 0 1", // White rook on a5 (simulated start)
-        goal: { type: "move", startSquare: "a5", targetSquare: "h5" },
-        validMoves: ["a5-h5"],
-        messages: {
-          success: "Exactly right. Rooks can cross the whole board in one turn.",
-          failure: { default: "That move isn't allowed. Try moving straight across the row." },
-          hint: "The Rook is on row 5. Move it all the way to the right side of the board."
-        }
+        id: "rook-2",
+        kind: "move-piece",
+        prompt: "Move the rook from d4 to d1.",
+        initialFen: "8/8/8/8/3R4/8/8/8 w - - 0 1", // white rook on d4
+        expectedMove: { from: "d4", to: "d1" },
       },
       {
-        id: 3,
-        instruction: "Move the Rook to capture the black pawn on e8.",
-        startingFen: "4p3/8/8/8/8/8/8/4R3 w - - 0 1", // Rook e1, Pawn e8
-        goal: { type: "capture", startSquare: "e1", targetSquare: "e8" },
-        validMoves: ["e1-e8"],
-        messages: {
-          success: "Capture successful! You moved in a straight line.",
-          failure: {
-            default: "That move isn't allowed. Rooks cannot move diagonally.",
-            specific: { "e1-h4": "That move isn't allowed. Rooks cannot move diagonally." }
-          },
-          hint: "The pawn is straight ahead. Move the Rook all the way up the 'e' column."
-        }
-      }
-    ]
+        id: "rook-3",
+        kind: "move-piece",
+        prompt: "Move the rook from h1 to h8.",
+        initialFen: "8/8/8/8/8/8/8/7R w - - 0 1", // white rook on h1
+        expectedMove: { from: "h1", to: "h8" },
+      },
+    ],
   },
+
+  // ----------------------------------------
+  // Lesson 3: Bishop Movement (move-piece)
+  // ----------------------------------------
   {
     slug: "level-0-lesson-3-bishop",
     title: "How the Bishop Moves",
-    pieceType: "Bishop",
-    introText: "The Bishop moves diagonally, like an 'X'. It can go as far as it wants, but it must stay on squares of the same color. A Bishop starting on a light square will never touch a dark square.",
-    order: 3,
+    description:
+      "Practice moving the bishop diagonally.",
+    level: 0,
+    xpReward: 10,
     tasks: [
       {
-        id: 1,
-        instruction: "Move the Bishop diagonally to e4.",
-        startingFen: "8/8/8/8/8/8/2B5/8 w - - 0 1", // Bishop c2
-        goal: { type: "move", startSquare: "c2", targetSquare: "e4" },
-        validMoves: ["c2-e4"],
-        messages: {
-          success: "Nice move. Notice how the Bishop stayed on light squares.",
-          failure: { default: "That move isn't allowed. Bishops must move diagonally." },
-          hint: "The target is two squares up and two squares to the right."
-        }
+        id: "bishop-1",
+        kind: "move-piece",
+        prompt: "Move the bishop from c1 to f4.",
+        initialFen: "8/8/8/8/8/8/8/2B5 w - - 0 1", // white bishop on c1
+        expectedMove: { from: "c1", to: "f4" },
       },
       {
-        id: 2,
-        instruction: "Move the Bishop all the way across the board to h1.",
-        startingFen: "B7/8/8/8/8/8/8/8 w - - 0 1", // Bishop a8
-        goal: { type: "move", startSquare: "a8", targetSquare: "h1" },
-        validMoves: ["a8-h1"],
-        messages: {
-          success: "Perfect. Bishops are great at controlling long diagonals.",
-          failure: { default: "Not quite. Follow the diagonal line of light squares." },
-          hint: "Imagine a diagonal line connecting the top-left corner to the bottom-right corner."
-        }
+        id: "bishop-2",
+        kind: "move-piece",
+        prompt: "Move the bishop from a8 to h1.",
+        initialFen: "B7/8/8/8/8/8/8/8 w - - 0 1", // white bishop on a8
+        expectedMove: { from: "a8", to: "h1" },
       },
       {
-        id: 3,
-        instruction: "Move the Bishop to capture the pawn on a7.",
-        startingFen: "8/p7/8/8/8/4B3/8/8 w - - 0 1", // Bishop e3, Pawn a7
-        goal: { type: "capture", startSquare: "e3", targetSquare: "a7" },
-        validMoves: ["e3-a7"],
-        messages: {
-          success: "Capture successful! You stayed on the diagonal.",
-          failure: {
-            default: "That move isn't allowed. Bishops cannot move up, down, left, or right.",
-            specific: { "e3-e7": "That move isn't allowed. Bishops cannot move straight up." }
-          },
-          hint: "The pawn is on a diagonal path from your Bishop. Do not go straight up."
-        }
-      }
-    ]
-  }
+        id: "bishop-3",
+        kind: "move-piece",
+        prompt: "Move the bishop from e3 to b6.",
+        initialFen: "8/8/8/8/8/4B3/8/8 w - - 0 1", // white bishop on e3
+        expectedMove: { from: "e3", to: "b6" },
+      },
+    ],
+  },
 ];
+
+// ============================================
+// HELPER FUNCTIONS
+// ============================================
+
+/**
+ * Get a lesson by its URL slug
+ */
+export function getLessonBySlug(slug: string): Lesson | null {
+  return lessons.find((lesson) => lesson.slug === slug) ?? null;
+}
+
+/**
+ * Get the first task of a lesson
+ */
+export function getFirstTask(lesson: Lesson): LessonTask {
+  return lesson.tasks[0];
+}
+
+/**
+ * Get a task by index, or null if out of bounds
+ */
+export function getTaskByIndex(lesson: Lesson, index: number): LessonTask | null {
+  if (index < 0 || index >= lesson.tasks.length) return null;
+  return lesson.tasks[index];
+}
+
+/**
+ * Check if a task index is the last task in a lesson
+ */
+export function isLastTask(lesson: Lesson, index: number): boolean {
+  return index === lesson.tasks.length - 1;
+}
