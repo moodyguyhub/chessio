@@ -1,4 +1,5 @@
 // Data structure for Level 0 Lessons
+// TODO (Phase 2+): Migrate to DB-driven lessons or generate this file from admin tooling.
 
 export type Task = {
   id: number;

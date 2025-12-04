@@ -133,6 +133,14 @@ Unit tests MUST cover:
 
 Tests run in CI via `npm test`.
 
+### Board Component
+
+**For Phase 1 (Level 0 MVP):**
+- ✅ Use **only** `src/components/chess/Chessboard.tsx` (custom SVG)
+- ❌ `react-chessboard` is in `package.json` but **unused** – evaluate removal after Level 0
+
+The custom board gives full control over beginner cues (glows, error states, hints) without fighting a third-party API.
+
 ---
 
 ## 6. Error Handling
