@@ -8,7 +8,7 @@ import "dotenv/config";
 import { db } from "../src/lib/db";
 import { hashPassword } from "../src/lib/auth";
 import { completeLessonAndAwardXp, getCompletedLessonSlugs, getUserXp, isLessonCompleted } from "../src/lib/lessons/progress";
-import { lessons, allLessons, getLessonBySlug, getNextLesson, getLevel0Lessons, getLevel1Lessons } from "../src/lib/lessons";
+import { lessons, allLessons, getLessonBySlug, getNextLesson, getLevel0Lessons, getLevel1Lessons, getPuzzles } from "../src/lib/lessons";
 
 const TEST_EMAIL = `playtest-${Date.now()}@test.com`;
 
@@ -95,18 +95,30 @@ async function main() {
     console.log(`   ✅ ${lesson.title}: +${result.xpAwarded} XP (Total: ${result.totalXp})`);
   }
 
+  // 7. Verify Puzzles unlock after Level 1 completion
+  console.log("\n📋 Step 7: Puzzles Progression");
+  const puzzleSets = getPuzzles();
+  console.log(`   ✅ Puzzle sets available: ${puzzleSets.length}`);
+  
+  // Complete all puzzles
+  for (const puzzle of puzzleSets) {
+    const result = await completeLessonAndAwardXp({ userId: user.id, lessonSlug: puzzle.slug });
+    console.log(`   ✅ ${puzzle.title}: +${result.xpAwarded} XP (Total: ${result.totalXp})`);
+  }
+
   // Final state
   const finalXp = await getUserXp(user.id);
   const finalCompleted = await getCompletedLessonSlugs(user.id);
-  const lastLesson = level1Lessons[level1Lessons.length - 1];
-  const nextLesson = getNextLesson(lastLesson.slug);
+  const lastPuzzle = puzzleSets.length > 0 ? puzzleSets[puzzleSets.length - 1] : null;
+  const nextLesson = lastPuzzle ? getNextLesson(lastPuzzle.slug) : null;
   
   console.log("\n📋 Final State:");
   console.log(`   ✅ Total XP: ${finalXp}`);
   console.log(`   ✅ Completed: ${finalCompleted.length}/${allLessons.length} lessons`);
   console.log(`   ✅ Level 0 lessons: ${getLevel0Lessons().length}`);
   console.log(`   ✅ Level 1 lessons: ${getLevel1Lessons().length}`);
-  console.log(`   ✅ Next lesson after ${lastLesson.title}: ${nextLesson ? nextLesson.title : "Level 1 Complete!"}`);
+  console.log(`   ✅ Puzzle sets: ${getPuzzles().length}`);
+  console.log(`   ✅ Next after puzzles: ${nextLesson ? nextLesson.title : "All content complete!"}`);
 
   // Cleanup
   console.log("\n📋 Cleanup:");

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { auth, signOut } from "@/lib/auth";
-import { allLessons, getPreviousLesson, getLevel0Lessons, getLevel1Lessons } from "@/lib/lessons";
+import { allLessons, getPreviousLesson, getLevel0Lessons, getLevel1Lessons, getPuzzles } from "@/lib/lessons";
 import { getCompletedLessonSlugs, getUserXp } from "@/lib/lessons/progress";
 
 // XP level calculation (simple: 100 XP per level)
@@ -32,6 +32,7 @@ export default async function DashboardPage() {
   // Get lessons by level from lessons.ts (source of truth)
   const level0Lessons = getLevel0Lessons();
   const level1Lessons = getLevel1Lessons();
+  const puzzles = getPuzzles();
 
   // Helper to determine lesson status
   const getLessonStatus = (lesson: typeof allLessons[0]) => {
@@ -55,6 +56,12 @@ export default async function DashboardPage() {
     ...getLessonStatus(lesson),
   }));
 
+  // Map Puzzles with status
+  const puzzlesWithStatus = puzzles.map((lesson) => ({
+    ...lesson,
+    ...getLessonStatus(lesson),
+  }));
+
   const { level, currentXp, nextLevelXp } = getLevel(userXp);
   
   // Calculate level 0 progress
@@ -67,6 +74,12 @@ export default async function DashboardPage() {
   const level1CompletedCount = level1WithStatus.filter((l) => l.isCompleted).length;
   const level1TotalLessons = level1WithStatus.length;
   const level1ProgressPercent = level1TotalLessons > 0 ? Math.round((level1CompletedCount / level1TotalLessons) * 100) : 0;
+  const level1Complete = level1CompletedCount === level1TotalLessons;
+
+  // Calculate puzzles progress
+  const puzzlesCompletedCount = puzzlesWithStatus.filter((l) => l.isCompleted).length;
+  const puzzlesTotalLessons = puzzlesWithStatus.length;
+  const puzzlesProgressPercent = puzzlesTotalLessons > 0 ? Math.round((puzzlesCompletedCount / puzzlesTotalLessons) * 100) : 0;
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -327,6 +340,110 @@ export default async function DashboardPage() {
                       <Link
                         href={`/lessons/${lesson.slug}`}
                         className="px-4 py-2 text-sm font-medium bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                      >
+                        Start
+                      </Link>
+                    ) : (
+                      <span className="px-4 py-2 text-sm text-slate-400">
+                        Locked
+                      </span>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+
+        {/* Puzzles Card */}
+        <div className={`mt-8 bg-white rounded-2xl shadow-lg overflow-hidden ${!level1Complete ? "opacity-75" : ""}`}>
+          {/* Card Header */}
+          <div className="p-6 bg-gradient-to-r from-purple-500 to-purple-600">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-purple-100 text-sm font-medium">Practice</p>
+                <h2 className="text-2xl font-bold text-white mt-1">Puzzles</h2>
+              </div>
+              <div className="text-right">
+                <p className="text-purple-100 text-sm">Progress</p>
+                <p className="text-2xl font-bold text-white">{puzzlesProgressPercent}%</p>
+              </div>
+            </div>
+            {/* Progress bar */}
+            <div className="mt-4 w-full h-2 bg-purple-400/30 rounded-full overflow-hidden">
+              <div 
+                className="h-full bg-white transition-all duration-500"
+                style={{ width: `${puzzlesProgressPercent}%` }}
+              />
+            </div>
+          </div>
+
+          {/* Puzzle List */}
+          <div className="p-6">
+            <h3 className="text-sm font-medium text-slate-500 uppercase tracking-wide mb-4">
+              Puzzle Sets
+            </h3>
+            <div className="space-y-3">
+              {puzzlesWithStatus.map((lesson) => {
+                const { isCompleted, isAvailable, isLocked } = lesson;
+
+                return (
+                  <div
+                    key={lesson.slug}
+                    className={`flex items-center gap-4 p-4 rounded-xl border transition-colors ${
+                      isCompleted
+                        ? "bg-purple-50 border-purple-200"
+                        : isAvailable
+                        ? "bg-white border-slate-200 hover:border-purple-300 hover:shadow-sm"
+                        : "bg-slate-50 border-slate-200 opacity-60"
+                    }`}
+                  >
+                    {/* Status Icon */}
+                    <div
+                      className={`w-10 h-10 rounded-full flex items-center justify-center text-lg ${
+                        isCompleted
+                          ? "bg-purple-500 text-white"
+                          : isAvailable
+                          ? "bg-purple-100 text-purple-600"
+                          : "bg-slate-200 text-slate-400"
+                      }`}
+                    >
+                      {isCompleted ? "✓" : isLocked ? "🔒" : "🧩"}
+                    </div>
+
+                    {/* Puzzle Info */}
+                    <div className="flex-1 min-w-0">
+                      <h4 className={`font-medium ${
+                        isLocked ? "text-slate-400" : "text-slate-900"
+                      }`}>
+                        {lesson.title}
+                      </h4>
+                      <p className={`text-sm truncate ${
+                        isLocked ? "text-slate-400" : "text-slate-500"
+                      }`}>
+                        {lesson.description}
+                      </p>
+                    </div>
+
+                    {/* XP Badge */}
+                    <div className={`text-sm font-medium ${
+                      isCompleted ? "text-purple-600" : isLocked ? "text-slate-400" : "text-slate-500"
+                    }`}>
+                      +{lesson.xpReward} XP
+                    </div>
+
+                    {/* Action */}
+                    {isCompleted ? (
+                      <Link
+                        href={`/lessons/${lesson.slug}`}
+                        className="px-4 py-2 text-sm font-medium text-purple-600 hover:text-purple-700"
+                      >
+                        Replay
+                      </Link>
+                    ) : isAvailable ? (
+                      <Link
+                        href={`/lessons/${lesson.slug}`}
+                        className="px-4 py-2 text-sm font-medium bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
                       >
                         Start
                       </Link>

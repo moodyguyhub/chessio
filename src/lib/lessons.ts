@@ -534,8 +534,88 @@ export const LEVEL_1_LESSONS: Lesson[] = [
   },
 ];
 
-// Combined lessons array for all levels
-export const allLessons: Lesson[] = [...lessons, ...LEVEL_1_LESSONS];
+// ============================================
+// PUZZLES - Active Recall / Practice Mode
+// ============================================
+
+export const PUZZLES: Lesson[] = [
+  // ----------------------------------------
+  // Puzzle Set 1: Mate in One
+  // ----------------------------------------
+  {
+    slug: "puzzle-set-1-mate-in-one",
+    title: "Practice: Mate in One",
+    description:
+      "Find the checkmate in one move. Test your pattern recognition!",
+    level: 2, // Puzzles are "Level 2" in progression
+    xpReward: 30,
+    tasks: [
+      {
+        id: "puzzle-1-back-rank",
+        kind: "move-piece",
+        prompt: "White to move. Find the checkmate!",
+        initialFen: "6k1/5ppp/8/8/8/8/2Q5/4K3 w - - 0 1", // Queen can deliver back rank mate
+        expectedMove: { from: "c2", to: "c8" },
+        messages: {
+          success: "Checkmate! The King is trapped behind his own pawns.",
+          failure: "Not quite. Look for a move that attacks the King on the back row.",
+          hint: "Move the Queen to the 8th rank where the King can't escape.",
+        },
+      },
+      {
+        id: "puzzle-2-queen-kiss",
+        kind: "move-piece",
+        prompt: "White to move. The Queen delivers the 'kiss of death'!",
+        initialFen: "7k/7p/7K/6Q1/8/8/8/8 w - - 0 1", // King on h6 supports Queen mate on g7
+        expectedMove: { from: "g5", to: "g7" },
+        messages: {
+          success: "Checkmate! The King protects the Queen, so Black can't capture.",
+          failure: "The King on h6 supports the Queen. Look for a protected checkmate.",
+          hint: "Move the Queen right next to the Black King on g7.",
+        },
+      },
+      {
+        id: "puzzle-3-rook-corner",
+        kind: "move-piece",
+        prompt: "White to move. Trap the King in the corner!",
+        initialFen: "k7/8/1K6/1R6/8/8/8/8 w - - 0 1", // King a6, Rook b5, Black King a8
+        expectedMove: { from: "b5", to: "b8" },
+        messages: {
+          success: "Checkmate! The King is stuck in the corner with nowhere to go.",
+          failure: "The Black King is almost trapped. Deliver the final blow!",
+          hint: "Move the Rook to b8. The King has no escape squares.",
+        },
+      },
+      {
+        id: "puzzle-4-queen-corner",
+        kind: "move-piece",
+        prompt: "White to move. The Queen finishes the job!",
+        initialFen: "k7/2Q5/1K6/8/8/8/8/8 w - - 0 1", // Queen c7, King b6, Black King a8
+        expectedMove: { from: "c7", to: "a7" },
+        messages: {
+          success: "Checkmate! The Queen covers all escape squares.",
+          failure: "The King is almost trapped. Find the square that delivers mate.",
+          hint: "Move the Queen to a7. The Black King can't escape!",
+        },
+      },
+      {
+        id: "puzzle-5-knight-smother",
+        kind: "move-piece",
+        prompt: "White to move. A smothered mate! The Knight delivers checkmate.",
+        initialFen: "6rk/5Npp/8/8/8/8/8/4K3 w - - 0 1", // Knight f7, can go to h6 for mate
+        expectedMove: { from: "f7", to: "h6" },
+        messages: {
+          success: "Smothered Mate! The Knight checkmates because the King is blocked by his own pieces!",
+          failure: "Knights can deliver checkmate in tight spaces. Look for the L-shape.",
+          hint: "The Knight hops to h6. The Black King is smothered by his own Rook and pawns!",
+        },
+      },
+    ],
+  },
+];
+
+// Combined lessons array for all levels (includes puzzles)
+export const allLessons: Lesson[] = [...lessons, ...LEVEL_1_LESSONS, ...PUZZLES];
 
 // ============================================
 // HELPER FUNCTIONS
@@ -582,6 +662,13 @@ export function getLevel0Lessons(): Lesson[] {
  */
 export function getLevel1Lessons(): Lesson[] {
   return allLessons.filter((lesson) => lesson.level === 1);
+}
+
+/**
+ * Get all puzzles (Level 2)
+ */
+export function getPuzzles(): Lesson[] {
+  return allLessons.filter((lesson) => lesson.level === 2);
 }
 
 /**
