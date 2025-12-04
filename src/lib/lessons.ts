@@ -332,6 +332,65 @@ export const lessons: Lesson[] = [
 ];
 
 // ============================================
+// LEVEL 1 LESSONS - Advanced Interactions
+// ============================================
+
+export const LEVEL_1_LESSONS: Lesson[] = [
+  // ----------------------------------------
+  // Lesson 7: The Knight (L-shape, jumping)
+  // ----------------------------------------
+  {
+    slug: "level-1-lesson-1-knight",
+    title: "Meet the Knight",
+    description:
+      "Learn the knight's unique L-shaped jump — the only piece that can hop over others.",
+    level: 1,
+    xpReward: 20,
+    tasks: [
+      {
+        id: "knight-1",
+        kind: "move-piece",
+        prompt: "Move the knight from b1 to c3 to see its special 'L' shape jump.",
+        initialFen: "8/8/8/8/8/8/8/1N6 w - - 0 1", // Knight at b1
+        expectedMove: { from: "b1", to: "c3" },
+        messages: {
+          success: "Perfect! Two squares up, one square over. That's the knight's L-shape.",
+          failure: "Not quite. Knights move in an L-shape: 2 steps one way, 1 step to the side.",
+          hint: "Imagine the letter 'L'. Go up two squares to b3, then turn right to c3.",
+        },
+      },
+      {
+        id: "knight-2",
+        kind: "move-piece",
+        prompt: "The knight is surrounded by pawns, but it can jump! Move from g1 to f3.",
+        initialFen: "8/8/8/8/8/8/5PPP/6N1 w - - 0 1", // Knight at g1 surrounded by pawns
+        expectedMove: { from: "g1", to: "f3" },
+        messages: {
+          success: "Excellent! The knight is the only piece that can jump over others like that.",
+          failure: "Try jumping! The pawns block straight lines, but the knight jumps right over them to f3.",
+          hint: "The knight doesn't care about pieces in its path. It simply lands on the destination square.",
+        },
+      },
+      {
+        id: "knight-3",
+        kind: "move-piece",
+        prompt: "Capture the black pawn on e3. Remember, the knight lands on the piece to capture it.",
+        initialFen: "8/8/8/8/8/4p3/8/3N4 w - - 0 1", // Knight on d1, Pawn on e3
+        expectedMove: { from: "d1", to: "e3" },
+        messages: {
+          success: "Got it! You jumped, landed, and captured in one move.",
+          failure: "Close. Look for the L-shape that lands exactly on the black pawn at e3.",
+          hint: "Count it out: 2 squares up (to d3), 1 square right (to e3). Capture!",
+        },
+      },
+    ],
+  },
+];
+
+// Combined lessons array for all levels
+export const allLessons: Lesson[] = [...lessons, ...LEVEL_1_LESSONS];
+
+// ============================================
 // HELPER FUNCTIONS
 // ============================================
 
@@ -339,7 +398,7 @@ export const lessons: Lesson[] = [
  * Get a lesson by its URL slug
  */
 export function getLessonBySlug(slug: string): Lesson | null {
-  return lessons.find((lesson) => lesson.slug === slug) ?? null;
+  return allLessons.find((lesson) => lesson.slug === slug) ?? null;
 }
 
 /**
@@ -368,22 +427,29 @@ export function isLastTask(lesson: Lesson, index: number): boolean {
  * Get all Level 0 lessons (convenience export)
  */
 export function getLevel0Lessons(): Lesson[] {
-  return lessons.filter((lesson) => lesson.level === 0);
+  return allLessons.filter((lesson) => lesson.level === 0);
 }
 
 /**
- * Get a lesson by its index in the lessons array
+ * Get all Level 1 lessons (convenience export)
+ */
+export function getLevel1Lessons(): Lesson[] {
+  return allLessons.filter((lesson) => lesson.level === 1);
+}
+
+/**
+ * Get a lesson by its index in the allLessons array
  */
 export function getLessonByIndex(index: number): Lesson | null {
-  if (index < 0 || index >= lessons.length) return null;
-  return lessons[index];
+  if (index < 0 || index >= allLessons.length) return null;
+  return allLessons[index];
 }
 
 /**
  * Get the index of a lesson by slug
  */
 export function getLessonIndex(slug: string): number {
-  return lessons.findIndex((lesson) => lesson.slug === slug);
+  return allLessons.findIndex((lesson) => lesson.slug === slug);
 }
 
 /**
@@ -392,7 +458,7 @@ export function getLessonIndex(slug: string): number {
 export function getPreviousLesson(slug: string): Lesson | null {
   const index = getLessonIndex(slug);
   if (index <= 0) return null;
-  return lessons[index - 1];
+  return allLessons[index - 1];
 }
 
 /**
@@ -400,6 +466,6 @@ export function getPreviousLesson(slug: string): Lesson | null {
  */
 export function getNextLesson(slug: string): Lesson | null {
   const index = getLessonIndex(slug);
-  if (index < 0 || index >= lessons.length - 1) return null;
-  return lessons[index + 1];
+  if (index < 0 || index >= allLessons.length - 1) return null;
+  return allLessons[index + 1];
 }
