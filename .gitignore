@@ -39,3 +39,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+/src/generated/prisma
+
+# design assets (vendor zips, etc.)
+/design/*.zip
+/design/extracted/

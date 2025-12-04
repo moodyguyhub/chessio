@@ -1,36 +1,100 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ♟️ Chessio
+
+An interactive chess learning platform where users master chess through structured lessons, earn XP, and level up their skills.
+
+## Features
+
+- 🎯 **Interactive Lessons** - Step-by-step chess lessons with real-time board interaction
+- 📈 **XP & Leveling** - Gamified progression system to track your improvement
+- 💡 **AI Hints** - Get contextual hints when you're stuck
+- 🔐 **Authentication** - Secure sign-in with GitHub, Google, or email
+- 📊 **Progress Tracking** - Resume lessons and track completed content
+
+## Tech Stack
+
+- **Framework**: Next.js 16 (App Router)
+- **Database**: PostgreSQL + Prisma ORM
+- **Auth**: NextAuth v5
+- **Chess**: chess.js + react-chessboard
+- **Styling**: Tailwind CSS
+- **Validation**: Zod
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- Node.js 18+
+- PostgreSQL database
+- npm or yarn
+
+### Installation
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/yourusername/chessio.git
+   cd chessio
+   ```
+
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+3. Set up environment variables:
+   ```bash
+   cp .env.example .env
+   # Edit .env with your database URL and auth secrets
+   ```
+
+4. Set up the database:
+   ```bash
+   npm run db:push
+   npm run db:seed
+   ```
+
+5. Start the development server:
+   ```bash
+   npm run dev
+   ```
+
+6. Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+## Project Structure
+
+```
+src/
+├── app/                    # Next.js App Router
+│   ├── api/               # API routes
+│   └── lessons/           # Lesson pages
+├── components/
+│   ├── chess/             # Chess-specific components
+│   └── ui/                # Reusable UI components
+└── lib/
+    ├── auth.ts            # NextAuth configuration
+    ├── db.ts              # Prisma client
+    ├── lessons/           # Lesson logic & types
+    └── gamification/      # XP/Level system
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Scripts
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+| Command | Description |
+|---------|-------------|
+| `npm run dev` | Start development server |
+| `npm run build` | Build for production |
+| `npm run db:generate` | Generate Prisma client |
+| `npm run db:migrate` | Run database migrations |
+| `npm run db:push` | Push schema to database |
+| `npm run db:seed` | Seed sample lessons |
+| `npm run db:studio` | Open Prisma Studio |
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Contributing
 
-## Learn More
+1. Create a feature branch
+2. Make your changes
+3. Ensure TypeScript compiles without errors
+4. Submit a pull request
 
-To learn more about Next.js, take a look at the following resources:
+## License
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+MIT
