@@ -3,7 +3,9 @@ import Link from "next/link";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { LessonPlayer } from "@/components/chess";
-import { LessonStatus } from "@prisma/client";
+
+// Temporary local type until full migration to lessons.ts
+const LessonStatus = { LOCKED: "LOCKED", AVAILABLE: "AVAILABLE", COMPLETED: "COMPLETED" } as const;
 
 interface LessonPageProps {
   params: Promise<{ slug: string }>;
@@ -24,9 +26,6 @@ export default async function LessonPage({ params }: LessonPageProps) {
       tasks: {
         orderBy: { index: "asc" },
       },
-      userProgress: {
-        where: { userId: session.user.id },
-      },
     },
   });
 
@@ -34,12 +33,8 @@ export default async function LessonPage({ params }: LessonPageProps) {
     notFound();
   }
 
-  // Check if lesson is accessible (not locked)
-  const progress = lesson.userProgress[0];
-  if (progress?.status === LessonStatus.LOCKED) {
-    // Redirect to dashboard with message
-    redirect("/app?locked=true");
-  }
+  // TODO: Check lesson locking via new UserLessonProgress model
+  // For now, all lessons are accessible in Level 0
 
   // Get next lesson for completion modal
   const nextLesson = await db.lesson.findFirst({

@@ -47,20 +47,9 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    // Initialize lesson progress - first lesson is AVAILABLE, rest are LOCKED
-    const lessons = await db.lesson.findMany({
-      orderBy: { order: "asc" },
-    });
-
-    if (lessons.length > 0) {
-      await db.userLessonProgress.createMany({
-        data: lessons.map((lesson, index) => ({
-          userId: user.id,
-          lessonId: lesson.id,
-          status: index === 0 ? "AVAILABLE" : "LOCKED",
-        })),
-      });
-    }
+    // Note: Lesson progress is now created on-demand when lessons are completed
+    // via the completeLessonAndAwardXp function in @/lib/lessons/progress
+    // No need to pre-populate progress records
 
     return NextResponse.json({ success: true, userId: user.id });
   } catch (error) {

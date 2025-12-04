@@ -1,13 +1,19 @@
-import { db } from "@/lib/db";
-import { LessonStatus } from "@prisma/client";
-
 /**
- * Lesson service - handles lesson-related database operations
- * Simplified for Level 0 MVP
+ * @deprecated This service uses the old DB-based lesson model with lessonId.
+ * Use the new progress helpers from @/lib/lessons/progress instead:
+ * - completeLessonAndAwardXp()
+ * - getCompletedLessonSlugs()
+ * - isLessonCompleted()
+ * - getUserXp()
+ * 
+ * The new model uses lessonSlug (matching lessons.ts) instead of lessonId.
  */
+
+import { db } from "@/lib/db";
+
 export const lessonService = {
   /**
-   * Get all lessons in order
+   * @deprecated Use lessons from @/lib/lessons instead
    */
   async getAll() {
     return db.lesson.findMany({
@@ -17,7 +23,7 @@ export const lessonService = {
   },
 
   /**
-   * Get a single lesson by slug with tasks
+   * @deprecated Use getLessonBySlug from @/lib/lessons instead
    */
   async getBySlug(slug: string) {
     return db.lesson.findUnique({
@@ -27,88 +33,42 @@ export const lessonService = {
   },
 
   /**
-   * Get user's progress for a specific lesson
+   * @deprecated Use isLessonCompleted from @/lib/lessons/progress instead
    */
-  async getUserProgress(userId: string, lessonId: string) {
+  async getUserProgress(userId: string, lessonSlug: string) {
     return db.userLessonProgress.findUnique({
-      where: { userId_lessonId: { userId, lessonId } },
+      where: { userId_lessonSlug: { userId, lessonSlug } },
     });
   },
 
   /**
-   * Get all lessons with user progress
+   * @deprecated Use getCompletedLessonSlugs from @/lib/lessons/progress instead
    */
-  async getLessonsWithProgress(userId: string) {
-    return db.lesson.findMany({
-      orderBy: { order: "asc" },
-      include: {
-        userProgress: {
-          where: { userId },
-        },
-      },
+  async getCompletedLessons(userId: string) {
+    return db.userLessonProgress.findMany({
+      where: { userId },
+      select: { lessonSlug: true },
     });
   },
 
   /**
-   * Complete a lesson and award XP
+   * @deprecated Use completeLessonAndAwardXp from @/lib/lessons/progress instead
    */
-  async completeLesson(userId: string, lessonId: string) {
-    const lesson = await db.lesson.findUnique({
-      where: { id: lessonId },
-    });
-
-    if (!lesson) throw new Error("Lesson not found");
-
-    // Mark as completed
-    await db.userLessonProgress.upsert({
-      where: { userId_lessonId: { userId, lessonId } },
-      create: {
-        userId,
-        lessonId,
-        status: LessonStatus.COMPLETED,
-      },
-      update: {
-        status: LessonStatus.COMPLETED,
-      },
-    });
-
-    // Award XP
-    await db.user.update({
-      where: { id: userId },
-      data: { xp: { increment: lesson.xpReward } },
-    });
-
-    // Unlock next lesson
-    const nextLesson = await db.lesson.findFirst({
-      where: { order: lesson.order + 1 },
-    });
-
-    if (nextLesson) {
-      await db.userLessonProgress.upsert({
-        where: { userId_lessonId: { userId, lessonId: nextLesson.id } },
-        create: {
-          userId,
-          lessonId: nextLesson.id,
-          status: LessonStatus.AVAILABLE,
-        },
-        update: {
-          status: LessonStatus.AVAILABLE,
-        },
-      });
-    }
-
-    return lesson.xpReward;
+  async completeLesson(userId: string, lessonSlug: string) {
+    // Import dynamically to avoid circular dependency
+    const { completeLessonAndAwardXp } = await import("@/lib/lessons/progress");
+    return completeLessonAndAwardXp({ userId, lessonSlug });
   },
 
   /**
    * Increment hints used for a lesson
    */
-  async incrementHintsUsed(userId: string, lessonId: string) {
+  async incrementHintsUsed(userId: string, lessonSlug: string) {
     await db.userLessonProgress.upsert({
-      where: { userId_lessonId: { userId, lessonId } },
+      where: { userId_lessonSlug: { userId, lessonSlug } },
       create: {
         userId,
-        lessonId,
+        lessonSlug,
         hintsUsed: 1,
       },
       update: {

@@ -19,6 +19,7 @@ import {
   getInitialInteractionState,
   type LessonInteractionState,
 } from "@/lib/lessons/engine";
+import { completeLessonAction } from "@/app/lessons/[slug]/actions";
 
 // ============================================
 // TYPES
@@ -254,6 +255,12 @@ export function LessonPlayer({ lesson }: LessonPlayerProps) {
   const [currentTaskIndex, setCurrentTaskIndex] = useState(0);
   const [isLessonComplete, setIsLessonComplete] = useState(false);
 
+  // XP state for completion feedback
+  const [xpAwarded, setXpAwarded] = useState<number | null>(null);
+  const [totalXp, setTotalXp] = useState<number | null>(null);
+  const [isSaving, setIsSaving] = useState(false);
+  const [alreadyCompleted, setAlreadyCompleted] = useState(false);
+
   // Current task
   const currentTask = getTaskByIndex(lesson, currentTaskIndex);
   const totalTasks = lesson.tasks.length;
@@ -268,19 +275,40 @@ export function LessonPlayer({ lesson }: LessonPlayerProps) {
     (isCorrect: boolean) => {
       if (isCorrect) {
         if (isLastTaskInLesson) {
+          // Mark lesson as complete locally
           setIsLessonComplete(true);
+
+          // Persist completion and award XP
+          setIsSaving(true);
+          completeLessonAction(lesson.slug)
+            .then((result) => {
+              setXpAwarded(result.xpAwarded);
+              setTotalXp(result.totalXp);
+              setAlreadyCompleted(result.alreadyCompleted);
+            })
+            .catch((err) => {
+              console.error("Failed to complete lesson:", err);
+              // Still show completion UI, just without XP info
+            })
+            .finally(() => {
+              setIsSaving(false);
+            });
         } else {
           setCurrentTaskIndex((prev) => prev + 1);
         }
       }
     },
-    [isLastTaskInLesson]
+    [isLastTaskInLesson, lesson.slug]
   );
 
   // Handle replay
   const handleReplay = useCallback(() => {
     setCurrentTaskIndex(0);
     setIsLessonComplete(false);
+    // Reset XP state for replay (won't award again)
+    setXpAwarded(null);
+    setTotalXp(null);
+    setAlreadyCompleted(false);
   }, []);
 
   // Handle back to dashboard
@@ -335,9 +363,36 @@ export function LessonPlayer({ lesson }: LessonPlayerProps) {
               <p className="text-chessio-muted dark:text-chessio-muted-dark">
                 You&apos;ve finished &quot;{lesson.title}&quot;
               </p>
-              <Badge variant="success" className="text-sm px-3 py-1">
-                +{lesson.xpReward} XP
-              </Badge>
+
+              {/* XP Feedback */}
+              {isSaving ? (
+                <p className="text-sm text-chessio-muted dark:text-chessio-muted-dark animate-pulse">
+                  Saving your progress...
+                </p>
+              ) : xpAwarded !== null ? (
+                <div className="space-y-1">
+                  {xpAwarded > 0 ? (
+                    <Badge variant="success" className="text-sm px-3 py-1">
+                      +{xpAwarded} XP
+                    </Badge>
+                  ) : alreadyCompleted ? (
+                    <Badge variant="default" className="text-sm px-3 py-1">
+                      Already Completed
+                    </Badge>
+                  ) : null}
+                  {totalXp !== null && (
+                    <p className="text-xs text-chessio-muted dark:text-chessio-muted-dark">
+                      Total XP: {totalXp}
+                    </p>
+                  )}
+                </div>
+              ) : (
+                // Fallback if server call failed
+                <Badge variant="success" className="text-sm px-3 py-1">
+                  +{lesson.xpReward} XP
+                </Badge>
+              )}
+
               <div className="flex flex-col gap-3 pt-4">
                 {nextLesson && (
                   <Button variant="primary" size="lg" onClick={handleNextLesson}>

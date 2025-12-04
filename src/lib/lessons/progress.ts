@@ -1,0 +1,139 @@
+/**
+ * Lesson Progress & XP Management
+ * 
+ * Handles completion tracking and XP awards with transaction-safe operations.
+ * XP is awarded only once per user per lesson (first completion).
+ */
+
+import { db } from "@/lib/db";
+import { getLessonBySlug } from "@/lib/lessons";
+
+// ============================================
+// TYPES
+// ============================================
+
+export type CompleteLessonArgs = {
+  userId: string;
+  lessonSlug: string;
+};
+
+export type CompleteLessonResult = {
+  lessonSlug: string;
+  xpAwarded: number;
+  totalXp: number;
+  alreadyCompleted: boolean;
+};
+
+// ============================================
+// MAIN FUNCTION
+// ============================================
+
+/**
+ * Complete a lesson and award XP (once only per user/lesson).
+ * 
+ * Uses a transaction to ensure:
+ * - No duplicate progress records
+ * - No double XP awards
+ * - Atomic read-update operations
+ */
+export async function completeLessonAndAwardXp({
+  userId,
+  lessonSlug,
+}: CompleteLessonArgs): Promise<CompleteLessonResult> {
+  // Get lesson from static data (source of truth for Level 0)
+  const lesson = getLessonBySlug(lessonSlug);
+
+  if (!lesson) {
+    throw new Error(`Unknown lesson slug: ${lessonSlug}`);
+  }
+
+  const xpReward = lesson.xpReward ?? 0;
+
+  // Single transaction to avoid race conditions and double XP
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return await db.$transaction(async (tx: any) => {
+    // Check if user has already completed this lesson
+    const existing = await tx.userLessonProgress.findUnique({
+      where: {
+        userId_lessonSlug: { userId, lessonSlug },
+      },
+    });
+
+    if (existing) {
+      // Already completed - return current XP without awarding more
+      const user = await tx.user.findUniqueOrThrow({
+        where: { id: userId },
+        select: { xp: true },
+      });
+
+      return {
+        lessonSlug,
+        xpAwarded: 0,
+        totalXp: user.xp,
+        alreadyCompleted: true,
+      };
+    }
+
+    // First-time completion → create progress record, award XP
+    await tx.userLessonProgress.create({
+      data: { userId, lessonSlug },
+    });
+
+    const user = await tx.user.update({
+      where: { id: userId },
+      data: { xp: { increment: xpReward } },
+      select: { xp: true },
+    });
+
+    return {
+      lessonSlug,
+      xpAwarded: xpReward,
+      totalXp: user.xp,
+      alreadyCompleted: false,
+    };
+  });
+}
+
+// ============================================
+// HELPER FUNCTIONS
+// ============================================
+
+/**
+ * Get all completed lesson slugs for a user
+ */
+export async function getCompletedLessonSlugs(userId: string): Promise<string[]> {
+  const progress = await db.userLessonProgress.findMany({
+    where: { userId },
+    select: { lessonSlug: true },
+  });
+
+  return progress.map((p: { lessonSlug: string }) => p.lessonSlug);
+}
+
+/**
+ * Check if a specific lesson is completed by a user
+ */
+export async function isLessonCompleted(
+  userId: string,
+  lessonSlug: string
+): Promise<boolean> {
+  const progress = await db.userLessonProgress.findUnique({
+    where: {
+      userId_lessonSlug: { userId, lessonSlug },
+    },
+  });
+
+  return progress !== null;
+}
+
+/**
+ * Get user's total XP
+ */
+export async function getUserXp(userId: string): Promise<number> {
+  const user = await db.user.findUnique({
+    where: { id: userId },
+    select: { xp: true },
+  });
+
+  return user?.xp ?? 0;
+}

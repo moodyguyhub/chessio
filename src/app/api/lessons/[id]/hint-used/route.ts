@@ -9,6 +9,9 @@ interface RouteParams {
 /**
  * POST /api/lessons/[id]/hint-used
  * Track when a user requests a hint
+ * 
+ * Note: This route accepts lessonSlug (not lessonId) in the URL path
+ * for compatibility with lessons.ts-based routing.
  */
 export async function POST(request: NextRequest, { params }: RouteParams) {
   try {
@@ -17,15 +20,16 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { id: lessonId } = await params;
+    // Note: the param is named 'id' for route compatibility but is actually lessonSlug
+    const { id: lessonSlug } = await params;
     const userId = session.user.id;
 
     // Increment hints used
     await db.userLessonProgress.upsert({
-      where: { userId_lessonId: { userId, lessonId } },
+      where: { userId_lessonSlug: { userId, lessonSlug } },
       create: {
         userId,
-        lessonId,
+        lessonSlug,
         hintsUsed: 1,
       },
       update: {

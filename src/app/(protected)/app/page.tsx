@@ -1,7 +1,9 @@
 import Link from "next/link";
 import { auth, signOut } from "@/lib/auth";
 import { db } from "@/lib/db";
-import { LessonStatus } from "@prisma/client";
+
+// Temporary local type until full migration to lessons.ts
+const LessonStatus = { LOCKED: "LOCKED", AVAILABLE: "AVAILABLE", COMPLETED: "COMPLETED" } as const;
 
 // XP level calculation (simple: 100 XP per level)
 function getLevel(xp: number): { level: number; currentXp: number; nextLevelXp: number } {
@@ -28,22 +30,30 @@ export default async function DashboardPage() {
     return null;
   }
 
-  // Fetch lessons with user progress
-  const lessons = await db.lesson.findMany({
+  // Fetch lessons from DB (for DB-based route compatibility)
+  const dbLessons = await db.lesson.findMany({
     orderBy: { order: "asc" },
-    include: {
-      userProgress: {
-        where: { userId: user.id },
-      },
-    },
   });
+
+  // Fetch user's lesson progress (new model)
+  const userProgress = await db.userLessonProgress.findMany({
+    where: { userId: user.id },
+    select: { lessonSlug: true },
+  });
+  const completedSlugs = new Set(userProgress.map((p: { lessonSlug: string }) => p.lessonSlug));
+
+  // Map lessons with completion status
+  const lessons = dbLessons.map((lesson, index) => ({
+    ...lesson,
+    isCompleted: completedSlugs.has(lesson.slug),
+    // First lesson is always available, others available if previous is completed
+    isAvailable: index === 0 || (index > 0 && completedSlugs.has(dbLessons[index - 1].slug)),
+  }));
 
   const { level, currentXp, nextLevelXp } = getLevel(user.xp);
   
   // Calculate level 0 progress
-  const completedCount = lessons.filter(
-    (l) => l.userProgress[0]?.status === LessonStatus.COMPLETED
-  ).length;
+  const completedCount = lessons.filter((l) => l.isCompleted).length;
   const totalLessons = lessons.length;
   const progressPercent = totalLessons > 0 ? Math.round((completedCount / totalLessons) * 100) : 0;
 
@@ -143,12 +153,9 @@ export default async function DashboardPage() {
             </h3>
             <div className="space-y-3">
               {lessons.map((lesson) => {
-                const progress = lesson.userProgress[0];
-                const status = progress?.status || LessonStatus.LOCKED;
-                
-                const isCompleted = status === LessonStatus.COMPLETED;
-                const isAvailable = status === LessonStatus.AVAILABLE;
-                const isLocked = status === LessonStatus.LOCKED;
+                const isCompleted = lesson.isCompleted;
+                const isAvailable = lesson.isAvailable;
+                const isLocked = !isAvailable && !isCompleted;
 
                 return (
                   <div
