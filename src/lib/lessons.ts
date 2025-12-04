@@ -385,6 +385,153 @@ export const LEVEL_1_LESSONS: Lesson[] = [
       },
     ],
   },
+  // ----------------------------------------
+  // Lesson 8: Castling (special King-Rook move)
+  // ----------------------------------------
+  {
+    slug: "level-1-lesson-2-castling",
+    title: "Castling",
+    description:
+      "Learn the special move where King and Rook work together to keep the King safe.",
+    level: 1,
+    xpReward: 20,
+    tasks: [
+      {
+        id: "castling-1",
+        kind: "move-piece",
+        prompt: "Castle kingside: move your King two squares toward the Rook (e1 to g1).",
+        initialFen: "r1bqk2r/pppp1ppp/2n2n2/2b1p3/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 0 1",
+        expectedMove: { from: "e1", to: "g1" },
+        messages: {
+          success: "Safe and sound! The King moved two squares, and the Rook jumped over to protect him.",
+          failure: "To castle kingside, move the King exactly two squares to the right (e1 to g1).",
+          hint: "Click the King on e1, then click g1. The Rook will move automatically!",
+        },
+      },
+      {
+        id: "castling-2",
+        kind: "move-piece",
+        prompt: "Castle queenside: move the King two squares toward the a-file Rook (e1 to c1).",
+        initialFen: "r3kbnr/pppq1ppp/2np4/4p3/2B1P3/2NP1N2/PPP2PPP/R3K2R w KQkq - 0 1",
+        expectedMove: { from: "e1", to: "c1" },
+        messages: {
+          success: "Perfect! Long castling takes more setup, but it keeps the King very safe.",
+          failure: "Move the King two squares to the left (e1 to c1) to castle queenside.",
+          hint: "Click the King on e1, then click c1. Watch the Rook fly over!",
+        },
+      },
+      {
+        id: "castling-3",
+        kind: "move-piece",
+        prompt: "You can't castle through check! The Bishop controls f1. Move your King to d2 instead.",
+        initialFen: "r2qk2r/ppp2ppp/2np1n2/2b1p3/2B1P3/3P1N2/PPP2PPP/RNBQK2R w KQkq - 0 1",
+        expectedMove: { from: "e1", to: "d2" },
+        messages: {
+          success: "Smart! You noticed you couldn't castle because the Bishop watched f1, so you moved safely.",
+          failure: "The Bishop on c5 attacks f1, blocking castling. Move the King to d2 instead.",
+          hint: "Castling is blocked! Just move the King one square to d2.",
+        },
+      },
+    ],
+  },
+  // ----------------------------------------
+  // Lesson 9: Check (King under attack)
+  // ----------------------------------------
+  {
+    slug: "level-1-lesson-3-check",
+    title: "Check!",
+    description:
+      "Learn what happens when your King is under attack — and how to escape.",
+    level: 1,
+    xpReward: 20,
+    tasks: [
+      {
+        id: "check-1",
+        kind: "move-piece",
+        prompt: "Your King is in check from the Rook! Move the King to f2 to escape.",
+        initialFen: "4r3/8/8/8/8/8/5P2/4K3 w - - 0 1", // Rook on e8 checking King on e1
+        expectedMove: { from: "e1", to: "f2" },
+        messages: {
+          success: "Phew! The King escaped behind the pawn.",
+          failure: "Your King is in danger! Move him to f2 to get out of the Rook's line of fire.",
+          hint: "The Rook attacks the whole e-file. Step diagonally to f2.",
+        },
+      },
+      {
+        id: "check-2",
+        kind: "move-piece",
+        prompt: "The Queen is attacking your King. Block the check by moving your Rook to e1.",
+        initialFen: "4q3/8/8/8/8/8/8/3RK3 w - - 0 1", // Queen on e8 checking, Rook on d1
+        expectedMove: { from: "d1", to: "e1" },
+        messages: {
+          success: "Great defense! The Rook acts as a shield for the King.",
+          failure: "The King can't escape. Use your Rook to block the Queen's path on e1.",
+          hint: "Move the Rook from d1 to e1 to intercept the attack.",
+        },
+      },
+      {
+        id: "check-3",
+        kind: "move-piece",
+        prompt: "The black Knight is checking your King. Don't run — capture it with your Pawn!",
+        initialFen: "8/8/8/8/3n4/4P3/8/4K3 w - - 0 1", // Knight on d4 checking King on e1
+        expectedMove: { from: "e3", to: "d4" },
+        messages: {
+          success: "Best defense is a good offense! You removed the threat completely.",
+          failure: "Your pawn on e3 can capture the Knight on d4. Take it!",
+          hint: "Pawns capture diagonally. Take that Knight!",
+        },
+      },
+    ],
+  },
+  // ----------------------------------------
+  // Lesson 10: Checkmate (winning the game)
+  // ----------------------------------------
+  {
+    slug: "level-1-lesson-4-checkmate",
+    title: "Checkmate!",
+    description:
+      "Learn how to deliver checkmate — the King is in check with no escape.",
+    level: 1,
+    xpReward: 25,
+    tasks: [
+      {
+        id: "mate-1",
+        kind: "move-piece",
+        prompt: "The black King is trapped behind his pawns. Move your Rook to c8 for checkmate!",
+        initialFen: "6k1/5ppp/8/8/8/8/8/2R3K1 w - - 0 1", // Back rank mate setup
+        expectedMove: { from: "c1", to: "c8" },
+        messages: {
+          success: "Checkmate! The King is trapped on the back rank with nowhere to run.",
+          failure: "Look for a move that attacks the King on the back row. Try Rook to c8.",
+          hint: "Move the Rook all the way up to c8. The King is trapped!",
+        },
+      },
+      {
+        id: "mate-2",
+        kind: "move-piece",
+        prompt: "Scholar's Mate! Move your Queen to f7 — the Bishop protects her.",
+        initialFen: "r1bqkbnr/pppp1ppp/2n5/4p2Q/2B1P3/8/PPPP1PPP/RNB1K1NR w KQkq - 0 1",
+        expectedMove: { from: "h5", to: "f7" },
+        messages: {
+          success: "Checkmate! The King can't take the Queen because she's protected by the Bishop.",
+          failure: "Target the weak f7 square with your Queen. The Bishop on c4 protects her.",
+          hint: "Move the Queen to f7. Game over!",
+        },
+      },
+      {
+        id: "mate-3",
+        kind: "move-piece",
+        prompt: "Ladder Mate! Your Rooks work together. Move the bottom Rook to b8 for checkmate.",
+        initialFen: "7k/R7/8/8/8/8/8/1R5K w - - 0 1", // Rook on a7 cuts off 7th, Rook on b1
+        expectedMove: { from: "b1", to: "b8" },
+        messages: {
+          success: "Checkmate! The Rooks worked like a ladder to trap the King.",
+          failure: "The Rook on a7 blocks the escape. Use the other Rook to deliver mate on b8.",
+          hint: "Move the Rook from b1 all the way to b8. The King has no escape!",
+        },
+      },
+    ],
+  },
 ];
 
 // Combined lessons array for all levels

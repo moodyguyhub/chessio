@@ -84,29 +84,29 @@ async function main() {
     console.log(`   ✅ ${lesson?.title}: +${result.xpAwarded} XP (Total: ${result.totalXp})`);
   }
 
-  // 6. Verify Knight unlocks after Level 0 completion
-  console.log("\n📋 Step 6: Level 1 Knight Unlock");
-  const knightLesson = getLessonBySlug("level-1-lesson-1-knight");
-  const pawnCompleted = await isLessonCompleted(user.id, "level-0-lesson-6-pawn");
-  console.log(`   ✅ Pawn (last Level 0) completed: ${pawnCompleted ? "YES" : "NO"}`);
-  console.log(`   ✅ Knight lesson exists: ${knightLesson ? "YES" : "NO"}`);
-  console.log(`   ✅ Knight lesson title: ${knightLesson?.title}`);
+  // 6. Verify Level 1 lessons unlock after Level 0 completion
+  console.log("\n📋 Step 6: Level 1 Progression");
+  const level1Lessons = getLevel1Lessons();
+  console.log(`   ✅ Level 1 lessons available: ${level1Lessons.length}`);
   
-  // Complete Knight lesson
-  const knightResult = await completeLessonAndAwardXp({ userId: user.id, lessonSlug: "level-1-lesson-1-knight" });
-  console.log(`   ✅ Knight completed: +${knightResult.xpAwarded} XP (Total: ${knightResult.totalXp})`);
+  // Complete all Level 1 lessons
+  for (const lesson of level1Lessons) {
+    const result = await completeLessonAndAwardXp({ userId: user.id, lessonSlug: lesson.slug });
+    console.log(`   ✅ ${lesson.title}: +${result.xpAwarded} XP (Total: ${result.totalXp})`);
+  }
 
   // Final state
   const finalXp = await getUserXp(user.id);
   const finalCompleted = await getCompletedLessonSlugs(user.id);
-  const nextLesson = getNextLesson("level-1-lesson-1-knight");
+  const lastLesson = level1Lessons[level1Lessons.length - 1];
+  const nextLesson = getNextLesson(lastLesson.slug);
   
   console.log("\n📋 Final State:");
   console.log(`   ✅ Total XP: ${finalXp}`);
   console.log(`   ✅ Completed: ${finalCompleted.length}/${allLessons.length} lessons`);
   console.log(`   ✅ Level 0 lessons: ${getLevel0Lessons().length}`);
   console.log(`   ✅ Level 1 lessons: ${getLevel1Lessons().length}`);
-  console.log(`   ✅ Next lesson after Knight: ${nextLesson ? nextLesson.title : "No more lessons yet!"}`);
+  console.log(`   ✅ Next lesson after ${lastLesson.title}: ${nextLesson ? nextLesson.title : "Level 1 Complete!"}`);
 
   // Cleanup
   console.log("\n📋 Cleanup:");
