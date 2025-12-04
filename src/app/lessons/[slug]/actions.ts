@@ -9,7 +9,7 @@ import {
 /**
  * Server action to complete a lesson and award XP.
  * 
- * Called from LessonPlayerNew when the user finishes the last task.
+ * Called from LessonPlayer when the user finishes the last task.
  * Returns XP info for UI feedback.
  */
 export async function completeLessonAction(

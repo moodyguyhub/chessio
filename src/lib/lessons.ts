@@ -188,6 +188,147 @@ export const lessons: Lesson[] = [
       },
     ],
   },
+
+  // ----------------------------------------
+  // Lesson 4: Queen Movement (move-piece)
+  // ----------------------------------------
+  {
+    slug: "level-0-lesson-4-queen",
+    title: "How the Queen Moves",
+    description:
+      "The queen is the most powerful piece — she moves like a rook AND a bishop!",
+    level: 0,
+    xpReward: 15,
+    tasks: [
+      {
+        id: "queen-1",
+        kind: "move-piece",
+        prompt: "Move the queen from d1 to d8 (like a rook).",
+        initialFen: "8/8/8/8/8/8/8/3Q4 w - - 0 1", // white queen on d1
+        expectedMove: { from: "d1", to: "d8" },
+        messages: {
+          success: "Perfect! The queen can move in straight lines like a rook.",
+          hint: "The queen can move vertically — go all the way up the d-file.",
+        },
+      },
+      {
+        id: "queen-2",
+        kind: "move-piece",
+        prompt: "Move the queen from a1 to h8 (like a bishop).",
+        initialFen: "8/8/8/8/8/8/8/Q7 w - - 0 1", // white queen on a1
+        expectedMove: { from: "a1", to: "h8" },
+        messages: {
+          success: "Great! The queen can also move diagonally like a bishop.",
+          hint: "The queen can move diagonally — try the long diagonal.",
+        },
+      },
+      {
+        id: "queen-3",
+        kind: "move-piece",
+        prompt: "Move the queen from e4 to h7.",
+        initialFen: "8/8/8/8/4Q3/8/8/8 w - - 0 1", // white queen on e4
+        expectedMove: { from: "e4", to: "h7" },
+        messages: {
+          success: "Excellent! You've mastered the queen's diagonal movement.",
+          hint: "Move diagonally toward the top-right corner.",
+        },
+      },
+    ],
+  },
+
+  // ----------------------------------------
+  // Lesson 5: King Movement (move-piece)
+  // ----------------------------------------
+  {
+    slug: "level-0-lesson-5-king",
+    title: "How the King Moves",
+    description:
+      "The king is the most important piece — protect him at all costs! He moves one square in any direction.",
+    level: 0,
+    xpReward: 15,
+    tasks: [
+      {
+        id: "king-1",
+        kind: "move-piece",
+        prompt: "Move the king from e1 to e2.",
+        initialFen: "8/8/8/8/8/8/8/4K3 w - - 0 1", // white king on e1
+        expectedMove: { from: "e1", to: "e2" },
+        messages: {
+          success: "Good! The king moves one square at a time.",
+          hint: "The king can only move one square — go forward.",
+        },
+      },
+      {
+        id: "king-2",
+        kind: "move-piece",
+        prompt: "Move the king from d4 to e5 (diagonally).",
+        initialFen: "8/8/8/8/3K4/8/8/8 w - - 0 1", // white king on d4
+        expectedMove: { from: "d4", to: "e5" },
+        messages: {
+          success: "Nice! The king can move diagonally too — but only one square.",
+          hint: "Move diagonally up and to the right.",
+        },
+      },
+      {
+        id: "king-3",
+        kind: "move-piece",
+        prompt: "Move the king from h8 to g7.",
+        initialFen: "7K/8/8/8/8/8/8/8 w - - 0 1", // white king on h8
+        expectedMove: { from: "h8", to: "g7" },
+        messages: {
+          success: "Perfect! You understand how the king moves.",
+          hint: "Move diagonally down and to the left.",
+        },
+      },
+    ],
+  },
+
+  // ----------------------------------------
+  // Lesson 6: Pawn Movement (move-piece)
+  // ----------------------------------------
+  {
+    slug: "level-0-lesson-6-pawn",
+    title: "How the Pawn Moves",
+    description:
+      "Pawns are humble but powerful — they can only move forward, but they have a special first-move option!",
+    level: 0,
+    xpReward: 15,
+    tasks: [
+      {
+        id: "pawn-1",
+        kind: "move-piece",
+        prompt: "Move the pawn from e2 to e4 (two squares on first move).",
+        initialFen: "8/8/8/8/8/8/4P3/8 w - - 0 1", // white pawn on e2
+        expectedMove: { from: "e2", to: "e4" },
+        messages: {
+          success: "Great! Pawns can move two squares on their first move.",
+          hint: "From the starting position, a pawn can jump two squares forward.",
+        },
+      },
+      {
+        id: "pawn-2",
+        kind: "move-piece",
+        prompt: "Move the pawn from d4 to d5 (one square forward).",
+        initialFen: "8/8/8/8/3P4/8/8/8 w - - 0 1", // white pawn on d4
+        expectedMove: { from: "d4", to: "d5" },
+        messages: {
+          success: "Correct! After the first move, pawns move one square at a time.",
+          hint: "Pawns move straight forward — one square only after the first move.",
+        },
+      },
+      {
+        id: "pawn-3",
+        kind: "move-piece",
+        prompt: "Move the pawn from a7 to a8 (promotion square!).",
+        initialFen: "8/P7/8/8/8/8/8/8 w - - 0 1", // white pawn on a7
+        expectedMove: { from: "a7", to: "a8" },
+        messages: {
+          success: "Amazing! When a pawn reaches the end, it promotes to a stronger piece!",
+          hint: "Move the pawn to the last rank — something special happens there!",
+        },
+      },
+    ],
+  },
 ];
 
 // ============================================
@@ -221,4 +362,44 @@ export function getTaskByIndex(lesson: Lesson, index: number): LessonTask | null
  */
 export function isLastTask(lesson: Lesson, index: number): boolean {
   return index === lesson.tasks.length - 1;
+}
+
+/**
+ * Get all Level 0 lessons (convenience export)
+ */
+export function getLevel0Lessons(): Lesson[] {
+  return lessons.filter((lesson) => lesson.level === 0);
+}
+
+/**
+ * Get a lesson by its index in the lessons array
+ */
+export function getLessonByIndex(index: number): Lesson | null {
+  if (index < 0 || index >= lessons.length) return null;
+  return lessons[index];
+}
+
+/**
+ * Get the index of a lesson by slug
+ */
+export function getLessonIndex(slug: string): number {
+  return lessons.findIndex((lesson) => lesson.slug === slug);
+}
+
+/**
+ * Get the previous lesson (for locking logic)
+ */
+export function getPreviousLesson(slug: string): Lesson | null {
+  const index = getLessonIndex(slug);
+  if (index <= 0) return null;
+  return lessons[index - 1];
+}
+
+/**
+ * Get the next lesson (for navigation)
+ */
+export function getNextLesson(slug: string): Lesson | null {
+  const index = getLessonIndex(slug);
+  if (index < 0 || index >= lessons.length - 1) return null;
+  return lessons[index + 1];
 }

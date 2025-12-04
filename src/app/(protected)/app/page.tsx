@@ -1,9 +1,8 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { auth, signOut } from "@/lib/auth";
-import { db } from "@/lib/db";
-
-// Temporary local type until full migration to lessons.ts
-const LessonStatus = { LOCKED: "LOCKED", AVAILABLE: "AVAILABLE", COMPLETED: "COMPLETED" } as const;
+import { lessons, getPreviousLesson } from "@/lib/lessons";
+import { getCompletedLessonSlugs, getUserXp } from "@/lib/lessons/progress";
 
 // XP level calculation (simple: 100 XP per level)
 function getLevel(xp: number): { level: number; currentXp: number; nextLevelXp: number } {
@@ -17,44 +16,43 @@ export default async function DashboardPage() {
   const session = await auth();
   
   if (!session?.user?.id) {
-    return null;
+    redirect("/login");
   }
 
-  // Fetch user with XP
-  const user = await db.user.findUnique({
-    where: { id: session.user.id },
-    select: { id: true, name: true, email: true, xp: true },
+  const userId = session.user.id;
+
+  // Get user's XP and completed lessons from progress.ts
+  const [userXp, completedSlugs] = await Promise.all([
+    getUserXp(userId),
+    getCompletedLessonSlugs(userId),
+  ]);
+
+  const completedSet = new Set(completedSlugs);
+
+  // Get Level 0 lessons from lessons.ts (source of truth)
+  const level0Lessons = lessons.filter((l) => l.level === 0);
+
+  // Map lessons with completion and locking status
+  const lessonsWithStatus = level0Lessons.map((lesson) => {
+    const isCompleted = completedSet.has(lesson.slug);
+    const previousLesson = getPreviousLesson(lesson.slug);
+    // First lesson is always available, others require previous completion
+    const isLocked = previousLesson !== null && !completedSet.has(previousLesson.slug);
+    const isAvailable = !isLocked && !isCompleted;
+
+    return {
+      ...lesson,
+      isCompleted,
+      isAvailable,
+      isLocked,
+    };
   });
 
-  if (!user) {
-    return null;
-  }
-
-  // Fetch lessons from DB (for DB-based route compatibility)
-  const dbLessons = await db.lesson.findMany({
-    orderBy: { order: "asc" },
-  });
-
-  // Fetch user's lesson progress (new model)
-  const userProgress = await db.userLessonProgress.findMany({
-    where: { userId: user.id },
-    select: { lessonSlug: true },
-  });
-  const completedSlugs = new Set(userProgress.map((p: { lessonSlug: string }) => p.lessonSlug));
-
-  // Map lessons with completion status
-  const lessons = dbLessons.map((lesson, index) => ({
-    ...lesson,
-    isCompleted: completedSlugs.has(lesson.slug),
-    // First lesson is always available, others available if previous is completed
-    isAvailable: index === 0 || (index > 0 && completedSlugs.has(dbLessons[index - 1].slug)),
-  }));
-
-  const { level, currentXp, nextLevelXp } = getLevel(user.xp);
+  const { level, currentXp, nextLevelXp } = getLevel(userXp);
   
   // Calculate level 0 progress
-  const completedCount = lessons.filter((l) => l.isCompleted).length;
-  const totalLessons = lessons.length;
+  const completedCount = lessonsWithStatus.filter((l) => l.isCompleted).length;
+  const totalLessons = lessonsWithStatus.length;
   const progressPercent = totalLessons > 0 ? Math.round((completedCount / totalLessons) * 100) : 0;
 
   return (
@@ -103,7 +101,7 @@ export default async function DashboardPage() {
         {/* Greeting */}
         <div className="mb-8">
           <h1 className="text-2xl font-bold text-slate-900">
-            Hi, {user.name || "Learner"} 👋
+            Hi, {session.user.name || "Learner"} 👋
           </h1>
           <p className="text-slate-600 mt-1">Ready to learn some chess?</p>
         </div>
@@ -112,7 +110,7 @@ export default async function DashboardPage() {
         <div className="sm:hidden mb-6 p-4 bg-white rounded-xl shadow-sm">
           <div className="flex items-center justify-between mb-2">
             <span className="font-medium text-slate-900">Level {level}</span>
-            <span className="text-sm text-slate-500">{user.xp} XP total</span>
+            <span className="text-sm text-slate-500">{userXp} XP total</span>
           </div>
           <div className="w-full h-2 bg-slate-200 rounded-full overflow-hidden">
             <div 
@@ -152,14 +150,12 @@ export default async function DashboardPage() {
               Lessons
             </h3>
             <div className="space-y-3">
-              {lessons.map((lesson) => {
-                const isCompleted = lesson.isCompleted;
-                const isAvailable = lesson.isAvailable;
-                const isLocked = !isAvailable && !isCompleted;
+              {lessonsWithStatus.map((lesson) => {
+                const { isCompleted, isAvailable, isLocked } = lesson;
 
                 return (
                   <div
-                    key={lesson.id}
+                    key={lesson.slug}
                     className={`flex items-center gap-4 p-4 rounded-xl border transition-colors ${
                       isCompleted
                         ? "bg-emerald-50 border-emerald-200"
@@ -191,7 +187,7 @@ export default async function DashboardPage() {
                       <p className={`text-sm truncate ${
                         isLocked ? "text-slate-400" : "text-slate-500"
                       }`}>
-                        Learn how the {lesson.pieceType} works
+                        {lesson.description}
                       </p>
                     </div>
 
@@ -205,14 +201,14 @@ export default async function DashboardPage() {
                     {/* Action */}
                     {isCompleted ? (
                       <Link
-                        href={`/app/lessons/${lesson.slug}`}
+                        href={`/lessons/${lesson.slug}`}
                         className="px-4 py-2 text-sm font-medium text-emerald-600 hover:text-emerald-700"
                       >
                         Replay
                       </Link>
                     ) : isAvailable ? (
                       <Link
-                        href={`/app/lessons/${lesson.slug}`}
+                        href={`/lessons/${lesson.slug}`}
                         className="px-4 py-2 text-sm font-medium bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors"
                       >
                         Start

@@ -1,331 +1,433 @@
 "use client";
 
-import { useState, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { Chessboard } from "./Chessboard";
-import { TaskBox } from "./TaskBox";
-import { LessonCompleteModal } from "./LessonCompleteModal";
+import { Chessboard, type HighlightsMap, type BoardState } from "./Chessboard";
+import { Button } from "@/components/ui/Button";
+import { Card, CardContent } from "@/components/ui/Card";
+import { Badge } from "@/components/ui/Badge";
+import {
+  type Lesson,
+  type LessonTask,
+  getTaskByIndex,
+  isLastTask,
+  getTaskMessage,
+  getNextLesson,
+} from "@/lib/lessons";
+import {
+  handleSquareClick as engineHandleClick,
+  getInitialInteractionState,
+  type LessonInteractionState,
+} from "@/lib/lessons/engine";
+import { completeLessonAction } from "@/app/lessons/[slug]/actions";
 
-interface Task {
-  id: number;
-  index: number;
-  instruction: string;
-  startingFen: string;
-  goalType: string;
-  targetSquare: string;
-  startSquare: string | null;
-  validMoves: string;
-  successMessage: string;
-  failureDefault: string;
-  failureSpecific: string | null;
-  hintMessage: string;
-}
+// ============================================
+// TYPES
+// ============================================
 
-interface Lesson {
-  id: string;
-  slug: string;
-  title: string;
-  pieceType: string;
-  introText: string;
-  xpReward: number;
-  tasks: Task[];
-}
+type FeedbackState = "idle" | "correct" | "error";
 
 interface LessonPlayerProps {
   lesson: Lesson;
-  nextLesson?: { slug: string; title: string } | null;
 }
 
-// Parse FEN and update it after a move
-function makeMove(fen: string, from: string, to: string): string {
-  // Simple FEN manipulation for Level 0 (single piece moves on mostly empty board)
-  const parts = fen.split(" ");
-  const rows = parts[0].split("/");
-  
-  // Convert square to row/col
-  const fromCol = from.charCodeAt(0) - 97;
-  const fromRow = 8 - parseInt(from[1]);
-  const toCol = to.charCodeAt(0) - 97;
-  const toRow = 8 - parseInt(to[1]);
-  
-  // Expand the FEN rows to arrays
-  const expandRow = (row: string): string[] => {
-    const result: string[] = [];
-    for (const char of row) {
-      if (/\d/.test(char)) {
-        for (let i = 0; i < parseInt(char); i++) {
-          result.push("");
-        }
-      } else {
-        result.push(char);
-      }
-    }
-    return result;
-  };
-  
-  const board = rows.map(expandRow);
-  
-  // Get the piece and make the move
-  const piece = board[fromRow][fromCol];
-  board[fromRow][fromCol] = "";
-  board[toRow][toCol] = piece;
-  
-  // Collapse back to FEN
-  const compressRow = (row: string[]): string => {
-    let result = "";
-    let emptyCount = 0;
-    for (const cell of row) {
-      if (cell === "") {
-        emptyCount++;
-      } else {
-        if (emptyCount > 0) {
-          result += emptyCount;
-          emptyCount = 0;
-        }
-        result += cell;
-      }
-    }
-    if (emptyCount > 0) {
-      result += emptyCount;
-    }
-    return result || "8";
-  };
-  
-  const newPosition = board.map(compressRow).join("/");
-  return `${newPosition} ${parts.slice(1).join(" ")}`;
+interface TaskPlayerProps {
+  task: LessonTask;
+  taskIndex: number;
+  totalTasks: number;
+  onComplete: (isCorrect: boolean) => void;
+  isLast: boolean;
 }
 
-export function LessonPlayer({ lesson, nextLesson }: LessonPlayerProps) {
-  const router = useRouter();
-  const [currentTaskIndex, setCurrentTaskIndex] = useState(0);
-  const [selectedSquare, setSelectedSquare] = useState<string | null>(null);
-  const [feedback, setFeedback] = useState<{ type: "success" | "error" | null; message: string | null }>({
-    type: null,
-    message: null,
-  });
+// ============================================
+// HELPERS
+// ============================================
+
+/**
+ * Build highlights map based on current state
+ */
+function buildHighlights(
+  task: LessonTask,
+  interactionState: LessonInteractionState,
+  feedback: FeedbackState
+): HighlightsMap {
+  const highlights: HighlightsMap = {};
+
+  if (task.kind === "select-square") {
+    // For select-square, show target on success
+    if (feedback === "correct") {
+      highlights[task.targetSquare] = "success";
+    }
+  } else {
+    // move-piece
+    const { selectedSquare } = interactionState;
+
+    if (feedback === "correct") {
+      // Show success on the target square
+      highlights[task.expectedMove.to] = "success";
+      highlights[task.expectedMove.from] = "hint";
+    } else if (feedback === "error" && selectedSquare) {
+      // Show warning on incorrect attempt
+      highlights[selectedSquare] = "warning";
+    } else if (selectedSquare) {
+      // Show selected square and target hint
+      highlights[selectedSquare] = "selected";
+      highlights[task.expectedMove.to] = "target";
+    }
+  }
+
+  return highlights;
+}
+
+// ============================================
+// TASK PLAYER COMPONENT (handles single task state)
+// ============================================
+
+function TaskPlayer({ task, taskIndex, totalTasks, onComplete, isLast }: TaskPlayerProps) {
+  // Task-local state - resets when component remounts (via key in parent)
+  const [fen, setFen] = useState(task.initialFen);
+  const [interactionState, setInteractionState] = useState<LessonInteractionState>(
+    getInitialInteractionState()
+  );
+  const [feedback, setFeedback] = useState<FeedbackState>("idle");
   const [showHint, setShowHint] = useState(false);
-  const [showCompleteModal, setShowCompleteModal] = useState(false);
-  
-  // Use ref to track completion state to avoid stale closures
-  const isCompletingRef = useRef(false);
-  
-  // Store the current FEN - derived from current task or modified by moves
-  const [fenOverride, setFenOverride] = useState<string | null>(null);
 
-  const currentTask = lesson.tasks[currentTaskIndex];
-  const totalTasks = lesson.tasks.length;
-  
-  // Get the current FEN - use override if set, otherwise use task's starting FEN
-  const currentFen = fenOverride ?? currentTask?.startingFen ?? "8/8/8/8/8/8/8/8 w - - 0 1";
+  // Timer ref for cleanup
+  const feedbackTimerRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Function to advance to next task - resets all task-specific state
-  const advanceToNextTask = useCallback(() => {
-    setCurrentTaskIndex((prev) => prev + 1);
-    setFenOverride(null);
-    setSelectedSquare(null);
-    setFeedback({ type: null, message: null });
-    setShowHint(false);
-  }, []);
+  // Board state
+  const isBoardLocked = feedback === "correct";
+  const boardState: BoardState = {
+    isDisabled: isBoardLocked,
+    isCorrect: feedback === "correct",
+    isError: feedback === "error",
+  };
 
-  // Lesson completion handler - defined first to avoid hook order issues
-  const handleLessonComplete = useCallback(async () => {
-    if (isCompletingRef.current) return;
-    isCompletingRef.current = true;
+  // Build highlights
+  const highlights = buildHighlights(task, interactionState, feedback);
 
-    try {
-      const res = await fetch(`/api/lessons/${lesson.id}/complete`, {
-        method: "POST",
+  // Auto-clear error feedback after delay
+  useEffect(() => {
+    if (feedback === "error") {
+      feedbackTimerRef.current = setTimeout(() => {
+        setFeedback("idle");
+      }, 1500);
+    }
+    return () => {
+      if (feedbackTimerRef.current) {
+        clearTimeout(feedbackTimerRef.current);
+      }
+    };
+  }, [feedback]);
+
+  // Handle board click
+  const handleBoardClick = useCallback(
+    (square: string) => {
+      if (isBoardLocked) return;
+
+      const result = engineHandleClick({
+        task,
+        currentFen: fen,
+        state: interactionState,
+        clickedSquare: square,
       });
 
-      if (res.ok) {
-        setShowCompleteModal(true);
-      } else {
-        // Still show modal even if API fails
-        setShowCompleteModal(true);
-      }
-    } catch {
-      // Show modal anyway
-      setShowCompleteModal(true);
-    }
-  }, [lesson.id]);
+      // Update state
+      setInteractionState(result.state);
+      setFen(result.newFen);
 
-  const handleSquareClick = useCallback((square: string) => {
-    if (!currentTask) return;
-
-    // For "select" tasks, check if this is the target square
-    if (currentTask.goalType === "select") {
-      const validMoves = JSON.parse(currentTask.validMoves) as string[];
-      
-      if (validMoves.includes(square)) {
-        setFeedback({ type: "success", message: currentTask.successMessage });
-        setSelectedSquare(square);
-        
-        // Move to next task after a delay
-        setTimeout(() => {
-          if (currentTaskIndex < totalTasks - 1) {
-            advanceToNextTask();
-          } else {
-            handleLessonComplete();
-          }
-        }, 1500);
-      } else {
-        setFeedback({ type: "error", message: currentTask.failureDefault });
-        setTimeout(() => setFeedback({ type: null, message: null }), 2000);
-      }
-      return;
-    }
-
-    // For move/capture tasks, handle piece selection
-    if (selectedSquare === square) {
-      setSelectedSquare(null);
-    } else if (!selectedSquare) {
-      // Select this square if it has a piece
-      setSelectedSquare(square);
-    }
-  }, [currentTask, currentTaskIndex, totalTasks, selectedSquare, handleLessonComplete, advanceToNextTask]);
-
-  const handleMove = useCallback((from: string, to: string) => {
-    if (!currentTask || currentTask.goalType === "select") return;
-
-    const moveStr = `${from}-${to}`;
-    const validMoves = JSON.parse(currentTask.validMoves) as string[];
-
-    if (validMoves.includes(moveStr)) {
-      // Valid move!
-      const newFen = makeMove(currentFen, from, to);
-      setFenOverride(newFen);
-      setSelectedSquare(null);
-      setFeedback({ type: "success", message: currentTask.successMessage });
-
-      // Move to next task after a delay
-      setTimeout(() => {
-        if (currentTaskIndex < totalTasks - 1) {
-          advanceToNextTask();
+      if (result.isAttemptComplete) {
+        if (result.isCorrect) {
+          setFeedback("correct");
+          // Notify parent after brief delay for feedback
+          setTimeout(() => onComplete(true), isLast ? 800 : 1000);
         } else {
-          handleLessonComplete();
-        }
-      }, 1500);
-    } else {
-      // Invalid move - check for specific failure message
-      let errorMessage = currentTask.failureDefault;
-      
-      if (currentTask.failureSpecific) {
-        try {
-          const specific = JSON.parse(currentTask.failureSpecific) as Record<string, string>;
-          if (specific[moveStr]) {
-            errorMessage = specific[moveStr];
-          }
-        } catch {
-          // Use default message
+          setFeedback("error");
         }
       }
+    },
+    [task, fen, interactionState, isBoardLocked, onComplete, isLast]
+  );
 
-      setFeedback({ type: "error", message: errorMessage });
-      setSelectedSquare(null);
-      setTimeout(() => setFeedback({ type: null, message: null }), 3000);
-    }
-  }, [currentTask, currentFen, currentTaskIndex, totalTasks, handleLessonComplete, advanceToNextTask]);
-
+  // Handle hint request
   const handleRequestHint = useCallback(() => {
     setShowHint(true);
-    
-    // Track hint usage
-    fetch(`/api/lessons/${lesson.id}/hint-used`, {
-      method: "POST",
-    }).catch(() => {
-      // Silently fail
-    });
-  }, [lesson.id]);
+  }, []);
 
-  // Determine highlight squares
-  const highlightSquares: string[] = [];
-  if (currentTask) {
-    if (currentTask.goalType === "select") {
-      // For select tasks, optionally highlight target after hint
-      if (showHint) {
-        highlightSquares.push(currentTask.targetSquare);
+  // Get feedback messages
+  const successMessage = getTaskMessage(task, "success");
+  const failureMessage = getTaskMessage(task, "failure");
+  const hintMessage = getTaskMessage(task, "hint");
+
+  return (
+    <div className="flex flex-col md:flex-row gap-6">
+      {/* Task Panel - Left on desktop, bottom on mobile */}
+      <div className="md:w-1/2 order-2 md:order-1">
+        <Card className="h-full">
+          <CardContent className="pt-6 space-y-4">
+            {/* Progress */}
+            <div className="flex items-center justify-between text-sm">
+              <span className="font-medium text-chessio-primary">
+                Task {taskIndex + 1} of {totalTasks}
+              </span>
+              <div className="flex gap-1">
+                {Array.from({ length: totalTasks }).map((_, i) => (
+                  <div
+                    key={i}
+                    className={`w-2 h-2 rounded-full ${
+                      i < taskIndex
+                        ? "bg-chessio-success"
+                        : i === taskIndex
+                        ? "bg-chessio-primary"
+                        : "bg-chessio-border dark:bg-chessio-border-dark"
+                    }`}
+                  />
+                ))}
+              </div>
+            </div>
+
+            {/* Task Prompt */}
+            <div className="bg-chessio-bg dark:bg-chessio-bg-dark rounded-lg p-4">
+              <p className="font-medium text-chessio-text dark:text-chessio-text-dark">
+                {task.prompt}
+              </p>
+            </div>
+
+            {/* Feedback Area - Fixed height to prevent layout jump */}
+            <div className="min-h-[48px] flex items-center">
+              {feedback === "correct" && (
+                <p className="text-sm text-chessio-success flex items-center gap-2">
+                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                  {successMessage}
+                </p>
+              )}
+              {feedback === "error" && (
+                <p className="text-sm text-chessio-warning flex items-center gap-2">
+                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                  </svg>
+                  {failureMessage}
+                </p>
+              )}
+            </div>
+
+            {/* Hint Section */}
+            <div className="pt-2 border-t border-chessio-border dark:border-chessio-border-dark">
+              {showHint ? (
+                <p className="text-sm text-chessio-muted dark:text-chessio-muted-dark italic">
+                  💡 {hintMessage}
+                </p>
+              ) : (
+                <Button variant="ghost" size="sm" onClick={handleRequestHint}>
+                  Need a hint?
+                </Button>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Board - Right on desktop, top on mobile */}
+      <div className="md:w-1/2 flex justify-center order-1 md:order-2">
+        <div className="w-full max-w-[400px] pl-6">
+          <Chessboard
+            fen={fen}
+            onSquareClick={handleBoardClick}
+            highlights={highlights}
+            state={boardState}
+          />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ============================================
+// MAIN LESSON PLAYER COMPONENT
+// ============================================
+
+export function LessonPlayer({ lesson }: LessonPlayerProps) {
+  const router = useRouter();
+
+  // Lesson state - task index and completion
+  const [currentTaskIndex, setCurrentTaskIndex] = useState(0);
+  const [isLessonComplete, setIsLessonComplete] = useState(false);
+
+  // XP state for completion feedback
+  const [xpAwarded, setXpAwarded] = useState<number | null>(null);
+  const [totalXp, setTotalXp] = useState<number | null>(null);
+  const [isSaving, setIsSaving] = useState(false);
+  const [alreadyCompleted, setAlreadyCompleted] = useState(false);
+
+  // Current task
+  const currentTask = getTaskByIndex(lesson, currentTaskIndex);
+  const totalTasks = lesson.tasks.length;
+  const isLastTaskInLesson = isLastTask(lesson, currentTaskIndex);
+
+  // Get next lesson for navigation (null if this is the last lesson)
+  const nextLesson = getNextLesson(lesson.slug);
+
+  // Handle task completion - advance to next or complete lesson
+  const handleTaskComplete = useCallback(
+    (isCorrect: boolean) => {
+      if (isCorrect) {
+        if (isLastTaskInLesson) {
+          // Mark lesson as complete locally
+          setIsLessonComplete(true);
+
+          // Persist completion and award XP
+          setIsSaving(true);
+          completeLessonAction(lesson.slug)
+            .then((result) => {
+              setXpAwarded(result.xpAwarded);
+              setTotalXp(result.totalXp);
+              setAlreadyCompleted(result.alreadyCompleted);
+            })
+            .catch((err) => {
+              console.error("Failed to complete lesson:", err);
+              // Still show completion UI, just without XP info
+            })
+            .finally(() => {
+              setIsSaving(false);
+            });
+        } else {
+          setCurrentTaskIndex((prev) => prev + 1);
+        }
       }
-    } else if (selectedSquare === currentTask.startSquare) {
-      // Show valid target squares when piece is selected
-      highlightSquares.push(currentTask.targetSquare);
-    }
-  }
+    },
+    [isLastTaskInLesson, lesson.slug]
+  );
 
-  // Build highlights map for new Chessboard API
-  const highlights: Record<string, "selected" | "target" | "warning" | "hint"> = {};
-  if (selectedSquare) {
-    highlights[selectedSquare] = "selected";
-  }
-  highlightSquares.forEach((sq) => {
-    if (sq !== selectedSquare) {
-      highlights[sq] = "target";
-    }
-  });
+  // Handle replay
+  const handleReplay = useCallback(() => {
+    setCurrentTaskIndex(0);
+    setIsLessonComplete(false);
+    // Reset XP state for replay (won't award again)
+    setXpAwarded(null);
+    setTotalXp(null);
+    setAlreadyCompleted(false);
+  }, []);
 
+  // Handle back to dashboard
+  const handleBackToDashboard = useCallback(() => {
+    router.push("/app");
+  }, [router]);
+
+  // Handle next lesson
+  const handleNextLesson = useCallback(() => {
+    if (nextLesson) {
+      router.push(`/lessons/${nextLesson.slug}`);
+    }
+  }, [router, nextLesson]);
+
+  // No task available
   if (!currentTask) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
-        <p className="text-slate-500">No tasks found for this lesson.</p>
+        <p className="text-chessio-muted">No tasks found for this lesson.</p>
       </div>
     );
   }
 
-  // Wrapper to handle both click and "move" via two clicks
-  const handleBoardClick = (square: string) => {
-    if (selectedSquare && selectedSquare !== square) {
-      // Second click - treat as move attempt
-      handleMove(selectedSquare, square);
-    } else {
-      handleSquareClick(square);
-    }
-  };
-
   return (
     <div className="space-y-6">
-      {/* Lesson Info */}
-      <div className="bg-white rounded-xl p-4 shadow-sm border border-slate-200">
-        <h2 className="font-semibold text-slate-900">{lesson.title}</h2>
-        <p className="text-sm text-slate-600 mt-1">{lesson.introText}</p>
-      </div>
+      {/* Lesson Header */}
+      <Card>
+        <CardContent className="pt-6">
+          <div className="flex items-center justify-between mb-2">
+            <h2 className="font-semibold text-lg text-chessio-text dark:text-chessio-text-dark">
+              {lesson.title}
+            </h2>
+            <Badge variant="default">
+              Level {lesson.level}
+            </Badge>
+          </div>
+          <p className="text-sm text-chessio-muted dark:text-chessio-muted-dark">
+            {lesson.description}
+          </p>
+        </CardContent>
+      </Card>
 
-      {/* Layout: Board + TaskBox */}
-      <div className="grid lg:grid-cols-2 gap-6">
-        {/* Board */}
-        <div className="flex justify-center lg:order-2">
-          <Chessboard
-            fen={currentFen}
-            onSquareClick={handleBoardClick}
-            highlights={highlights}
-          />
-        </div>
+      {/* Lesson Complete State */}
+      {isLessonComplete ? (
+        <Card>
+          <CardContent className="pt-6">
+            <div className="text-center space-y-4 py-8">
+              <div className="text-5xl mb-4">🎉</div>
+              <h3 className="text-xl font-bold text-chessio-text dark:text-chessio-text-dark">
+                Lesson Complete!
+              </h3>
+              <p className="text-chessio-muted dark:text-chessio-muted-dark">
+                You&apos;ve finished &quot;{lesson.title}&quot;
+              </p>
 
-        {/* TaskBox */}
-        <div className="lg:order-1">
-          <TaskBox
-            taskNumber={currentTaskIndex + 1}
-            totalTasks={totalTasks}
-            instruction={currentTask.instruction}
-            hintMessage={currentTask.hintMessage}
-            feedback={feedback}
-            showHint={showHint}
-            onRequestHint={handleRequestHint}
-          />
-        </div>
-      </div>
+              {/* XP Feedback */}
+              {isSaving ? (
+                <p className="text-sm text-chessio-muted dark:text-chessio-muted-dark animate-pulse">
+                  Saving your progress...
+                </p>
+              ) : xpAwarded !== null ? (
+                <div className="space-y-2">
+                  {xpAwarded > 0 ? (
+                    <>
+                      <Badge variant="success" className="text-sm px-3 py-1">
+                        +{xpAwarded} XP earned!
+                      </Badge>
+                      <p className="text-sm text-chessio-muted dark:text-chessio-muted-dark">
+                        Total XP: {totalXp}
+                      </p>
+                    </>
+                  ) : alreadyCompleted ? (
+                    <>
+                      <Badge variant="default" className="text-sm px-3 py-1">
+                        Already Completed
+                      </Badge>
+                      <p className="text-xs text-chessio-muted dark:text-chessio-muted-dark">
+                        Nice practice! Your total XP: {totalXp}
+                      </p>
+                    </>
+                  ) : null}
+                </div>
+              ) : (
+                // Fallback if server call failed
+                <Badge variant="success" className="text-sm px-3 py-1">
+                  +{lesson.xpReward} XP
+                </Badge>
+              )}
 
-      {/* Completion Modal */}
-      <LessonCompleteModal
-        isOpen={showCompleteModal}
-        xpEarned={lesson.xpReward}
-        headline="Lesson Complete!"
-        subline={`You now know how the ${lesson.pieceType} works.`}
-        nextLessonSlug={nextLesson?.slug}
-        nextLessonTitle={nextLesson?.title}
-        onClose={() => {
-          setShowCompleteModal(false);
-          router.push("/app");
-        }}
-      />
+              <div className="flex flex-col gap-3 pt-4">
+                {nextLesson ? (
+                  <Button variant="primary" size="lg" onClick={handleNextLesson}>
+                    Next: {nextLesson.title}
+                  </Button>
+                ) : (
+                  <div className="text-sm text-chessio-success font-medium mb-2">
+                    🎊 Level 0 Complete!
+                  </div>
+                )}
+                <Button variant="secondary" onClick={handleReplay}>
+                  Replay Lesson
+                </Button>
+                <Button variant="ghost" onClick={handleBackToDashboard}>
+                  Back to Dashboard
+                </Button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      ) : (
+        // Active Task - key causes remount on task change, resetting TaskPlayer state
+        <TaskPlayer
+          key={`task-${currentTaskIndex}`}
+          task={currentTask}
+          taskIndex={currentTaskIndex}
+          totalTasks={totalTasks}
+          onComplete={handleTaskComplete}
+          isLast={isLastTaskInLesson}
+        />
+      )}
     </div>
   );
 }
