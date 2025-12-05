@@ -73,7 +73,7 @@ export function FeedbackButton({ hasGivenFeedback = false }: FeedbackButtonProps
       >
         <span className="text-lg">💬</span>
         <span className="text-sm font-medium hidden sm:inline">
-          {hasGivenFeedback ? "Feedback" : "Feedback (+50 XP)"}
+          {hasGivenFeedback ? "Feedback" : "Feedback (+15 XP)"}
         </span>
       </button>
 
@@ -127,7 +127,7 @@ export function FeedbackButton({ hasGivenFeedback = false }: FeedbackButtonProps
                 {!hasGivenFeedback && (
                   <div className="bg-amber-50 dark:bg-amber-900/30 border border-amber-200 dark:border-amber-700 rounded-lg p-3">
                     <p className="text-sm text-amber-800 dark:text-amber-200">
-                      🎁 <strong>Founder&apos;s Bonus:</strong> Submit your first feedback and earn <strong>+50 XP</strong>!
+                      🎁 <strong>Founder&apos;s Bonus:</strong> Submit your first feedback and earn <strong>+15 XP</strong>!
                     </p>
                   </div>
                 )}

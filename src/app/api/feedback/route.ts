@@ -4,7 +4,8 @@ import { db } from "@/lib/db";
 
 export const runtime = "nodejs";
 
-const FEEDBACK_BOUNTY_XP = 50;
+// Keep bounty small (~1 lesson) to avoid XP farming
+const FEEDBACK_BOUNTY_XP = 15;
 
 export async function POST(req: Request) {
   try {
