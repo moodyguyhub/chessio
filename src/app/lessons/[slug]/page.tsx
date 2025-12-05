@@ -1,5 +1,6 @@
 import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
+import type { Metadata } from "next";
 import { auth } from "@/lib/auth";
 import { LessonPlayer } from "@/components/chess/LessonPlayer";
 import { getLessonBySlug, getPreviousLesson, lessons } from "@/lib/lessons";
@@ -11,6 +12,35 @@ export const runtime = "nodejs";
 
 interface LessonPageProps {
   params: Promise<{ slug: string }>;
+}
+
+/**
+ * Generate dynamic metadata for each lesson page
+ */
+export async function generateMetadata({ params }: LessonPageProps): Promise<Metadata> {
+  const { slug } = await params;
+  const lesson = getLessonBySlug(slug);
+  
+  if (!lesson) {
+    return {
+      title: "Lesson Not Found | Chessio",
+    };
+  }
+
+  return {
+    title: `${lesson.title} | Chessio`,
+    description: lesson.description,
+    openGraph: {
+      title: `${lesson.title} | Chessio`,
+      description: lesson.description,
+      type: "website",
+    },
+    twitter: {
+      card: "summary",
+      title: `${lesson.title} | Chessio`,
+      description: lesson.description,
+    },
+  };
 }
 
 export default async function LessonPage({ params }: LessonPageProps) {
