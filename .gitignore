@@ -45,3 +45,4 @@ next-env.d.ts
 # design assets (vendor zips, etc.)
 /design/*.zip
 /design/extracted/
+.env*.local
