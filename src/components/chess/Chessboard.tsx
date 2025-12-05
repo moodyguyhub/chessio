@@ -36,9 +36,9 @@ export interface ChessboardProps {
 // CONSTANTS
 // ============================================
 
-// Piece characters for rendering
+// Piece characters for rendering (using filled black symbols for all, colored via CSS)
 const PIECE_SYMBOLS: Record<string, string> = {
-  K: "♔", Q: "♕", R: "♖", B: "♗", N: "♘", P: "♙",
+  K: "♚", Q: "♛", R: "♜", B: "♝", N: "♞", P: "♟",
   k: "♚", q: "♛", r: "♜", b: "♝", n: "♞", p: "♟",
 };
 
@@ -161,8 +161,8 @@ export function Chessboard({
                   className={`
                     text-4xl sm:text-5xl select-none pointer-events-none
                     ${piece === piece.toUpperCase() 
-                      ? "text-white drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]" 
-                      : "text-slate-900 drop-shadow-[0_1px_1px_rgba(255,255,255,0.3)]"}
+                      ? "text-amber-50 drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)]" 
+                      : "text-slate-800 drop-shadow-[0_1px_1px_rgba(255,255,255,0.2)]"}
                   `}
                 >
                   {PIECE_SYMBOLS[piece]}
