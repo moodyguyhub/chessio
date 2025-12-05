@@ -3,16 +3,9 @@ import { redirect } from "next/navigation";
 import { auth, signOut } from "@/lib/auth";
 import { allLessons, getPreviousLesson, getLevel0Lessons, getLevel1Lessons, getPuzzles, getLevel2Lessons } from "@/lib/lessons";
 import { getCompletedLessonSlugs, getUserXp, hasUserGivenFeedback } from "@/lib/lessons/progress";
+import { getLevelForXp, LEVELS } from "@/lib/gamification";
 import { FeedbackButton } from "@/components/ui/FeedbackButton";
 import { OnboardingModal, HowItWorksLink } from "@/components/ui/OnboardingModal";
-
-// XP level calculation (simple: 100 XP per level)
-function getLevel(xp: number): { level: number; currentXp: number; nextLevelXp: number } {
-  const level = Math.floor(xp / 100) + 1;
-  const currentXp = xp % 100;
-  const nextLevelXp = 100;
-  return { level, currentXp, nextLevelXp };
-}
 
 export default async function DashboardPage() {
   const session = await auth();
@@ -72,7 +65,9 @@ export default async function DashboardPage() {
     ...getLessonStatus(lesson),
   }));
 
-  const { level, currentXp, nextLevelXp } = getLevel(userXp);
+  // Use centralized level config
+  const levelProgress = getLevelForXp(userXp);
+  const nextLevel = levelProgress.level < LEVELS.length - 1 ? LEVELS[levelProgress.level + 1] : null;
   
   // Calculate level 0 progress
   const level0CompletedCount = level0WithStatus.filter((l) => l.isCompleted).length;
@@ -110,14 +105,16 @@ export default async function DashboardPage() {
           <div className="flex items-center gap-4">
             {/* XP Display */}
             <div className="hidden sm:flex items-center gap-2 text-sm">
-              <span className="font-medium text-slate-900">Level {level}</span>
+              <span className="font-medium text-slate-900">{levelProgress.label}</span>
               <div className="w-24 h-2 bg-slate-200 rounded-full overflow-hidden">
                 <div 
                   className="h-full bg-emerald-500 transition-all duration-500"
-                  style={{ width: `${(currentXp / nextLevelXp) * 100}%` }}
+                  style={{ width: `${levelProgress.progressPercent}%` }}
                 />
               </div>
-              <span className="text-slate-500">{currentXp}/{nextLevelXp} XP</span>
+              <span className="text-slate-500">
+                {nextLevel ? `${levelProgress.xpIntoLevel}/${nextLevel.cumulativeXpRequired - LEVELS[levelProgress.level].cumulativeXpRequired} XP` : `${userXp} XP`}
+              </span>
             </div>
 
             {/* Sign Out */}
@@ -159,16 +156,20 @@ export default async function DashboardPage() {
         {/* Mobile XP Display */}
         <div className="sm:hidden mb-6 p-4 bg-white rounded-xl shadow-sm">
           <div className="flex items-center justify-between mb-2">
-            <span className="font-medium text-slate-900">Level {level}</span>
+            <span className="font-medium text-slate-900">{levelProgress.label}</span>
             <span className="text-sm text-slate-500">{userXp} XP total</span>
           </div>
           <div className="w-full h-2 bg-slate-200 rounded-full overflow-hidden">
             <div 
               className="h-full bg-emerald-500 transition-all duration-500"
-              style={{ width: `${(currentXp / nextLevelXp) * 100}%` }}
+              style={{ width: `${levelProgress.progressPercent}%` }}
             />
           </div>
-          <p className="text-xs text-slate-500 mt-1">{currentXp}/{nextLevelXp} XP to next level</p>
+          {nextLevel ? (
+            <p className="text-xs text-slate-500 mt-1">{levelProgress.xpToNextLevel} XP to {nextLevel.label}</p>
+          ) : (
+            <p className="text-xs text-emerald-600 mt-1">Max level reached! 🏆</p>
+          )}
         </div>
 
         {/* Level 0 Card */}

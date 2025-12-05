@@ -285,6 +285,7 @@ export function LessonPlayer({ lesson, initialXpStats }: LessonPlayerProps) {
   const [alreadyCompleted, setAlreadyCompleted] = useState(false);
   const [leveledUp, setLeveledUp] = useState(false);
   const [newLevel, setNewLevel] = useState<number | null>(null);
+  const [contentTypeLabel, setContentTypeLabel] = useState<string | null>(null);
 
   // Next step recommendation (computed server-side after completion)
   const [nextStep, setNextStep] = useState<NextStep | null>(null);
@@ -334,6 +335,7 @@ export function LessonPlayer({ lesson, initialXpStats }: LessonPlayerProps) {
               setAlreadyCompleted(result.alreadyCompleted);
               setLeveledUp(result.leveledUp);
               setNewLevel(result.newLevel);
+              setContentTypeLabel(result.contentTypeLabel);
               setNextStep(result.nextStep);
             })
             .catch((err) => {
@@ -357,6 +359,7 @@ export function LessonPlayer({ lesson, initialXpStats }: LessonPlayerProps) {
     setIsLessonComplete(false);
     // Reset XP state for replay (won't award again)
     setXpAwarded(null);
+    setContentTypeLabel(null);
     setTotalXp(null);
     setPreviousXp(null);
     setLeveledUp(false);
@@ -432,6 +435,7 @@ export function LessonPlayer({ lesson, initialXpStats }: LessonPlayerProps) {
               ) : xpAwarded !== null && totalXp !== null ? (
                 <XpBreakdown
                   totalXpEarned={xpAwarded}
+                  contentTypeLabel={contentTypeLabel ?? undefined}
                   newTotalXp={totalXp}
                   previousTotalXp={previousXp ?? undefined}
                   leveledUp={leveledUp}

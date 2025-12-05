@@ -9,16 +9,28 @@ export {
 
 // Centralized configuration
 export {
+  // Level definitions
   LEVELS,
-  XP_PER_LEVEL,
   MAX_LEVEL,
+  getLevelDef,
+  getLevelForXp,
+  
+  // XP rewards
   XP_REWARDS,
+  getXpForContentSlug,
+  getContentTypeFromSlug,
+  
+  // Helpers
+  wouldLevelUp,
+  
+  // Legacy compatibility
   calculateLevelFromXp,
   getXpProgress,
   xpToNextLevel,
-  wouldLevelUp,
-  getLevelInfo,
-  type LevelInfo,
-  type XpRewardType,
+  
+  // Types
+  type LevelDef,
+  type LevelProgress,
+  type ContentType,
   type XpStats,
 } from "./config";

@@ -7,13 +7,15 @@ import { db } from "@/lib/db";
 import {
   calculateLevelFromXp,
   getXpProgress,
-  XP_PER_LEVEL,
+  getLevelForXp,
+  getXpForContentSlug,
+  getContentTypeFromSlug,
   MAX_LEVEL,
   type XpStats,
 } from "./config";
 
 // Re-export for backwards compatibility
-export { calculateLevelFromXp, getXpProgress, XP_PER_LEVEL, MAX_LEVEL };
+export { calculateLevelFromXp, getXpProgress, MAX_LEVEL };
 export type { XpStats };
 
 /**

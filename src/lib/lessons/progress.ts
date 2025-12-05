@@ -7,7 +7,7 @@
 
 import { db } from "@/lib/db";
 import { getLessonBySlug } from "@/lib/lessons";
-import { calculateLevelFromXp } from "@/lib/gamification";
+import { calculateLevelFromXp, getXpForContentSlug, getContentTypeFromSlug, type ContentType } from "@/lib/gamification";
 import { logLessonCompleted, logLevelUp } from "@/lib/telemetry";
 
 // ============================================
@@ -19,6 +19,14 @@ export type CompleteLessonArgs = {
   lessonSlug: string;
 };
 
+// Content type labels for UI display
+const CONTENT_TYPE_LABELS: Record<ContentType, string> = {
+  intro: "Intro Lesson",
+  core: "Core Lesson",
+  puzzle: "Puzzle Set",
+  bonus: "Bonus",
+};
+
 export type CompleteLessonResult = {
   lessonSlug: string;
   xpAwarded: number;
@@ -27,6 +35,7 @@ export type CompleteLessonResult = {
   alreadyCompleted: boolean;
   leveledUp: boolean;
   newLevel: number;
+  contentTypeLabel: string; // e.g., "Core Lesson"
 };
 
 // ============================================
@@ -52,7 +61,10 @@ export async function completeLessonAndAwardXp({
     throw new Error(`Unknown lesson slug: ${lessonSlug}`);
   }
 
-  const xpReward = lesson.xpReward ?? 0;
+  // Use config for XP (can differ from hardcoded lesson.xpReward)
+  const xpReward = getXpForContentSlug(lessonSlug);
+  const contentType = getContentTypeFromSlug(lessonSlug);
+  const contentTypeLabel = CONTENT_TYPE_LABELS[contentType];
 
   // Single transaction to avoid race conditions and double XP
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -80,6 +92,7 @@ export async function completeLessonAndAwardXp({
         alreadyCompleted: true,
         leveledUp: false,
         newLevel: currentLevel,
+        contentTypeLabel,
       };
     }
 
@@ -132,6 +145,7 @@ export async function completeLessonAndAwardXp({
       alreadyCompleted: false,
       leveledUp,
       newLevel,
+      contentTypeLabel,
     };
   });
 }

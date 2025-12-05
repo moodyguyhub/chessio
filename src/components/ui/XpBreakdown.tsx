@@ -8,6 +8,7 @@
  */
 
 import { Badge } from "@/components/ui/Badge";
+import { getLevelForXp, LEVELS } from "@/lib/gamification/config";
 
 interface XpBreakdownItem {
   label: string;
@@ -17,6 +18,7 @@ interface XpBreakdownItem {
 
 interface XpBreakdownProps {
   totalXpEarned: number;
+  contentTypeLabel?: string; // e.g., "Core Lesson", "Puzzle Set"
   breakdown?: XpBreakdownItem[];
   newTotalXp: number;
   previousTotalXp?: number;
@@ -27,6 +29,7 @@ interface XpBreakdownProps {
 
 export function XpBreakdown({
   totalXpEarned,
+  contentTypeLabel,
   breakdown,
   newTotalXp,
   previousTotalXp,
@@ -34,6 +37,12 @@ export function XpBreakdown({
   newLevel,
   alreadyCompleted,
 }: XpBreakdownProps) {
+  // Calculate level progress using centralized config
+  const levelProgress = getLevelForXp(newTotalXp);
+  const nextLevel = levelProgress.level < LEVELS.length - 1 
+    ? LEVELS[levelProgress.level + 1] 
+    : null;
+  
   // Already completed - show simple message
   if (alreadyCompleted) {
     return (
@@ -52,7 +61,7 @@ export function XpBreakdown({
   const items: XpBreakdownItem[] =
     breakdown && breakdown.length > 0
       ? breakdown
-      : [{ label: "Lesson Complete", amount: totalXpEarned }];
+      : [{ label: contentTypeLabel || "Complete", amount: totalXpEarned }];
 
   return (
     <div className="space-y-3">
@@ -96,7 +105,7 @@ export function XpBreakdown({
       )}
 
       {/* Level Up Celebration */}
-      {leveledUp && newLevel && (
+      {leveledUp && newLevel !== undefined && (
         <div className="bg-gradient-to-r from-amber-500/10 to-orange-500/10 rounded-lg p-3 border border-amber-500/30">
           <div className="flex items-center justify-center gap-2 text-amber-600 dark:text-amber-400">
             <span className="text-lg">🎖️</span>
@@ -104,7 +113,7 @@ export function XpBreakdown({
             <span className="text-lg">🎖️</span>
           </div>
           <p className="text-center text-sm text-amber-700 dark:text-amber-300 mt-1">
-            You reached Level {newLevel}!
+            You reached {levelProgress.label}!
           </p>
         </div>
       )}
@@ -112,7 +121,7 @@ export function XpBreakdown({
       {/* XP Progress Bar */}
       <div className="space-y-1">
         <div className="flex justify-between text-xs text-chessio-muted dark:text-chessio-muted-dark">
-          <span>Total XP</span>
+          <span>{levelProgress.label}</span>
           <span>
             {previousTotalXp !== undefined && previousTotalXp !== newTotalXp && (
               <span className="text-chessio-muted/60 line-through mr-1">
@@ -120,7 +129,7 @@ export function XpBreakdown({
               </span>
             )}
             <span className="text-chessio-text dark:text-chessio-text-dark font-medium">
-              {newTotalXp}
+              {newTotalXp} XP
             </span>
           </span>
         </div>
@@ -128,13 +137,19 @@ export function XpBreakdown({
           <div
             className="h-full bg-gradient-to-r from-emerald-500 to-emerald-400 transition-all duration-700 ease-out"
             style={{
-              width: `${Math.min((newTotalXp % 100) / 100 * 100, 100)}%`,
+              width: `${levelProgress.progressPercent}%`,
             }}
           />
         </div>
-        <p className="text-xs text-center text-chessio-muted dark:text-chessio-muted-dark">
-          {100 - (newTotalXp % 100)} XP to next level
-        </p>
+        {nextLevel ? (
+          <p className="text-xs text-center text-chessio-muted dark:text-chessio-muted-dark">
+            {levelProgress.xpToNextLevel} XP to {nextLevel.label}
+          </p>
+        ) : (
+          <p className="text-xs text-center text-chessio-success">
+            Max level reached! 🏆
+          </p>
+        )}
       </div>
     </div>
   );
