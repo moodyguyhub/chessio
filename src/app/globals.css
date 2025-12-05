@@ -96,3 +96,17 @@ body {
 .chessboard-square--success {
   box-shadow: inset 0 0 0 4px rgba(34, 197, 94, 0.5); /* chessio-success */
 }
+
+/* ============================================
+   MOBILE VIEWPORT HEIGHT FIX (dvh)
+   Handles Safari address bar gracefully
+   ============================================ */
+.min-h-dvh {
+  min-height: 100vh; /* Fallback for older browsers */
+  min-height: 100dvh;
+}
+
+.h-dvh {
+  height: 100vh; /* Fallback */
+  height: 100dvh;
+}

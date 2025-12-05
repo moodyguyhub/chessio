@@ -70,7 +70,7 @@ export default async function LessonPage({ params }: LessonPageProps) {
   // Show locked message if trying to access a locked lesson
   if (isLocked && previousLesson) {
     return (
-      <div className="min-h-screen bg-chessio-bg dark:bg-chessio-bg-dark">
+      <div className="min-h-dvh flex flex-col bg-chessio-bg dark:bg-chessio-bg-dark">
         {/* Header */}
         <header className="bg-chessio-card dark:bg-chessio-card-dark border-b border-chessio-border dark:border-chessio-border-dark">
           <div className="container mx-auto px-4 py-4 flex items-center justify-between">
@@ -126,7 +126,7 @@ export default async function LessonPage({ params }: LessonPageProps) {
   }
 
   return (
-    <div className="min-h-screen bg-chessio-bg dark:bg-chessio-bg-dark">
+    <div className="min-h-dvh flex flex-col bg-chessio-bg dark:bg-chessio-bg-dark">
       {/* Header */}
       <header className="bg-chessio-card dark:bg-chessio-card-dark border-b border-chessio-border dark:border-chessio-border-dark">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
@@ -150,7 +150,7 @@ export default async function LessonPage({ params }: LessonPageProps) {
       </header>
 
       {/* Main Content */}
-      <main className="container mx-auto px-4 py-8 max-w-5xl">
+      <main className="flex-1 container mx-auto px-4 py-8 max-w-5xl">
         <LessonPlayer lesson={lesson} />
       </main>
     </div>
