@@ -1,9 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { z } from "zod";
+import { logHintRequested } from "@/lib/telemetry";
 
 const hintRequestSchema = z.object({
   fen: z.string().describe("Current board position in FEN notation"),
+  lessonSlug: z.string().optional().describe("Current lesson slug for context"),
+  taskIndex: z.number().optional().describe("Current task index for context"),
   lessonId: z.string().optional().describe("Current lesson ID for context"),
   taskId: z.string().optional().describe("Current task ID for context"),
   difficulty: z.enum(["beginner", "intermediate", "advanced"]).default("beginner"),
@@ -43,8 +46,16 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { fen, difficulty } = result.data;
-    // lessonId and taskId will be used when we integrate AI hints
+    const { fen, difficulty, lessonSlug, taskIndex } = result.data;
+
+    // Log telemetry for hint request
+    if (lessonSlug) {
+      logHintRequested({
+        userId: session.user.id,
+        lessonSlug,
+        taskIndex: taskIndex ?? 0,
+      });
+    }
 
     // TODO: Replace with actual AI integration (OpenAI, Anthropic, etc.)
     // For now, return a mocked hint based on position analysis

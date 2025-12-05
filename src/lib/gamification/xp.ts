@@ -1,113 +1,112 @@
+/**
+ * XP calculation and awarding functions
+ * Uses centralized config from ./config.ts
+ */
+
 import { db } from "@/lib/db";
+import {
+  calculateLevelFromXp,
+  getXpProgress,
+  XP_PER_LEVEL,
+  MAX_LEVEL,
+  type XpStats,
+} from "./config";
+
+// Re-export for backwards compatibility
+export { calculateLevelFromXp, getXpProgress, XP_PER_LEVEL, MAX_LEVEL };
+export type { XpStats };
 
 /**
- * XP required for each level.
- * Uses a simple quadratic formula: level^2 * 100
- * Level 1: 100 XP, Level 2: 400 XP, Level 3: 900 XP, etc.
+ * Get user's current XP and level stats
  */
-export function xpRequiredForLevel(level: number): number {
-  return level * level * 100;
-}
+export async function getUserXpStats(userId: string): Promise<XpStats> {
+  const user = await db.user.findUnique({
+    where: { id: userId },
+    select: { xp: true },
+  });
 
-/**
- * Calculate total XP required to reach a level from level 1
- */
-export function totalXpForLevel(level: number): number {
-  let total = 0;
-  for (let i = 1; i <= level; i++) {
-    total += xpRequiredForLevel(i);
-  }
-  return total;
-}
-
-/**
- * Calculate current level based on total XP
- */
-export function calculateLevel(totalXp: number): number {
-  let level = 1;
-  let xpNeeded = 0;
-  
-  while (true) {
-    xpNeeded += xpRequiredForLevel(level);
-    if (totalXp < xpNeeded) {
-      return level;
-    }
-    level++;
-    
-    // Cap at level 100 to prevent infinite loop
-    if (level > 100) return 100;
-  }
-}
-
-/**
- * Get progress within current level (0-100%)
- */
-export function getLevelProgress(totalXp: number): {
-  level: number;
-  currentLevelXp: number;
-  xpForNextLevel: number;
-  progressPercent: number;
-} {
-  const level = calculateLevel(totalXp);
-  const xpForPreviousLevels = level > 1 ? totalXpForLevel(level - 1) : 0;
-  const currentLevelXp = totalXp - xpForPreviousLevels;
-  const xpForNextLevel = xpRequiredForLevel(level);
-  const progressPercent = Math.floor((currentLevelXp / xpForNextLevel) * 100);
-
-  return {
-    level,
-    currentLevelXp,
-    xpForNextLevel,
-    progressPercent,
-  };
+  const totalXp = user?.xp ?? 0;
+  return getXpProgress(totalXp);
 }
 
 /**
  * Award XP to a user
+ * Returns the updated XP stats including any level-up info
  */
-export async function awardXp(userId: string, xpAmount: number) {
-  const user = await db.user.findUnique({
+export async function awardXp(
+  userId: string,
+  amount: number
+): Promise<{
+  previousStats: XpStats;
+  newStats: XpStats;
+  leveledUp: boolean;
+}> {
+  // Get current stats
+  const previousStats = await getUserXpStats(userId);
+
+  // Award XP
+  const updatedUser = await db.user.update({
     where: { id: userId },
+    data: { xp: { increment: amount } },
     select: { xp: true },
   });
 
-  if (!user) throw new Error("User not found");
+  const newStats = getXpProgress(updatedUser.xp);
+  const leveledUp = newStats.level > previousStats.level;
 
-  const newTotalXp = user.xp + xpAmount;
-  const previousLevel = calculateLevel(user.xp);
-  const newLevel = calculateLevel(newTotalXp);
-  const leveledUp = newLevel > previousLevel;
-
-  await db.user.update({
-    where: { id: userId },
-    data: {
-      xp: newTotalXp,
-    },
-  });
-
-  return {
-    previousXp: user.xp,
-    newXp: newTotalXp,
-    previousLevel,
-    newLevel,
-    leveledUp,
-    xpAwarded: xpAmount,
-  };
+  return { previousStats, newStats, leveledUp };
 }
 
 /**
- * Get user's XP stats
+ * Calculate XP breakdown for lesson completion
+ * Returns the amount of XP earned for completing a lesson
  */
-export async function getUserXpStats(userId: string) {
-  const user = await db.user.findUnique({
-    where: { id: userId },
-    select: { xp: true },
-  });
+export function calculateLessonXp(
+  lessonXpReward: number,
+  _hintsUsed: number = 0,
+  _mistakesMade: number = 0
+): {
+  baseXp: number;
+  bonusXp: number;
+  totalXp: number;
+  breakdown: { label: string; amount: number }[];
+} {
+  // For now, simple implementation - just return lesson XP
+  // Future: Add hint penalties, mistake penalties, time bonuses, etc.
+  const baseXp = lessonXpReward;
+  const bonusXp = 0;
+  const totalXp = baseXp + bonusXp;
 
-  if (!user) throw new Error("User not found");
+  const breakdown = [{ label: "Lesson Complete", amount: baseXp }];
 
+  // Future breakdown items:
+  // if (hintsUsed === 0) breakdown.push({ label: "No Hints Bonus", amount: 5 });
+  // if (mistakesMade === 0) breakdown.push({ label: "Perfect Run", amount: 5 });
+
+  return { baseXp, bonusXp, totalXp, breakdown };
+}
+
+/**
+ * @deprecated Use calculateLevelFromXp from config.ts
+ */
+export function calculateLevel(xp: number): number {
+  return calculateLevelFromXp(xp);
+}
+
+/**
+ * @deprecated Use getXpProgress from config.ts
+ */
+export function getLevelProgress(xp: number): {
+  level: number;
+  currentLevelXp: number;
+  xpForNextLevel: number;
+  progress: number;
+} {
+  const stats = getXpProgress(xp);
   return {
-    totalXp: user.xp,
-    ...getLevelProgress(user.xp),
+    level: stats.level,
+    currentLevelXp: stats.currentLevelXp,
+    xpForNextLevel: stats.xpForNextLevel,
+    progress: stats.progressPercent / 100,
   };
 }

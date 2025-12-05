@@ -7,21 +7,22 @@ import { Chessboard, type HighlightsMap, type BoardState } from "./Chessboard";
 import { Button } from "@/components/ui/Button";
 import { Card, CardContent } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
+import { XpBreakdown } from "@/components/ui/XpBreakdown";
 import {
   type Lesson,
   type LessonTask,
   getTaskByIndex,
   isLastTask,
   getTaskMessage,
-  getNextLesson,
 } from "@/lib/lessons";
 import {
   handleSquareClick as engineHandleClick,
   getInitialInteractionState,
   type LessonInteractionState,
 } from "@/lib/lessons/engine";
-import { completeLessonAction } from "@/app/lessons/[slug]/actions";
+import { completeLessonAction, type CompleteLessonActionResult } from "@/app/lessons/[slug]/actions";
 import { useChessAudio } from "@/hooks/useChessAudio";
+import type { NextStep } from "@/lib/lessons/next-step";
 
 // ============================================
 // TYPES
@@ -279,16 +280,19 @@ export function LessonPlayer({ lesson, initialXpStats }: LessonPlayerProps) {
   // XP state for completion feedback
   const [xpAwarded, setXpAwarded] = useState<number | null>(null);
   const [totalXp, setTotalXp] = useState<number | null>(initialXpStats?.totalXp ?? null);
+  const [previousXp, setPreviousXp] = useState<number | null>(null);
   const [isSaving, setIsSaving] = useState(false);
   const [alreadyCompleted, setAlreadyCompleted] = useState(false);
+  const [leveledUp, setLeveledUp] = useState(false);
+  const [newLevel, setNewLevel] = useState<number | null>(null);
+
+  // Next step recommendation (computed server-side after completion)
+  const [nextStep, setNextStep] = useState<NextStep | null>(null);
 
   // Current task
   const currentTask = getTaskByIndex(lesson, currentTaskIndex);
   const totalTasks = lesson.tasks.length;
   const isLastTaskInLesson = isLastTask(lesson, currentTaskIndex);
-
-  // Get next lesson for navigation (null if this is the last lesson)
-  const nextLesson = getNextLesson(lesson.slug);
 
   // Fire confetti and play success sound when lesson completes
   useEffect(() => {
@@ -326,7 +330,11 @@ export function LessonPlayer({ lesson, initialXpStats }: LessonPlayerProps) {
             .then((result) => {
               setXpAwarded(result.xpAwarded);
               setTotalXp(result.totalXp);
+              setPreviousXp(result.previousXp);
               setAlreadyCompleted(result.alreadyCompleted);
+              setLeveledUp(result.leveledUp);
+              setNewLevel(result.newLevel);
+              setNextStep(result.nextStep);
             })
             .catch((err) => {
               console.error("Failed to complete lesson:", err);
@@ -350,6 +358,10 @@ export function LessonPlayer({ lesson, initialXpStats }: LessonPlayerProps) {
     // Reset XP state for replay (won't award again)
     setXpAwarded(null);
     setTotalXp(null);
+    setPreviousXp(null);
+    setLeveledUp(false);
+    setNewLevel(null);
+    setNextStep(null);
     setAlreadyCompleted(false);
   }, []);
 
@@ -358,12 +370,12 @@ export function LessonPlayer({ lesson, initialXpStats }: LessonPlayerProps) {
     router.push("/app");
   }, [router]);
 
-  // Handle next lesson
-  const handleNextLesson = useCallback(() => {
-    if (nextLesson) {
-      router.push(`/lessons/${nextLesson.slug}`);
+  // Handle next step navigation
+  const handleNextStep = useCallback(() => {
+    if (nextStep?.href) {
+      router.push(nextStep.href);
     }
-  }, [router, nextLesson]);
+  }, [router, nextStep]);
 
   // No task available
   if (!currentTask) {
@@ -412,33 +424,20 @@ export function LessonPlayer({ lesson, initialXpStats }: LessonPlayerProps) {
                 You&apos;ve finished &quot;{lesson.title}&quot;
               </p>
 
-              {/* XP Feedback */}
+              {/* XP Breakdown */}
               {isSaving ? (
                 <p className="text-sm text-chessio-muted dark:text-chessio-muted-dark animate-pulse">
                   Saving your progress...
                 </p>
-              ) : xpAwarded !== null ? (
-                <div className="space-y-2">
-                  {xpAwarded > 0 ? (
-                    <>
-                      <Badge variant="success" className="text-sm px-3 py-1">
-                        +{xpAwarded} XP earned!
-                      </Badge>
-                      <p className="text-sm text-chessio-muted dark:text-chessio-muted-dark">
-                        Total XP: {totalXp}
-                      </p>
-                    </>
-                  ) : alreadyCompleted ? (
-                    <>
-                      <Badge variant="default" className="text-sm px-3 py-1">
-                        Already Completed
-                      </Badge>
-                      <p className="text-xs text-chessio-muted dark:text-chessio-muted-dark">
-                        Nice practice! Your total XP: {totalXp}
-                      </p>
-                    </>
-                  ) : null}
-                </div>
+              ) : xpAwarded !== null && totalXp !== null ? (
+                <XpBreakdown
+                  totalXpEarned={xpAwarded}
+                  newTotalXp={totalXp}
+                  previousTotalXp={previousXp ?? undefined}
+                  leveledUp={leveledUp}
+                  newLevel={newLevel ?? undefined}
+                  alreadyCompleted={alreadyCompleted}
+                />
               ) : (
                 // Fallback if server call failed
                 <Badge variant="success" className="text-sm px-3 py-1">
@@ -446,30 +445,53 @@ export function LessonPlayer({ lesson, initialXpStats }: LessonPlayerProps) {
                 </Badge>
               )}
 
+              {/* Next Step Actions */}
               <div className="flex flex-col gap-3 pt-6">
-                {nextLesson ? (
-                  <Button variant="primary" size="lg" onClick={handleNextLesson} className="w-full">
-                    Continue → {nextLesson.title}
-                  </Button>
-                ) : (
-                  <div className="space-y-3">
-                    <div className="text-sm text-chessio-success font-medium">
-                      🎊 You&apos;ve completed all lessons in this level!
-                    </div>
-                    <Button variant="primary" size="lg" onClick={handleBackToDashboard} className="w-full">
-                      Back to Dashboard
-                    </Button>
-                  </div>
-                )}
-                {nextLesson && (
+                {nextStep ? (
                   <>
-                    <Button variant="secondary" onClick={handleReplay} className="w-full">
-                      Replay Lesson
-                    </Button>
-                    <Button variant="ghost" onClick={handleBackToDashboard} className="w-full">
-                      Back to Dashboard
-                    </Button>
+                    {/* Level completion celebration message */}
+                    {nextStep.type === "level-complete" && (
+                      <div className="text-sm text-chessio-success font-medium mb-2">
+                        {nextStep.message}
+                      </div>
+                    )}
+                    
+                    {/* All complete message */}
+                    {nextStep.type === "all-complete" && (
+                      <div className="space-y-3">
+                        <div className="text-sm text-chessio-success font-medium">
+                          {nextStep.message}
+                        </div>
+                        <Button variant="primary" size="lg" onClick={handleBackToDashboard} className="w-full">
+                          Back to Dashboard
+                        </Button>
+                      </div>
+                    )}
+
+                    {/* Primary CTA for next lesson/level */}
+                    {nextStep.type !== "all-complete" && (
+                      <Button variant="primary" size="lg" onClick={handleNextStep} className="w-full">
+                        {nextStep.cta}
+                      </Button>
+                    )}
+
+                    {/* Secondary actions */}
+                    {nextStep.type !== "all-complete" && (
+                      <>
+                        <Button variant="secondary" onClick={handleReplay} className="w-full">
+                          Replay Lesson
+                        </Button>
+                        <Button variant="ghost" onClick={handleBackToDashboard} className="w-full">
+                          Back to Dashboard
+                        </Button>
+                      </>
+                    )}
                   </>
+                ) : (
+                  // Fallback while loading or if no nextStep
+                  <Button variant="primary" size="lg" onClick={handleBackToDashboard} className="w-full">
+                    Back to Dashboard
+                  </Button>
                 )}
               </div>
             </div>

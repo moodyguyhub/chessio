@@ -7,6 +7,8 @@
 
 import { db } from "@/lib/db";
 import { getLessonBySlug } from "@/lib/lessons";
+import { calculateLevelFromXp } from "@/lib/gamification";
+import { logLessonCompleted, logLevelUp } from "@/lib/telemetry";
 
 // ============================================
 // TYPES
@@ -21,7 +23,10 @@ export type CompleteLessonResult = {
   lessonSlug: string;
   xpAwarded: number;
   totalXp: number;
+  previousXp: number;
   alreadyCompleted: boolean;
+  leveledUp: boolean;
+  newLevel: number;
 };
 
 // ============================================
@@ -66,13 +71,25 @@ export async function completeLessonAndAwardXp({
         select: { xp: true },
       });
 
+      const currentLevel = calculateLevelFromXp(user.xp);
       return {
         lessonSlug,
         xpAwarded: 0,
         totalXp: user.xp,
+        previousXp: user.xp,
         alreadyCompleted: true,
+        leveledUp: false,
+        newLevel: currentLevel,
       };
     }
+
+    // Get current XP before awarding
+    const userBefore = await tx.user.findUniqueOrThrow({
+      where: { id: userId },
+      select: { xp: true },
+    });
+    const previousXp = userBefore.xp;
+    const previousLevel = calculateLevelFromXp(previousXp);
 
     // First-time completion → create progress record, award XP
     await tx.userLessonProgress.create({
@@ -85,11 +102,36 @@ export async function completeLessonAndAwardXp({
       select: { xp: true },
     });
 
+    const newLevel = calculateLevelFromXp(user.xp);
+    const leveledUp = newLevel > previousLevel;
+
+    // Log telemetry events (async, fire-and-forget)
+    logLessonCompleted({
+      userId,
+      lessonSlug,
+      lessonTitle: lesson.title,
+      lessonLevel: lesson.level,
+      xpAwarded: xpReward,
+      totalXp: user.xp,
+      alreadyCompleted: false,
+    });
+
+    if (leveledUp) {
+      logLevelUp({
+        userId,
+        newLevel,
+        totalXp: user.xp,
+      });
+    }
+
     return {
       lessonSlug,
       xpAwarded: xpReward,
       totalXp: user.xp,
+      previousXp,
       alreadyCompleted: false,
+      leveledUp,
+      newLevel,
     };
   });
 }
