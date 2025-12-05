@@ -1,14 +1,15 @@
 import Link from "next/link";
+import { Chessboard } from "@/components/chess";
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 via-white to-indigo-50/30">
       {/* Header */}
       <header className="container mx-auto px-4 py-6">
         <nav className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <span className="text-2xl">♟️</span>
-            <span className="text-xl font-bold text-slate-900">Chessio</span>
+            <span className="text-xl font-bold text-slate-900 font-[family-name:var(--font-nunito)]">Chessio</span>
           </div>
           <div className="flex items-center gap-4">
             <Link
@@ -28,57 +29,48 @@ export default function LandingPage() {
       </header>
 
       {/* Hero Section */}
-      <main className="container mx-auto px-4 py-16 md:py-24">
-        <div className="mx-auto max-w-3xl text-center">
-          <h1 className="text-4xl font-bold tracking-tight text-slate-900 md:text-5xl lg:text-6xl">
-            Learn Chess
-            <span className="block text-emerald-600">the Fun Way</span>
-          </h1>
-          <p className="mt-6 text-lg text-slate-600 md:text-xl">
-            Master chess from zero with friendly, bite-sized lessons. 
-            No pressure, no timers, no intimidation — just you and the board.
-          </p>
-          <div className="mt-10 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
-            <Link
-              href="/register"
-              className="w-full rounded-full bg-emerald-600 px-8 py-3 text-lg font-semibold text-white shadow-lg hover:bg-emerald-700 transition-colors sm:w-auto"
-            >
-              Start Learning — It&apos;s Free
-            </Link>
+      <main className="container mx-auto px-4 py-12 md:py-20">
+        <div className="grid lg:grid-cols-2 gap-12 items-center max-w-6xl mx-auto">
+          {/* Left: Text Content */}
+          <div className="text-center lg:text-left">
+            <h1 className="text-4xl font-bold tracking-tight text-slate-900 md:text-5xl lg:text-6xl font-[family-name:var(--font-nunito)]">
+              Learn Chess
+              <span className="block text-emerald-600">the Fun Way</span>
+            </h1>
+            <p className="mt-6 text-lg text-slate-600 md:text-xl">
+              Master chess from zero with friendly, bite-sized lessons. 
+              No pressure, no timers, no intimidation — just you and the board.
+            </p>
+            <div className="mt-10 flex flex-col items-center gap-4 sm:flex-row lg:justify-start sm:justify-center">
+              <Link
+                href="/register"
+                className="w-full rounded-full bg-emerald-600 px-8 py-3 text-lg font-semibold text-white shadow-lg hover:bg-emerald-700 transition-colors sm:w-auto"
+              >
+                Start Learning — It&apos;s Free
+              </Link>
+            </div>
           </div>
-        </div>
 
-        {/* Mini Board Illustration */}
-        <div className="mt-16 flex justify-center">
-          <div className="grid grid-cols-8 gap-0 rounded-lg overflow-hidden shadow-2xl">
-            {Array.from({ length: 64 }).map((_, i) => {
-              const row = Math.floor(i / 8);
-              const col = i % 8;
-              const isLight = (row + col) % 2 === 0;
-              // Show a few pieces for visual interest
-              const pieces: Record<number, string> = {
-                3: "♜", 4: "♚", // Black rook and king
-                27: "♗", // White bishop in center
-                59: "♖", 60: "♔", // White rook and king
-              };
-              return (
-                <div
-                  key={i}
-                  className={`w-8 h-8 md:w-10 md:h-10 flex items-center justify-center text-xl md:text-2xl
-                    ${isLight ? "bg-amber-100" : "bg-amber-700"}`}
-                >
-                  {pieces[i] || ""}
-                </div>
-              );
-            })}
+          {/* Right: Hero Board */}
+          <div className="relative mx-auto w-full max-w-[400px] lg:max-w-none">
+            {/* Decorative glow blob */}
+            <div className="absolute -inset-4 bg-indigo-500/20 blur-2xl rounded-full" />
+            
+            <div className="relative shadow-2xl rounded-lg overflow-hidden border border-gray-200">
+              <Chessboard 
+                fen="rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1"
+                state={{ isDisabled: true }}
+                highlights={{ "e4": "success", "e2": "hint" }}
+              />
+            </div>
           </div>
         </div>
       </main>
 
       {/* How It Works */}
-      <section className="bg-white py-20">
+      <section className="bg-white/80 backdrop-blur-sm py-20">
         <div className="container mx-auto px-4">
-          <h2 className="text-center text-3xl font-bold text-slate-900 mb-12">
+          <h2 className="text-center text-3xl font-bold text-slate-900 mb-12 font-[family-name:var(--font-nunito)]">
             How It Works
           </h2>
           <div className="grid gap-8 md:grid-cols-3 max-w-4xl mx-auto">
@@ -86,7 +78,7 @@ export default function LandingPage() {
               <div className="mx-auto w-16 h-16 rounded-full bg-emerald-100 flex items-center justify-center text-3xl mb-4">
                 🎯
               </div>
-              <h3 className="text-lg font-semibold text-slate-900 mb-2">
+              <h3 className="text-lg font-semibold text-slate-900 mb-2 font-[family-name:var(--font-nunito)]">
                 1. Learn One Piece at a Time
               </h3>
               <p className="text-slate-600">
@@ -97,7 +89,7 @@ export default function LandingPage() {
               <div className="mx-auto w-16 h-16 rounded-full bg-emerald-100 flex items-center justify-center text-3xl mb-4">
                 ✨
               </div>
-              <h3 className="text-lg font-semibold text-slate-900 mb-2">
+              <h3 className="text-lg font-semibold text-slate-900 mb-2 font-[family-name:var(--font-nunito)]">
                 2. Practice with Instant Feedback
               </h3>
               <p className="text-slate-600">
@@ -108,7 +100,7 @@ export default function LandingPage() {
               <div className="mx-auto w-16 h-16 rounded-full bg-emerald-100 flex items-center justify-center text-3xl mb-4">
                 🏆
               </div>
-              <h3 className="text-lg font-semibold text-slate-900 mb-2">
+              <h3 className="text-lg font-semibold text-slate-900 mb-2 font-[family-name:var(--font-nunito)]">
                 3. Earn XP & Level Up
               </h3>
               <p className="text-slate-600">
@@ -122,7 +114,7 @@ export default function LandingPage() {
       {/* CTA Section */}
       <section className="py-20">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl font-bold text-slate-900 mb-4">
+          <h2 className="text-3xl font-bold text-slate-900 mb-4 font-[family-name:var(--font-nunito)]">
             Ready to make your first move?
           </h2>
           <p className="text-slate-600 mb-8">
@@ -138,7 +130,7 @@ export default function LandingPage() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-slate-200 py-8">
+      <footer className="border-t border-slate-200/50 py-8 bg-white/50 backdrop-blur-sm">
         <div className="container mx-auto px-4 text-center text-sm text-slate-500">
           <p>♟️ Chessio — Learn chess, one move at a time.</p>
         </div>
