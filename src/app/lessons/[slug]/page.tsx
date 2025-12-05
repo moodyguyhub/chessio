@@ -5,8 +5,10 @@ import { auth } from "@/lib/auth";
 import { LessonPlayer } from "@/components/chess/LessonPlayer";
 import { getLessonBySlug, getPreviousLesson, lessons } from "@/lib/lessons";
 import { isLessonCompleted } from "@/lib/lessons/progress";
+import { getUserXpStats } from "@/lib/gamification";
 import { Card, CardContent } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
+import { ProgressHeader } from "@/components/ui/ProgressHeader";
 
 export const runtime = "nodejs";
 
@@ -57,6 +59,9 @@ export default async function LessonPage({ params }: LessonPageProps) {
   if (!lesson) {
     notFound();
   }
+
+  // Fetch user XP stats for progress header
+  const xpStats = await getUserXpStats(session.user.id);
 
   // Check lesson locking
   const previousLesson = getPreviousLesson(slug);
@@ -129,29 +134,38 @@ export default async function LessonPage({ params }: LessonPageProps) {
     <div className="min-h-dvh flex flex-col bg-chessio-bg dark:bg-chessio-bg-dark">
       {/* Header */}
       <header className="bg-chessio-card dark:bg-chessio-card-dark border-b border-chessio-border dark:border-chessio-border-dark">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <Link 
-            href="/app" 
-            className="flex items-center gap-2 text-chessio-muted hover:text-chessio-text dark:hover:text-chessio-text-dark transition-colors"
-          >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-            </svg>
-            <span className="text-sm font-medium">Back to Dashboard</span>
-          </Link>
-          
-          <div className="flex items-center gap-2">
-            <span className="text-2xl">♟️</span>
-            <span className="text-lg font-bold text-chessio-text dark:text-chessio-text-dark">Chessio</span>
-          </div>
+        <div className="container mx-auto px-4 py-3">
+          <div className="flex items-center justify-between mb-2">
+            <Link 
+              href="/app" 
+              className="flex items-center gap-2 text-chessio-muted hover:text-chessio-text dark:hover:text-chessio-text-dark transition-colors"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              </svg>
+              <span className="text-sm font-medium hidden sm:inline">Dashboard</span>
+            </Link>
+            
+            <div className="flex items-center gap-2">
+              <span className="text-2xl">♟️</span>
+              <span className="text-lg font-bold text-chessio-text dark:text-chessio-text-dark">Chessio</span>
+            </div>
 
-          <div className="w-24" /> {/* Spacer for centering */}
+            <div className="w-16 sm:w-24" /> {/* Spacer for centering */}
+          </div>
+          
+          {/* Progress Header */}
+          <ProgressHeader 
+            level={xpStats.level}
+            currentXp={xpStats.currentLevelXp}
+            nextLevelXp={xpStats.xpForNextLevel}
+          />
         </div>
       </header>
 
       {/* Main Content */}
-      <main className="flex-1 container mx-auto px-4 py-8 max-w-5xl">
-        <LessonPlayer lesson={lesson} />
+      <main className="flex-1 container mx-auto px-4 py-6 pb-safe max-w-5xl">
+        <LessonPlayer lesson={lesson} initialXpStats={xpStats} />
       </main>
     </div>
   );

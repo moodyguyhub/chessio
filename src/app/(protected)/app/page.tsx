@@ -4,6 +4,7 @@ import { auth, signOut } from "@/lib/auth";
 import { allLessons, getPreviousLesson, getLevel0Lessons, getLevel1Lessons, getPuzzles, getLevel2Lessons } from "@/lib/lessons";
 import { getCompletedLessonSlugs, getUserXp, hasUserGivenFeedback } from "@/lib/lessons/progress";
 import { FeedbackButton } from "@/components/ui/FeedbackButton";
+import { OnboardingModal, HowItWorksLink } from "@/components/ui/OnboardingModal";
 
 // XP level calculation (simple: 100 XP per level)
 function getLevel(xp: number): { level: number; currentXp: number; nextLevelXp: number } {
@@ -141,11 +142,19 @@ export default async function DashboardPage() {
       <main className="container mx-auto px-4 py-8">
         {/* Greeting */}
         <div className="mb-8">
-          <h1 className="text-2xl font-bold text-slate-900">
-            Hi, {session.user.name || "Learner"} 👋
-          </h1>
-          <p className="text-slate-600 mt-1">Ready to learn some chess?</p>
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-2xl font-bold text-slate-900">
+                Hi, {session.user.name || "Learner"} 👋
+              </h1>
+              <p className="text-slate-600 mt-1">Ready to learn some chess?</p>
+            </div>
+            <HowItWorksLink />
+          </div>
         </div>
+
+        {/* First-time Onboarding Modal */}
+        <OnboardingModal />
 
         {/* Mobile XP Display */}
         <div className="sm:hidden mb-6 p-4 bg-white rounded-xl shadow-sm">

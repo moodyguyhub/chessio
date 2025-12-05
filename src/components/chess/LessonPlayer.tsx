@@ -29,8 +29,17 @@ import { useChessAudio } from "@/hooks/useChessAudio";
 
 type FeedbackState = "idle" | "correct" | "error";
 
+interface XpStats {
+  totalXp: number;
+  level: number;
+  currentLevelXp: number;
+  xpForNextLevel: number;
+  progressPercent: number;
+}
+
 interface LessonPlayerProps {
   lesson: Lesson;
+  initialXpStats?: XpStats;
 }
 
 interface TaskPlayerProps {
@@ -241,7 +250,7 @@ function TaskPlayer({ task, taskIndex, totalTasks, onComplete, isLast, playSound
 
       {/* Board - Right on desktop, top on mobile */}
       <div className="md:w-1/2 flex justify-center order-1 md:order-2">
-        <div className="w-full max-w-[400px] pl-6">
+        <div className="w-full max-w-[min(400px,100%)]">
           <Chessboard
             fen={fen}
             onSquareClick={handleBoardClick}
@@ -258,7 +267,7 @@ function TaskPlayer({ task, taskIndex, totalTasks, onComplete, isLast, playSound
 // MAIN LESSON PLAYER COMPONENT
 // ============================================
 
-export function LessonPlayer({ lesson }: LessonPlayerProps) {
+export function LessonPlayer({ lesson, initialXpStats }: LessonPlayerProps) {
   const router = useRouter();
   const { play } = useChessAudio();
 
@@ -269,7 +278,7 @@ export function LessonPlayer({ lesson }: LessonPlayerProps) {
 
   // XP state for completion feedback
   const [xpAwarded, setXpAwarded] = useState<number | null>(null);
-  const [totalXp, setTotalXp] = useState<number | null>(null);
+  const [totalXp, setTotalXp] = useState<number | null>(initialXpStats?.totalXp ?? null);
   const [isSaving, setIsSaving] = useState(false);
   const [alreadyCompleted, setAlreadyCompleted] = useState(false);
 
@@ -437,22 +446,31 @@ export function LessonPlayer({ lesson }: LessonPlayerProps) {
                 </Badge>
               )}
 
-              <div className="flex flex-col gap-3 pt-4">
+              <div className="flex flex-col gap-3 pt-6">
                 {nextLesson ? (
-                  <Button variant="primary" size="lg" onClick={handleNextLesson}>
-                    Next: {nextLesson.title}
+                  <Button variant="primary" size="lg" onClick={handleNextLesson} className="w-full">
+                    Continue → {nextLesson.title}
                   </Button>
                 ) : (
-                  <div className="text-sm text-chessio-success font-medium mb-2">
-                    🎊 Level 0 Complete!
+                  <div className="space-y-3">
+                    <div className="text-sm text-chessio-success font-medium">
+                      🎊 You&apos;ve completed all lessons in this level!
+                    </div>
+                    <Button variant="primary" size="lg" onClick={handleBackToDashboard} className="w-full">
+                      Back to Dashboard
+                    </Button>
                   </div>
                 )}
-                <Button variant="secondary" onClick={handleReplay}>
-                  Replay Lesson
-                </Button>
-                <Button variant="ghost" onClick={handleBackToDashboard}>
-                  Back to Dashboard
-                </Button>
+                {nextLesson && (
+                  <>
+                    <Button variant="secondary" onClick={handleReplay} className="w-full">
+                      Replay Lesson
+                    </Button>
+                    <Button variant="ghost" onClick={handleBackToDashboard} className="w-full">
+                      Back to Dashboard
+                    </Button>
+                  </>
+                )}
               </div>
             </div>
           </CardContent>
