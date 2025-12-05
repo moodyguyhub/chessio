@@ -1,7 +1,7 @@
 import { MetadataRoute } from "next";
 import { allLessons } from "@/lib/lessons";
 
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "https://chessio.vercel.app";
+const BASE_URL = "https://chessio.io";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   // Static pages

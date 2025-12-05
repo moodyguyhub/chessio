@@ -1,6 +1,6 @@
 import { MetadataRoute } from "next";
 
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "https://chessio.vercel.app";
+const BASE_URL = "https://chessio.io";
 
 export default function robots(): MetadataRoute.Robots {
   return {
