@@ -449,10 +449,10 @@ export const LEVEL_1_LESSONS: Lesson[] = [
         id: "check-1",
         kind: "move-piece",
         prompt: "Your King is in check from the Rook! Move the King to f2 to escape.",
-        initialFen: "4r3/8/8/8/8/8/5P2/4K3 w - - 0 1", // Rook on e8 checking King on e1
+        initialFen: "4r3/8/8/8/8/8/8/4K3 w - - 0 1", // Rook on e8 checking King on e1
         expectedMove: { from: "e1", to: "f2" },
         messages: {
-          success: "Phew! The King escaped behind the pawn.",
+          success: "Phew! The King escaped the Rook's attack.",
           failure: "Your King is in danger! Move him to f2 to get out of the Rook's line of fire.",
           hint: "The Rook attacks the whole e-file. Step diagonally to f2.",
         },
@@ -461,7 +461,7 @@ export const LEVEL_1_LESSONS: Lesson[] = [
         id: "check-2",
         kind: "move-piece",
         prompt: "The Queen is attacking your King. Block the check by moving your Rook to e1.",
-        initialFen: "4q3/8/8/8/8/8/8/3RK3 w - - 0 1", // Queen on e8 checking, Rook on d1
+        initialFen: "4q3/8/8/8/8/8/8/3R1K2 w - - 0 1", // Queen on e8, Rook on d1, King on f1
         expectedMove: { from: "d1", to: "e1" },
         messages: {
           success: "Great defense! The Rook acts as a shield for the King.",
@@ -578,7 +578,7 @@ export const PUZZLES: Lesson[] = [
         id: "puzzle-3-rook-corner",
         kind: "move-piece",
         prompt: "White to move. Trap the King in the corner!",
-        initialFen: "k7/8/1K6/1R6/8/8/8/8 w - - 0 1", // King a6, Rook b5, Black King a8
+        initialFen: "k7/8/2K5/1R6/8/8/8/8 w - - 0 1", // King c6, Rook b5, Black King a8
         expectedMove: { from: "b5", to: "b8" },
         messages: {
           success: "Checkmate! The King is stuck in the corner with nowhere to go.",
@@ -614,8 +614,113 @@ export const PUZZLES: Lesson[] = [
   },
 ];
 
-// Combined lessons array for all levels (includes puzzles)
-export const allLessons: Lesson[] = [...lessons, ...LEVEL_1_LESSONS, ...PUZZLES];
+// ============================================
+// LEVEL 2 LESSONS - The Edge Cases
+// ============================================
+
+export const LEVEL_2_LESSONS: Lesson[] = [
+  // ----------------------------------------
+  // Lesson 11: En Passant
+  // ----------------------------------------
+  {
+    slug: "level-2-lesson-1-en-passant",
+    title: "En Passant",
+    description:
+      "A special pawn capture that only happens right after an enemy pawn moves two squares forward. It's French for 'in passing'.",
+    level: 3, // Level 3 in progression (after puzzles)
+    xpReward: 25,
+    tasks: [
+      {
+        id: "en-passant-1",
+        kind: "move-piece",
+        prompt: "Your pawn is on e5. Black just moved their pawn two squares to d5, landing right next to you! Capture it 'en passant' by moving to d6.",
+        initialFen: "8/8/8/3pP3/8/8/8/4K2k w - d6 0 1", // White pawn e5, Black pawn d5 (just moved). En passant target d6.
+        expectedMove: { from: "e5", to: "d6" },
+        messages: {
+          success: "Magnifique! That's En Passant. You captured the pawn as if it had only moved one square.",
+          failure: "Capture the black pawn by moving diagonally to d6 (the empty square behind it).",
+          hint: "Move your pawn to the empty square d6. The black pawn disappears!",
+        },
+      },
+      {
+        id: "en-passant-2",
+        kind: "move-piece",
+        prompt: "Another en passant opportunity! Black's pawn just jumped to f5. Capture it!",
+        initialFen: "8/8/8/4Pp2/8/8/8/4K2k w - f6 0 1", // White pawn e5, Black pawn f5 (just moved). Target f6.
+        expectedMove: { from: "e5", to: "f6" },
+        messages: {
+          success: "Correct! Remember: you can only capture en passant on the very next turn, or the opportunity is lost forever.",
+          failure: "Capture the black pawn by moving diagonally to f6.",
+          hint: "Diagonally forward to f6. Take that pawn!",
+        },
+      },
+      {
+        id: "en-passant-3",
+        kind: "move-piece",
+        prompt: "Final en passant practice. Black's c-pawn just moved to c5. Capture it!",
+        initialFen: "8/8/8/2pP4/8/8/8/4K2k w - c6 0 1", // White pawn d5, Black pawn c5 (just moved). Target c6.
+        expectedMove: { from: "d5", to: "c6" },
+        messages: {
+          success: "You've mastered en passant! This special capture keeps the game interesting.",
+          failure: "The black pawn on c5 can be captured en passant. Move to c6.",
+          hint: "Move your pawn from d5 to c6 to capture en passant.",
+        },
+      },
+    ],
+  },
+  // ----------------------------------------
+  // Lesson 12: Stalemate
+  // ----------------------------------------
+  {
+    slug: "level-2-lesson-2-stalemate",
+    title: "Stalemate (The Draw!)",
+    description:
+      "If the enemy King is NOT in check but has no legal moves left, the game ends in a Draw. Be careful not to trap them by accident!",
+    level: 3,
+    xpReward: 25,
+    tasks: [
+      {
+        id: "stalemate-1",
+        kind: "move-piece",
+        prompt: "White to move. If you move your Queen to b6, the Black King will be trapped but NOT in check. Try it to see Stalemate!",
+        initialFen: "k7/8/2K5/8/8/8/1Q6/8 w - - 0 1", // Black King a8, White King c6, White Queen b2
+        expectedMove: { from: "b2", to: "b6" },
+        messages: {
+          success: "It's a draw! The Black King isn't in check, but has nowhere to go. This is Stalemate — you should have won, but it's only a draw!",
+          failure: "Try moving the Queen to b6 to see what happens.",
+          hint: "Move the Queen to b6. Watch what happens to the Black King.",
+        },
+      },
+      {
+        id: "stalemate-2",
+        kind: "move-piece",
+        prompt: "Same position. This time, deliver Checkmate instead of Stalemate! Move the Queen to b7.",
+        initialFen: "k7/8/2K5/8/8/8/1Q6/8 w - - 0 1", // Same setup
+        expectedMove: { from: "b2", to: "b7" },
+        messages: {
+          success: "Checkmate! The King IS attacked AND has nowhere to go. That's a win, not a draw!",
+          failure: "Move the Queen to b7 for checkmate, not stalemate.",
+          hint: "Move the Queen to b7. The Black King is attacked with no escape!",
+        },
+      },
+      {
+        id: "stalemate-3",
+        kind: "move-piece",
+        prompt: "Be careful! The Black King looks trapped. Find the Checkmate move — don't stalemate! (Queen to h7)",
+        initialFen: "7k/8/6K1/8/8/8/8/7Q w - - 0 1", // Black King h8, White King g6, White Queen h1
+        expectedMove: { from: "h1", to: "h7" },
+        messages: {
+          success: "Checkmate! The Queen attacks the King, and the White King covers the escape squares.",
+          failure: "Find the checkmate. The Queen needs to attack the King directly.",
+          hint: "Move the Queen to h7. The King is attacked and can't escape!",
+        },
+      },
+    ],
+  },
+];
+
+// Combined lessons array for all levels (includes puzzles and Level 2)
+export const allLessons: Lesson[] = [...lessons, ...LEVEL_1_LESSONS, ...PUZZLES, ...LEVEL_2_LESSONS];
 
 // ============================================
 // HELPER FUNCTIONS
@@ -665,10 +770,17 @@ export function getLevel1Lessons(): Lesson[] {
 }
 
 /**
- * Get all puzzles (Level 2)
+ * Get all puzzles (Practice Mode - Level 2 in data)
  */
 export function getPuzzles(): Lesson[] {
   return allLessons.filter((lesson) => lesson.level === 2);
+}
+
+/**
+ * Get all Level 2 lessons - Edge Cases (Level 3 in data)
+ */
+export function getLevel2Lessons(): Lesson[] {
+  return allLessons.filter((lesson) => lesson.level === 3);
 }
 
 /**

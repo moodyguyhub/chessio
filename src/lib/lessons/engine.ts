@@ -11,7 +11,6 @@
  */
 
 import type { LessonTask, SelectSquareTask, MovePieceTask } from "@/lib/lessons";
-import { Chess } from "chess.js";
 
 // ============================================
 // STATE TYPES
@@ -168,10 +167,12 @@ function handleMovePieceClick(
     };
   }
 
-  // Clicking a different piece switches selection
-  if (squareHasPiece(currentFen, toSquare)) {
-    // Check if it's a friendly piece (same color) - if so, switch selection
-    // For Level 0, we only have white pieces, so any piece is switchable
+  // Check if clicking a friendly piece (same color) - if so, switch selection
+  const fromPieceColor = getPieceColor(currentFen, fromSquare);
+  const toPieceColor = getPieceColor(currentFen, toSquare);
+  
+  if (toPieceColor !== null && toPieceColor === fromPieceColor) {
+    // Clicking another friendly piece switches selection
     return {
       state: { selectedSquare: toSquare },
       isAttemptComplete: false,
@@ -180,7 +181,7 @@ function handleMovePieceClick(
     };
   }
 
-  // Attempting a move from -> to
+  // Attempting a move (or capture) from -> to
   const attemptedMove = { from: fromSquare, to: toSquare };
   const isCorrect =
     attemptedMove.from === task.expectedMove.from &&
@@ -211,29 +212,95 @@ function handleMovePieceClick(
 // ============================================
 
 /**
+ * Parse FEN to get piece map (handles invalid FENs like those without kings)
+ */
+function parseFenToPieces(fen: string): Record<string, string> {
+  const pieces: Record<string, string> = {};
+  const boardPart = fen.split(" ")[0];
+  const rows = boardPart.split("/");
+
+  rows.forEach((row, rowIndex) => {
+    let col = 0;
+    for (const char of row) {
+      if (/\d/.test(char)) {
+        col += parseInt(char);
+      } else {
+        const file = String.fromCharCode(97 + col); // a-h
+        const rank = 8 - rowIndex; // 8-1
+        pieces[`${file}${rank}`] = char;
+        col++;
+      }
+    }
+  });
+
+  return pieces;
+}
+
+/**
  * Check if a square has a piece on it
+ * Uses manual FEN parsing to support simplified FENs (no king required)
  */
 function squareHasPiece(fen: string, square: string): boolean {
-  try {
-    const chess = new Chess(fen);
-    const piece = chess.get(square as Parameters<typeof chess.get>[0]);
-    return piece !== null;
-  } catch {
-    return false;
-  }
+  const pieces = parseFenToPieces(fen);
+  return square in pieces;
+}
+
+/**
+ * Get the color of a piece on a square
+ * Returns 'white' for uppercase, 'black' for lowercase, null if empty
+ */
+function getPieceColor(fen: string, square: string): "white" | "black" | null {
+  const pieces = parseFenToPieces(fen);
+  const piece = pieces[square];
+  if (!piece) return null;
+  return piece === piece.toUpperCase() ? "white" : "black";
 }
 
 /**
  * Apply a move and return the new FEN
- * For Level 0, we trust the move is valid (it was already checked against expectedMove)
+ * For Level 0, we manually update the FEN since chess.js requires valid positions
  */
 function applyMove(fen: string, from: string, to: string): string {
-  try {
-    const chess = new Chess(fen);
-    chess.move({ from, to });
-    return chess.fen();
-  } catch {
-    // If move fails for some reason, return original FEN
-    return fen;
+  const pieces = parseFenToPieces(fen);
+  const movingPiece = pieces[from];
+  
+  if (!movingPiece) {
+    return fen; // No piece to move
   }
+  
+  // Remove piece from source, add to destination
+  delete pieces[from];
+  pieces[to] = movingPiece;
+  
+  // Rebuild the board part of FEN
+  let boardStr = "";
+  for (let rank = 8; rank >= 1; rank--) {
+    let emptyCount = 0;
+    for (let fileCode = 97; fileCode <= 104; fileCode++) { // a-h
+      const file = String.fromCharCode(fileCode);
+      const square = `${file}${rank}`;
+      const piece = pieces[square];
+      
+      if (piece) {
+        if (emptyCount > 0) {
+          boardStr += emptyCount;
+          emptyCount = 0;
+        }
+        boardStr += piece;
+      } else {
+        emptyCount++;
+      }
+    }
+    if (emptyCount > 0) {
+      boardStr += emptyCount;
+    }
+    if (rank > 1) {
+      boardStr += "/";
+    }
+  }
+  
+  // Keep the rest of the FEN metadata (turn, castling, etc.)
+  const fenParts = fen.split(" ");
+  fenParts[0] = boardStr;
+  return fenParts.join(" ");
 }

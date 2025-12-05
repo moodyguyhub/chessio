@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";
+import confetti from "canvas-confetti";
 import { Chessboard, type HighlightsMap, type BoardState } from "./Chessboard";
 import { Button } from "@/components/ui/Button";
 import { Card, CardContent } from "@/components/ui/Card";
@@ -20,6 +21,7 @@ import {
   type LessonInteractionState,
 } from "@/lib/lessons/engine";
 import { completeLessonAction } from "@/app/lessons/[slug]/actions";
+import { useChessAudio } from "@/hooks/useChessAudio";
 
 // ============================================
 // TYPES
@@ -37,6 +39,7 @@ interface TaskPlayerProps {
   totalTasks: number;
   onComplete: (isCorrect: boolean) => void;
   isLast: boolean;
+  playSound: (type: "move" | "capture" | "success" | "error") => void;
 }
 
 // ============================================
@@ -83,7 +86,7 @@ function buildHighlights(
 // TASK PLAYER COMPONENT (handles single task state)
 // ============================================
 
-function TaskPlayer({ task, taskIndex, totalTasks, onComplete, isLast }: TaskPlayerProps) {
+function TaskPlayer({ task, taskIndex, totalTasks, onComplete, isLast, playSound }: TaskPlayerProps) {
   // Task-local state - resets when component remounts (via key in parent)
   const [fen, setFen] = useState(task.initialFen);
   const [interactionState, setInteractionState] = useState<LessonInteractionState>(
@@ -138,15 +141,22 @@ function TaskPlayer({ task, taskIndex, totalTasks, onComplete, isLast }: TaskPla
 
       if (result.isAttemptComplete) {
         if (result.isCorrect) {
+          // Check if this was a capture (FEN changed and destination had a piece)
+          const wasCapture = result.newFen !== fen && task.kind === "move-piece";
+          playSound(wasCapture ? "capture" : "move");
           setFeedback("correct");
           // Notify parent after brief delay for feedback
           setTimeout(() => onComplete(true), isLast ? 800 : 1000);
         } else {
+          playSound("error");
           setFeedback("error");
         }
+      } else if (result.state.selectedSquare && !interactionState.selectedSquare) {
+        // Just selected a piece (first click)
+        playSound("move");
       }
     },
-    [task, fen, interactionState, isBoardLocked, onComplete, isLast]
+    [task, fen, interactionState, isBoardLocked, onComplete, isLast, playSound]
   );
 
   // Handle hint request
@@ -250,6 +260,7 @@ function TaskPlayer({ task, taskIndex, totalTasks, onComplete, isLast }: TaskPla
 
 export function LessonPlayer({ lesson }: LessonPlayerProps) {
   const router = useRouter();
+  const { play } = useChessAudio();
 
   // Lesson state - task index and completion
   const [currentTaskIndex, setCurrentTaskIndex] = useState(0);
@@ -268,6 +279,22 @@ export function LessonPlayer({ lesson }: LessonPlayerProps) {
 
   // Get next lesson for navigation (null if this is the last lesson)
   const nextLesson = getNextLesson(lesson.slug);
+
+  // Fire confetti and play success sound when lesson completes
+  useEffect(() => {
+    if (isLessonComplete) {
+      // Play the "quiet triumph" chime
+      play("success");
+      
+      // Fire confetti celebration
+      confetti({
+        particleCount: 100,
+        spread: 70,
+        origin: { y: 0.6 },
+        colors: ["#10B981", "#6366F1", "#F59E0B"], // Emerald, Indigo, Amber
+      });
+    }
+  }, [isLessonComplete, play]);
 
   // Handle task completion - advance to next or complete lesson
   const handleTaskComplete = useCallback(
@@ -426,6 +453,7 @@ export function LessonPlayer({ lesson }: LessonPlayerProps) {
           totalTasks={totalTasks}
           onComplete={handleTaskComplete}
           isLast={isLastTaskInLesson}
+          playSound={play}
         />
       )}
     </div>
