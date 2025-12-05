@@ -2,7 +2,8 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { auth, signOut } from "@/lib/auth";
 import { allLessons, getPreviousLesson, getLevel0Lessons, getLevel1Lessons, getPuzzles, getLevel2Lessons } from "@/lib/lessons";
-import { getCompletedLessonSlugs, getUserXp } from "@/lib/lessons/progress";
+import { getCompletedLessonSlugs, getUserXp, hasUserGivenFeedback } from "@/lib/lessons/progress";
+import { FeedbackButton } from "@/components/ui/FeedbackButton";
 
 // XP level calculation (simple: 100 XP per level)
 function getLevel(xp: number): { level: number; currentXp: number; nextLevelXp: number } {
@@ -22,9 +23,10 @@ export default async function DashboardPage() {
   const userId = session.user.id;
 
   // Get user's XP and completed lessons from progress.ts
-  const [userXp, completedSlugs] = await Promise.all([
+  const [userXp, completedSlugs, feedbackGiven] = await Promise.all([
     getUserXp(userId),
     getCompletedLessonSlugs(userId),
+    hasUserGivenFeedback(userId),
   ]);
 
   const completedSet = new Set(completedSlugs);
@@ -548,6 +550,9 @@ export default async function DashboardPage() {
           </div>
         </div>
       </main>
+
+      {/* Floating Feedback Button */}
+      <FeedbackButton hasGivenFeedback={feedbackGiven} />
     </div>
   );
 }

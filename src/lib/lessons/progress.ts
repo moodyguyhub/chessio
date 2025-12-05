@@ -137,3 +137,15 @@ export async function getUserXp(userId: string): Promise<number> {
 
   return user?.xp ?? 0;
 }
+
+/**
+ * Check if user has given feedback (for XP Bounty display)
+ */
+export async function hasUserGivenFeedback(userId: string): Promise<boolean> {
+  const user = await db.user.findUnique({
+    where: { id: userId },
+    select: { feedbackGiven: true },
+  });
+
+  return user?.feedbackGiven ?? false;
+}

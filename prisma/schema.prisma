@@ -21,12 +21,16 @@ model User {
   // Gamification
   xp            Int       @default(0)
   
+  // Beta Voice (XP Bounty)
+  feedbackGiven Boolean   @default(false)
+  
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   accounts          Account[]
   sessions          Session[]
   lessonProgress    UserLessonProgress[]
+  feedback          Feedback[]
 }
 
 model Account {
@@ -118,5 +122,21 @@ model UserLessonProgress {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, lessonSlug])
+  @@index([userId])
+}
+
+// ============================================
+// BETA VOICE (XP BOUNTY) - Feedback System
+// ============================================
+
+model Feedback {
+  id        String   @id @default(cuid())
+  userId    String
+  text      String   @db.Text
+  category  String   @default("general") // "bug", "suggestion", "praise", "general"
+  createdAt DateTime @default(now())
+  
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
   @@index([userId])
 }
