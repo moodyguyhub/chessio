@@ -195,7 +195,7 @@ export default async function DashboardPage() {
                 return (
                   <div
                     key={lesson.slug}
-                    className={`flex items-center gap-4 p-4 rounded-xl border transition-colors ${
+                    className={`flex items-center gap-3 p-4 rounded-xl border transition-colors ${
                       isCompleted
                         ? "bg-emerald-50 border-emerald-200"
                         : isAvailable
@@ -205,7 +205,7 @@ export default async function DashboardPage() {
                   >
                     {/* Status Icon */}
                     <div
-                      className={`w-10 h-10 rounded-full flex items-center justify-center text-lg ${
+                      className={`w-10 h-10 shrink-0 rounded-full flex items-center justify-center text-lg ${
                         isCompleted
                           ? "bg-emerald-500 text-white"
                           : isAvailable
@@ -223,37 +223,30 @@ export default async function DashboardPage() {
                       }`}>
                         {lesson.title}
                       </h4>
-                      <p className={`text-sm truncate ${
-                        isLocked ? "text-slate-400" : "text-slate-500"
+                      <p className={`text-sm ${
+                        isLocked ? "text-slate-400" : "text-emerald-600"
                       }`}>
-                        {lesson.description}
+                        +{lesson.xpReward} XP
                       </p>
-                    </div>
-
-                    {/* XP Badge */}
-                    <div className={`text-sm font-medium ${
-                      isCompleted ? "text-emerald-600" : isLocked ? "text-slate-400" : "text-slate-500"
-                    }`}>
-                      +{lesson.xpReward} XP
                     </div>
 
                     {/* Action */}
                     {isCompleted ? (
                       <Link
                         href={`/lessons/${lesson.slug}`}
-                        className="px-4 py-2 text-sm font-medium text-emerald-600 hover:text-emerald-700"
+                        className="shrink-0 px-3 py-2 text-sm font-medium text-emerald-600 hover:text-emerald-700"
                       >
                         Replay
                       </Link>
                     ) : isAvailable ? (
                       <Link
                         href={`/lessons/${lesson.slug}`}
-                        className="px-4 py-2 text-sm font-medium bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors"
+                        className="shrink-0 px-3 py-2 text-sm font-medium bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors"
                       >
                         Start
                       </Link>
                     ) : (
-                      <span className="px-4 py-2 text-sm text-slate-400">
+                      <span className="shrink-0 px-3 py-2 text-sm text-slate-400">
                         Locked
                       </span>
                     )}
@@ -299,7 +292,7 @@ export default async function DashboardPage() {
                 return (
                   <div
                     key={lesson.slug}
-                    className={`flex items-center gap-4 p-4 rounded-xl border transition-colors ${
+                    className={`flex items-center gap-3 p-4 rounded-xl border transition-colors ${
                       isCompleted
                         ? "bg-blue-50 border-blue-200"
                         : isAvailable
@@ -309,7 +302,7 @@ export default async function DashboardPage() {
                   >
                     {/* Status Icon */}
                     <div
-                      className={`w-10 h-10 rounded-full flex items-center justify-center text-lg ${
+                      className={`w-10 h-10 shrink-0 rounded-full flex items-center justify-center text-lg ${
                         isCompleted
                           ? "bg-blue-500 text-white"
                           : isAvailable
@@ -327,37 +320,30 @@ export default async function DashboardPage() {
                       }`}>
                         {lesson.title}
                       </h4>
-                      <p className={`text-sm truncate ${
-                        isLocked ? "text-slate-400" : "text-slate-500"
+                      <p className={`text-sm ${
+                        isLocked ? "text-slate-400" : "text-blue-600"
                       }`}>
-                        {lesson.description}
+                        +{lesson.xpReward} XP
                       </p>
-                    </div>
-
-                    {/* XP Badge */}
-                    <div className={`text-sm font-medium ${
-                      isCompleted ? "text-blue-600" : isLocked ? "text-slate-400" : "text-slate-500"
-                    }`}>
-                      +{lesson.xpReward} XP
                     </div>
 
                     {/* Action */}
                     {isCompleted ? (
                       <Link
                         href={`/lessons/${lesson.slug}`}
-                        className="px-4 py-2 text-sm font-medium text-blue-600 hover:text-blue-700"
+                        className="shrink-0 px-3 py-2 text-sm font-medium text-blue-600 hover:text-blue-700"
                       >
                         Replay
                       </Link>
                     ) : isAvailable ? (
                       <Link
                         href={`/lessons/${lesson.slug}`}
-                        className="px-4 py-2 text-sm font-medium bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                        className="shrink-0 px-3 py-2 text-sm font-medium bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
                       >
                         Start
                       </Link>
                     ) : (
-                      <span className="px-4 py-2 text-sm text-slate-400">
+                      <span className="shrink-0 px-3 py-2 text-sm text-slate-400">
                         Locked
                       </span>
                     )}
@@ -403,7 +389,7 @@ export default async function DashboardPage() {
                 return (
                   <div
                     key={lesson.slug}
-                    className={`flex items-center gap-4 p-4 rounded-xl border transition-colors ${
+                    className={`flex items-center gap-3 p-4 rounded-xl border transition-colors ${
                       isCompleted
                         ? "bg-purple-50 border-purple-200"
                         : isAvailable
@@ -413,7 +399,7 @@ export default async function DashboardPage() {
                   >
                     {/* Status Icon */}
                     <div
-                      className={`w-10 h-10 rounded-full flex items-center justify-center text-lg ${
+                      className={`w-10 h-10 shrink-0 rounded-full flex items-center justify-center text-lg ${
                         isCompleted
                           ? "bg-purple-500 text-white"
                           : isAvailable
@@ -431,37 +417,30 @@ export default async function DashboardPage() {
                       }`}>
                         {lesson.title}
                       </h4>
-                      <p className={`text-sm truncate ${
-                        isLocked ? "text-slate-400" : "text-slate-500"
+                      <p className={`text-sm ${
+                        isLocked ? "text-slate-400" : "text-purple-600"
                       }`}>
-                        {lesson.description}
+                        +{lesson.xpReward} XP
                       </p>
-                    </div>
-
-                    {/* XP Badge */}
-                    <div className={`text-sm font-medium ${
-                      isCompleted ? "text-purple-600" : isLocked ? "text-slate-400" : "text-slate-500"
-                    }`}>
-                      +{lesson.xpReward} XP
                     </div>
 
                     {/* Action */}
                     {isCompleted ? (
                       <Link
                         href={`/lessons/${lesson.slug}`}
-                        className="px-4 py-2 text-sm font-medium text-purple-600 hover:text-purple-700"
+                        className="shrink-0 px-3 py-2 text-sm font-medium text-purple-600 hover:text-purple-700"
                       >
                         Replay
                       </Link>
                     ) : isAvailable ? (
                       <Link
                         href={`/lessons/${lesson.slug}`}
-                        className="px-4 py-2 text-sm font-medium bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+                        className="shrink-0 px-3 py-2 text-sm font-medium bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
                       >
                         Start
                       </Link>
                     ) : (
-                      <span className="px-4 py-2 text-sm text-slate-400">
+                      <span className="shrink-0 px-3 py-2 text-sm text-slate-400">
                         Locked
                       </span>
                     )}
@@ -507,7 +486,7 @@ export default async function DashboardPage() {
                 return (
                   <div
                     key={lesson.slug}
-                    className={`flex items-center gap-4 p-4 rounded-xl border transition-colors ${
+                    className={`flex items-center gap-3 p-4 rounded-xl border transition-colors ${
                       isCompleted
                         ? "bg-amber-50 border-amber-200"
                         : isAvailable
@@ -517,7 +496,7 @@ export default async function DashboardPage() {
                   >
                     {/* Status Icon */}
                     <div
-                      className={`w-10 h-10 rounded-full flex items-center justify-center text-lg ${
+                      className={`w-10 h-10 shrink-0 rounded-full flex items-center justify-center text-lg ${
                         isCompleted
                           ? "bg-amber-500 text-white"
                           : isAvailable
@@ -535,37 +514,30 @@ export default async function DashboardPage() {
                       }`}>
                         {lesson.title}
                       </h4>
-                      <p className={`text-sm truncate ${
-                        isLocked ? "text-slate-400" : "text-slate-500"
+                      <p className={`text-sm ${
+                        isLocked ? "text-slate-400" : "text-amber-600"
                       }`}>
-                        {lesson.description}
+                        +{lesson.xpReward} XP
                       </p>
-                    </div>
-
-                    {/* XP Badge */}
-                    <div className={`text-sm font-medium ${
-                      isCompleted ? "text-amber-600" : isLocked ? "text-slate-400" : "text-slate-500"
-                    }`}>
-                      +{lesson.xpReward} XP
                     </div>
 
                     {/* Action */}
                     {isCompleted ? (
                       <Link
                         href={`/lessons/${lesson.slug}`}
-                        className="px-4 py-2 text-sm font-medium text-amber-600 hover:text-amber-700"
+                        className="shrink-0 px-3 py-2 text-sm font-medium text-amber-600 hover:text-amber-700"
                       >
                         Replay
                       </Link>
                     ) : isAvailable ? (
                       <Link
                         href={`/lessons/${lesson.slug}`}
-                        className="px-4 py-2 text-sm font-medium bg-amber-500 text-white rounded-lg hover:bg-amber-600 transition-colors"
+                        className="shrink-0 px-3 py-2 text-sm font-medium bg-amber-500 text-white rounded-lg hover:bg-amber-600 transition-colors"
                       >
                         Start
                       </Link>
                     ) : (
-                      <span className="px-4 py-2 text-sm text-slate-400">
+                      <span className="shrink-0 px-3 py-2 text-sm text-slate-400">
                         Locked
                       </span>
                     )}
