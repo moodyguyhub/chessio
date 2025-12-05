@@ -6,7 +6,6 @@
  */
 
 import { NextResponse } from "next/server";
-import { Prisma } from "@prisma/client";
 
 // User-friendly error messages
 const FRIENDLY_MESSAGES = {
@@ -20,6 +19,36 @@ const FRIENDLY_MESSAGES = {
 } as const;
 
 type ErrorType = keyof typeof FRIENDLY_MESSAGES;
+
+// Prisma error detection using duck typing (works with Prisma 7 adapter pattern)
+interface PrismaKnownError {
+  code: string;
+  name: string;
+}
+
+function isPrismaKnownError(error: unknown): error is PrismaKnownError {
+  return (
+    typeof error === "object" &&
+    error !== null &&
+    "code" in error &&
+    typeof (error as PrismaKnownError).code === "string" &&
+    (error as PrismaKnownError).code.startsWith("P")
+  );
+}
+
+function isPrismaInitError(error: unknown): boolean {
+  return (
+    error instanceof Error &&
+    error.name === "PrismaClientInitializationError"
+  );
+}
+
+function isPrismaValidationError(error: unknown): boolean {
+  return (
+    error instanceof Error &&
+    error.name === "PrismaClientValidationError"
+  );
+}
 
 /**
  * Logs error server-side and returns a friendly message.
@@ -36,7 +65,7 @@ export function handleApiError(
   let statusCode = 500;
   let errorType: ErrorType = "default";
 
-  if (error instanceof Prisma.PrismaClientKnownRequestError) {
+  if (isPrismaKnownError(error)) {
     switch (error.code) {
       case "P2002": // Unique constraint violation
         statusCode = 409;
@@ -55,10 +84,10 @@ export function handleApiError(
         statusCode = 500;
         errorType = "default";
     }
-  } else if (error instanceof Prisma.PrismaClientInitializationError) {
+  } else if (isPrismaInitError(error)) {
     statusCode = 503;
     errorType = "connection";
-  } else if (error instanceof Prisma.PrismaClientValidationError) {
+  } else if (isPrismaValidationError(error)) {
     statusCode = 400;
     errorType = "validation";
   } else if (error instanceof Error) {
