@@ -265,6 +265,7 @@ export function LessonPlayer({ lesson }: LessonPlayerProps) {
   // Lesson state - task index and completion
   const [currentTaskIndex, setCurrentTaskIndex] = useState(0);
   const [isLessonComplete, setIsLessonComplete] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
 
   // XP state for completion feedback
   const [xpAwarded, setXpAwarded] = useState<number | null>(null);
@@ -293,6 +294,12 @@ export function LessonPlayer({ lesson }: LessonPlayerProps) {
         origin: { y: 0.6 },
         colors: ["#10B981", "#6366F1", "#F59E0B"], // Emerald, Indigo, Amber
       });
+
+      // Trigger modal animation after confetti pops
+      const timer = setTimeout(() => setShowSuccess(true), 150);
+      return () => clearTimeout(timer);
+    } else {
+      setShowSuccess(false);
     }
   }, [isLessonComplete, play]);
 
@@ -381,7 +388,13 @@ export function LessonPlayer({ lesson }: LessonPlayerProps) {
       {isLessonComplete ? (
         <Card>
           <CardContent className="pt-6">
-            <div className="text-center space-y-4 py-8">
+            <div 
+              className={`
+                text-center space-y-4 py-8
+                transition-all duration-500 ease-out transform
+                ${showSuccess ? "opacity-100 scale-100 translate-y-0" : "opacity-0 scale-95 translate-y-4"}
+              `}
+            >
               <div className="text-5xl mb-4">🎉</div>
               <h3 className="text-xl font-bold text-chessio-text dark:text-chessio-text-dark">
                 Lesson Complete!
