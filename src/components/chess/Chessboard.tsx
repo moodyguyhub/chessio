@@ -134,7 +134,7 @@ export function Chessboard({
       {/* Board */}
       <div 
         className={`
-          grid grid-cols-8 rounded-lg overflow-hidden shadow-lg
+          grid grid-cols-8 rounded-lg overflow-hidden bg-amber-700
           ${state.isError ? "animate-shake" : ""}
         `}
       >
