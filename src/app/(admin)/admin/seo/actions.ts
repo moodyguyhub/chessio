@@ -1,9 +1,9 @@
 "use server";
 
+"use server";
+
 import { db } from "@/lib/db";
 import { revalidatePath } from "next/cache";
-
-export const runtime = "nodejs";
 
 export async function updateSeoPage(formData: FormData) {
   const slug = String(formData.get("slug"));
