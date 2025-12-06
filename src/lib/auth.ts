@@ -55,18 +55,21 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       // Auto-grant admin role to GitHub users
       if (account?.provider === "github" && user.email) {
         try {
+          const profileName = profile?.name as string | undefined;
+          const profileImage = profile?.image as string | undefined;
+          
           // Use upsert to ensure user gets ADMIN role on first sign-in
           await db.user.upsert({
             where: { email: user.email },
             update: { 
               role: "ADMIN",
-              name: user.name || profile?.name || user.email,
-              image: user.image || profile?.image,
+              name: user.name || profileName || user.email,
+              image: user.image || profileImage || null,
             },
             create: {
               email: user.email,
-              name: user.name || profile?.name || user.email,
-              image: user.image || profile?.image,
+              name: user.name || profileName || user.email,
+              image: user.image || profileImage || null,
               role: "ADMIN",
               xp: 0,
             },
