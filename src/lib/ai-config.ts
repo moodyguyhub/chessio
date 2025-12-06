@@ -9,11 +9,11 @@
  * 
  * Why these models?
  * 
- * gpt-4.1 (reasoning):
- * - Current flagship text model (replaces legacy gpt-4-turbo-preview)
+ * gpt-4o (reasoning):
+ * - Latest and most capable GPT-4 model (May 2024)
  * - Strong instruction-following + long-context handling
  * - Best for strategy, protocol, architecture, planning
- * - Cost: ~$10/$30 per 1M tokens (expensive but effective)
+ * - Cost: ~$5/$15 per 1M tokens (expensive but effective)
  * 
  * gpt-4o-mini (cheap):
  * - Excellent cost/quality ratio ($0.15/$0.60 per 1M tokens)
@@ -22,16 +22,16 @@
  * - Can upgrade to gpt-4.1-mini later if needed
  */
 
-export const MODEL_REASONING = "gpt-4.1" as const;
-export const MODEL_CHEAP = "gpt-4o-mini" as const;
+export const MODEL_REASONING = "gpt-4o" as const; // Latest flagship for deep thinking
+export const MODEL_CHEAP = "gpt-4o-mini" as const; // Cost-effective workhorse
 
 /**
  * Cost tracking (per 1M tokens)
  */
 export const COSTS = {
   [MODEL_REASONING]: {
-    input: 10.0,   // $10/1M input tokens
-    output: 30.0,  // $30/1M output tokens
+    input: 5.0,   // $5/1M input tokens
+    output: 15.0,  // $15/1M output tokens
   },
   [MODEL_CHEAP]: {
     input: 0.15,   // $0.15/1M input tokens
