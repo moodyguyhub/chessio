@@ -52,17 +52,15 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   ],
   callbacks: {
     async signIn({ user, account, profile }) {
-      // Auto-grant admin role to GitHub users
       if (account?.provider === "github" && user.email) {
         try {
           const profileName = profile?.name as string | undefined;
           const profileImage = profile?.image as string | undefined;
-          
-          // Use upsert to ensure user gets ADMIN role on first sign-in
+
+          // Upsert minimal fields to avoid schema mismatch on prod DB
           await db.user.upsert({
             where: { email: user.email },
-            update: { 
-              role: "ADMIN",
+            update: {
               name: user.name || profileName || user.email,
               image: user.image || profileImage || null,
             },
@@ -70,8 +68,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
               email: user.email,
               name: user.name || profileName || user.email,
               image: user.image || profileImage || null,
-              role: "ADMIN",
-              xp: 0,
             },
           });
           return true;
@@ -83,23 +79,16 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       return true;
     },
     async jwt({ token, user, account }) {
-      // Persist email and id when available
-      if (user?.email) {
-        token.email = user.email;
-      }
-      if (user?.id) {
-        token.id = user.id;
-      }
+      if (user?.email) token.email = user.email;
+      if (user?.id) token.id = user.id;
 
-      // For GitHub sign-ins, fetch the freshly upserted user to capture id/role
       if (account?.provider === "github" && token.email) {
         const dbUser = await db.user.findUnique({
           where: { email: token.email },
-          select: { id: true, role: true, email: true },
+          select: { id: true, email: true },
         });
         if (dbUser) {
           token.id = dbUser.id;
-          token.role = dbUser.role;
           token.email = dbUser.email;
         }
       }
@@ -110,7 +99,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       if (session.user) {
         if (token.id) session.user.id = token.id as string;
         if (token.email) session.user.email = token.email as string;
-        if (token.role) (session.user as any).role = token.role;
       }
       return session;
     },

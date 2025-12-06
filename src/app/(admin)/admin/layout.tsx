@@ -18,16 +18,6 @@ export default async function AdminLayout({
     redirect("/admin/login");
   }
 
-  // Check if user is admin
-  const user = await db.user.findUnique({ 
-    where: { id: session.user.id }, 
-    select: { role: true, email: true } 
-  });
-  
-  if (user?.role !== 'ADMIN') {
-    redirect('/app'); // Redirect non-admins to dashboard
-  }
-
   return (
     <div className="min-h-screen bg-slate-950 flex">
       {/* Sidebar */}
