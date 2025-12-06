@@ -1,6 +1,6 @@
 /**
- * Chessio Logo System v1.2 - Ink & Ivory
- * Spotify-style: Filled amber-200 circle (#FDE68A) with dark pawn (#0A0A0A)
+ * Chessio Logo System v1.3 - Ink & Ivory
+ * Spotify-style: Filled amber-200 circle (#FDE68A) with dark queen (#0A0A0A)
  * Creates bold, recognizable icon with high contrast
  * 
  * Usage:
@@ -29,9 +29,13 @@ export const ChessioLogo: React.FC<LogoProps> = ({
         className={className}
       >
         <circle cx="50" cy="50" r="50" fill="#FDE68A"/>
-        <path d="M50 28C45.0294 28 41 32.0294 41 37C41 41 43.5 44.4 47 45.5L42 68H58L53 45.5C56.5 44.4 59 41 59 37C59 32.0294 54.9706 28 50 28Z" fill="#0A0A0A"/>
-        <rect x="36" y="68" width="28" height="6" rx="2" fill="#0A0A0A"/>
-        <path d="M38 71H62" stroke="#0A0A0A" strokeWidth="2.5" strokeLinecap="round"/>
+        {/* Queen piece */}
+        <circle cx="42" cy="32" r="2.5" fill="#0A0A0A"/>
+        <circle cx="50" cy="28" r="3" fill="#0A0A0A"/>
+        <circle cx="58" cy="32" r="2.5" fill="#0A0A0A"/>
+        <path d="M40 36C40 36 42 34 44 36L46 50L54 50L56 36C58 34 60 36 60 36L58 54C58 56 56 58 54 58H46C44 58 42 56 42 54L40 36Z" fill="#0A0A0A"/>
+        <rect x="38" y="58" width="24" height="6" rx="2" fill="#0A0A0A"/>
+        <path d="M36 64H64L62 70H38L36 64Z" fill="#0A0A0A"/>
       </svg>
     );
   }
@@ -69,9 +73,13 @@ export const ChessioLogo: React.FC<LogoProps> = ({
       className={className}
     >
       <circle cx="50" cy="50" r="50" fill="#FDE68A"/>
-      <path d="M50 28C45.0294 28 41 32.0294 41 37C41 41 43.5 44.4 47 45.5L42 68H58L53 45.5C56.5 44.4 59 41 59 37C59 32.0294 54.9706 28 50 28Z" fill="#0A0A0A"/>
-      <rect x="36" y="68" width="28" height="6" rx="2" fill="#0A0A0A"/>
-      <path d="M38 71H62" stroke="#0A0A0A" strokeWidth="2.5" strokeLinecap="round"/>
+      {/* Queen piece */}
+      <circle cx="42" cy="32" r="2.5" fill="#0A0A0A"/>
+      <circle cx="50" cy="28" r="3" fill="#0A0A0A"/>
+      <circle cx="58" cy="32" r="2.5" fill="#0A0A0A"/>
+      <path d="M40 36C40 36 42 34 44 36L46 50L54 50L56 36C58 34 60 36 60 36L58 54C58 56 56 58 54 58H46C44 58 42 56 42 54L40 36Z" fill="#0A0A0A"/>
+      <rect x="38" y="58" width="24" height="6" rx="2" fill="#0A0A0A"/>
+      <path d="M36 64H64L62 70H38L36 64Z" fill="#0A0A0A"/>
       
       <text 
         x="120" 
