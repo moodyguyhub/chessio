@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/Button";
 
 const STORAGE_KEY = "chessio-alpha-banner-dismissed";
@@ -13,13 +13,14 @@ const STORAGE_KEY = "chessio-alpha-banner-dismissed";
  * - Provides quick access to feedback via floating button
  */
 export function AlphaBanner() {
-  // Check localStorage on mount to determine initial visibility
-  const [isVisible, setIsVisible] = useState(() => {
-    if (typeof window === 'undefined') return false;
+  // Start with true to avoid hydration mismatch, then check localStorage
+  const [isVisible, setIsVisible] = useState(true);
+
+  useEffect(() => {
     const dismissedDate = localStorage.getItem(STORAGE_KEY);
     const today = new Date().toDateString();
-    return dismissedDate !== today;
-  });
+    setIsVisible(dismissedDate !== today);
+  }, []);
 
   const handleDismiss = () => {
     const today = new Date().toDateString();

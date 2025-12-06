@@ -2,7 +2,6 @@ import NextAuth from "next-auth";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import Credentials from "next-auth/providers/credentials";
 import GitHub from "next-auth/providers/github";
-import Google from "next-auth/providers/google";
 import bcrypt from "bcryptjs";
 import { db } from "./db";
 
@@ -13,10 +12,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     GitHub({
       clientId: process.env.GITHUB_ID,
       clientSecret: process.env.GITHUB_SECRET,
-    }),
-    Google({
-      clientId: process.env.GOOGLE_ID,
-      clientSecret: process.env.GOOGLE_SECRET,
     }),
     Credentials({
       name: "credentials",
@@ -57,13 +52,14 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   ],
   callbacks: {
     async signIn({ user, account }) {
-      // Auto-grant admin role to GitHub user (moodyguyhub)
+      // Auto-grant admin role to GitHub users
       if (account?.provider === "github" && user.email) {
         const dbUser = await db.user.findUnique({
           where: { email: user.email },
         });
         
-        if (dbUser && dbUser.role !== "ADMIN") {
+        // Set ADMIN role for all GitHub users (development mode)
+        if (dbUser) {
           await db.user.update({
             where: { id: dbUser.id },
             data: { role: "ADMIN" },
