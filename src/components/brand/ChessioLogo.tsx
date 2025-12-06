@@ -1,6 +1,6 @@
 /**
  * Chessio Logo System v1.3 - Ink & Ivory
- * Spotify-style: Filled amber-200 circle (#FDE68A) with dark queen (#0A0A0A)
+ * Spotify-style: Filled amber-200 circle (#FDE68A) with pure black queen (#000000)
  * Creates bold, recognizable icon with high contrast
  * 
  * Usage:
@@ -30,12 +30,12 @@ export const ChessioLogo: React.FC<LogoProps> = ({
       >
         <circle cx="50" cy="50" r="50" fill="#FDE68A"/>
         {/* Queen piece */}
-        <circle cx="42" cy="32" r="2.5" fill="#0A0A0A"/>
-        <circle cx="50" cy="28" r="3" fill="#0A0A0A"/>
-        <circle cx="58" cy="32" r="2.5" fill="#0A0A0A"/>
-        <path d="M40 36C40 36 42 34 44 36L46 50L54 50L56 36C58 34 60 36 60 36L58 54C58 56 56 58 54 58H46C44 58 42 56 42 54L40 36Z" fill="#0A0A0A"/>
-        <rect x="38" y="58" width="24" height="6" rx="2" fill="#0A0A0A"/>
-        <path d="M36 64H64L62 70H38L36 64Z" fill="#0A0A0A"/>
+        <circle cx="42" cy="32" r="2.5" fill="#000000"/>
+        <circle cx="50" cy="28" r="3" fill="#000000"/>
+        <circle cx="58" cy="32" r="2.5" fill="#000000"/>
+        <path d="M40 36C40 36 42 34 44 36L46 50L54 50L56 36C58 34 60 36 60 36L58 54C58 56 56 58 54 58H46C44 58 42 56 42 54L40 36Z" fill="#000000"/>
+        <rect x="38" y="58" width="24" height="6" rx="2" fill="#000000"/>
+        <path d="M36 64H64L62 70H38L36 64Z" fill="#000000"/>
       </svg>
     );
   }
@@ -74,12 +74,12 @@ export const ChessioLogo: React.FC<LogoProps> = ({
     >
       <circle cx="50" cy="50" r="50" fill="#FDE68A"/>
       {/* Queen piece */}
-      <circle cx="42" cy="32" r="2.5" fill="#0A0A0A"/>
-      <circle cx="50" cy="28" r="3" fill="#0A0A0A"/>
-      <circle cx="58" cy="32" r="2.5" fill="#0A0A0A"/>
-      <path d="M40 36C40 36 42 34 44 36L46 50L54 50L56 36C58 34 60 36 60 36L58 54C58 56 56 58 54 58H46C44 58 42 56 42 54L40 36Z" fill="#0A0A0A"/>
-      <rect x="38" y="58" width="24" height="6" rx="2" fill="#0A0A0A"/>
-      <path d="M36 64H64L62 70H38L36 64Z" fill="#0A0A0A"/>
+      <circle cx="42" cy="32" r="2.5" fill="#000000"/>
+      <circle cx="50" cy="28" r="3" fill="#000000"/>
+      <circle cx="58" cy="32" r="2.5" fill="#000000"/>
+      <path d="M40 36C40 36 42 34 44 36L46 50L54 50L56 36C58 34 60 36 60 36L58 54C58 56 56 58 54 58H46C44 58 42 56 42 54L40 36Z" fill="#000000"/>
+      <rect x="38" y="58" width="24" height="6" rx="2" fill="#000000"/>
+      <path d="M36 64H64L62 70H38L36 64Z" fill="#000000"/>
       
       <text 
         x="120" 
