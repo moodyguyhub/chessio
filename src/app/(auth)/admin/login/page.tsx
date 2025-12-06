@@ -3,17 +3,16 @@
 import { useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { signIn } from "next-auth/react";
-import Link from "next/link";
 import { ChessioLogo } from "@/components/brand/ChessioLogo";
 
-function LoginForm() {
+function AdminLoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [githubLoading, setGithubLoading] = useState(false);
   
-  const justRegistered = searchParams.get("registered") === "true";
+  const errorParam = searchParams.get("error");
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -37,7 +36,7 @@ function LoginForm() {
         return;
       }
 
-      router.push("/app");
+      router.push("/admin");
       router.refresh();
     } catch {
       setError("Something went wrong. Please try again.");
@@ -45,59 +44,76 @@ function LoginForm() {
     }
   }
 
+  async function handleGitHubSignIn() {
+    setGithubLoading(true);
+    setError(null);
+    
+    try {
+      await signIn("github", {
+        callbackUrl: "/admin",
+      });
+    } catch {
+      setError("Failed to sign in with GitHub");
+      setGithubLoading(false);
+    }
+  }
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-neutral-950 px-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <Link href="/" className="inline-flex items-center justify-center">
-            <ChessioLogo variant="horizontal" className="h-8 w-auto" />
-          </Link>
-          <h1 className="mt-6 text-2xl font-semibold tracking-tight text-neutral-50">
-            Welcome back
+          <div className="inline-flex items-center gap-3 mb-4">
+            <ChessioLogo />
+            <div className="text-sm font-medium text-amber-300 bg-amber-300/10 px-3 py-1 rounded-full border border-amber-300/20">
+              Admin Access
+            </div>
+          </div>
+          <h1 className="text-2xl font-semibold text-neutral-50 mb-2">
+            Admin Sign In
           </h1>
-          <p className="mt-2 text-neutral-400">
-            Sign in to continue your journey
+          <p className="text-neutral-400 text-sm">
+            Content management & AI tools
           </p>
         </div>
 
-        <div className="bg-neutral-900 border border-neutral-800 rounded-2xl shadow-lg p-8">
-          {justRegistered && (
-            <div className="mb-4 p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-sm">
-              Account created! Please sign in.
+        <div className="bg-neutral-900 p-8 rounded-xl border border-neutral-800">
+          {errorParam && (
+            <div className="mb-4 p-3 bg-red-500/10 border border-red-500/20 rounded-lg text-red-400 text-sm">
+              Authentication failed. Please try again.
             </div>
           )}
 
           {error && (
-            <div className="mb-4 p-3 rounded-lg bg-rose-500/10 border border-rose-500/20 text-rose-400 text-sm">
+            <div className="mb-4 p-3 bg-red-500/10 border border-red-500/20 rounded-lg text-red-400 text-sm">
               {error}
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-4 mb-6">
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-neutral-300 mb-1">
+              <label htmlFor="email" className="block text-sm font-medium text-neutral-300 mb-2">
                 Email
               </label>
               <input
+                type="email"
                 id="email"
                 name="email"
-                type="email"
                 required
-                className="w-full px-4 py-2 rounded-lg border border-neutral-700 bg-neutral-950 text-neutral-50 placeholder:text-neutral-500 focus:ring-2 focus:ring-amber-300 focus:border-amber-300 outline-none transition-colors"
-                placeholder="you@example.com"
+                className="w-full px-4 py-3 rounded-lg bg-neutral-800 border border-neutral-700 text-neutral-50 placeholder:text-neutral-500 focus:outline-none focus:ring-2 focus:ring-amber-300 focus:border-transparent"
+                placeholder="admin@example.com"
               />
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-neutral-300 mb-1">
+              <label htmlFor="password" className="block text-sm font-medium text-neutral-300 mb-2">
                 Password
               </label>
               <input
+                type="password"
                 id="password"
                 name="password"
-                type="password"
                 required
-                className="w-full px-4 py-2 rounded-lg border border-neutral-700 bg-neutral-950 text-neutral-50 placeholder:text-neutral-500 focus:ring-2 focus:ring-amber-300 focus:border-amber-300 outline-none transition-colors"
+                className="w-full px-4 py-3 rounded-lg bg-neutral-800 border border-neutral-700 text-neutral-50 placeholder:text-neutral-500 focus:outline-none focus:ring-2 focus:ring-amber-300 focus:border-transparent"
                 placeholder="Your password"
               />
             </div>
@@ -122,16 +138,7 @@ function LoginForm() {
 
           <button
             type="button"
-            onClick={async () => {
-              setGithubLoading(true);
-              setError(null);
-              try {
-                await signIn("github", { callbackUrl: "/app" });
-              } catch {
-                setError("Failed to sign in with GitHub");
-                setGithubLoading(false);
-              }
-            }}
+            onClick={handleGitHubSignIn}
             disabled={githubLoading}
             className="w-full py-3 px-4 rounded-full bg-neutral-800 text-neutral-50 font-medium hover:bg-neutral-700 focus:ring-2 focus:ring-neutral-500 focus:ring-offset-2 focus:ring-offset-neutral-900 transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
           >
@@ -141,11 +148,8 @@ function LoginForm() {
             {githubLoading ? "Signing in..." : "Sign in with GitHub"}
           </button>
 
-          <div className="mt-6 text-center text-sm text-neutral-400">
-            Don&apos;t have an account?{" "}
-            <Link href="/register" className="font-medium text-amber-300 hover:text-amber-200">
-              Sign up
-            </Link>
+          <div className="mt-6 text-center text-sm text-neutral-500">
+            Admin access only • No public registration
           </div>
         </div>
       </div>
@@ -153,14 +157,14 @@ function LoginForm() {
   );
 }
 
-export default function LoginPage() {
+export default function AdminLoginPage() {
   return (
     <Suspense fallback={
       <div className="min-h-screen flex items-center justify-center bg-neutral-950">
         <div className="text-neutral-400">Loading...</div>
       </div>
     }>
-      <LoginForm />
+      <AdminLoginForm />
     </Suspense>
   );
 }

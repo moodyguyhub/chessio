@@ -15,7 +15,7 @@ export default async function AdminLayout({
 
   // Only allow logged-in users
   if (!session?.user?.id) {
-    redirect("/login");
+    redirect("/admin/login");
   }
 
   // Check if user is admin

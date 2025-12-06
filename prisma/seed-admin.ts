@@ -3,7 +3,25 @@
  * Seeds initial SEO pages, keywords, article ideas, and AI prompts
  */
 
-import { db } from "../src/lib/db";
+import "dotenv/config";
+import { PrismaClient } from "@prisma/client";
+import { PrismaPg } from "@prisma/adapter-pg";
+import { Pool } from "pg";
+
+// Parse the Prisma Postgres URL to get the underlying PostgreSQL connection
+function createPrismaClient() {
+  const databaseUrl = process.env.DATABASE_URL;
+  
+  if (!databaseUrl) {
+    throw new Error("DATABASE_URL is not set");
+  }
+
+  const pool = new Pool({ connectionString: databaseUrl });
+  const adapter = new PrismaPg(pool);
+  return new PrismaClient({ adapter });
+}
+
+const db = createPrismaClient();
 
 async function seedCalmAdmin() {
   console.log("🌱 Seeding Calm Admin data...\n");
