@@ -5,10 +5,11 @@ import { allLessons, getPreviousLesson, getLevel0Lessons, getLevel1Lessons, getP
 import { getCompletedLessonSlugs, getUserXp, hasUserGivenFeedback } from "@/lib/lessons/progress";
 import { getLevelForXp, LEVELS } from "@/lib/gamification";
 import { FeedbackButton } from "@/components/ui/FeedbackButton";
+import { AlphaBanner } from "@/components/ui/AlphaBanner";
 import { OnboardingModal, HowItWorksLink } from "@/components/ui/OnboardingModal";
 import { recordDashboardVisit, getLastActiveDescription } from "@/lib/engagement";
-import { getTodaysGoalForUser, getProgressSummary } from "@/lib/engagement/todays-goal";
-import { logDashboardViewed, logWelcomeBackShown } from "@/lib/telemetry";
+import { getTodaysGoalForUser } from "@/lib/engagement/todays-goal";
+import { logDashboardViewed, logWelcomeBackShown, logSessionStarted } from "@/lib/telemetry";
 
 export default async function DashboardPage() {
   const session = await auth();
@@ -32,6 +33,18 @@ export default async function DashboardPage() {
 
   // Get level info for telemetry
   const levelProgress = getLevelForXp(userXp);
+  
+  // Log session_started ONLY if this is a new session (Sprint 04: once per day)
+  if (!engagementStats.isReturningToday) {
+    logSessionStarted({
+      userId,
+      sessionCount: engagementStats.sessionCount,
+      currentLevel: levelProgress.level,
+      currentLevelLabel: levelProgress.label,
+      totalXp: userXp,
+      daysSinceLastVisit: engagementStats.daysSinceLastVisit,
+    });
+  }
   
   // Log dashboard viewed event (Sprint 03 telemetry)
   logDashboardViewed({
@@ -60,8 +73,8 @@ export default async function DashboardPage() {
     totalXp: userXp,
   });
 
-  // Get progress summary (Sprint 03)
-  const progressSummary = getProgressSummary(completedSlugs);
+  // Get progress summary (Sprint 03) - for future use
+  // const progressSummary = getProgressSummary(completedSlugs);
 
   // Get lessons by level from lessons.ts (source of truth)
   const level0Lessons = getLevel0Lessons();
@@ -130,26 +143,26 @@ export default async function DashboardPage() {
   const level2ProgressPercent = level2TotalLessons > 0 ? Math.round((level2CompletedCount / level2TotalLessons) * 100) : 0;
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      {/* Header */}
-      <header className="bg-white border-b border-slate-200">
+    <div className="min-h-screen bg-slate-950">
+      {/* Header - Sticky Glassmorphism */}
+      <header className="sticky top-0 z-50 glass-panel border-b border-white/10">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <Link href="/app" className="flex items-center gap-2">
+          <Link href="/app" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
             <span className="text-2xl">♟️</span>
-            <span className="text-xl font-bold text-slate-900">Chessio</span>
+            <span className="text-xl font-bold text-white tracking-tight">Chessio</span>
           </Link>
           
           <div className="flex items-center gap-4">
             {/* XP Display */}
             <div className="hidden sm:flex items-center gap-2 text-sm">
-              <span className="font-medium text-slate-900">{levelProgress.label}</span>
-              <div className="w-24 h-2 bg-slate-200 rounded-full overflow-hidden">
+              <span className="px-2.5 py-1 bg-teal-900/20 text-teal-200 rounded-full font-medium text-xs tracking-tight">{levelProgress.label}</span>
+              <div className="w-24 h-2 bg-white/10 rounded-full overflow-hidden">
                 <div 
-                  className="h-full bg-emerald-500 transition-all duration-500"
+                  className="h-full bg-teal-500 transition-all duration-500"
                   style={{ width: `${levelProgress.progressPercent}%` }}
                 />
               </div>
-              <span className="text-slate-500">
+              <span className="text-slate-400">
                 {nextLevel ? `${levelProgress.xpIntoLevel}/${nextLevel.cumulativeXpRequired - LEVELS[levelProgress.level].cumulativeXpRequired} XP` : `${userXp} XP`}
               </span>
             </div>
@@ -163,7 +176,7 @@ export default async function DashboardPage() {
             >
               <button
                 type="submit"
-                className="text-sm text-slate-600 hover:text-slate-900"
+                className="text-sm text-slate-400 hover:text-white transition-colors"
               >
                 Sign out
               </button>
@@ -174,27 +187,30 @@ export default async function DashboardPage() {
 
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8">
+        {/* Alpha Banner (Sprint 04) */}
+        <AlphaBanner />
+        
         {/* Welcome Back State (Sprint 03) */}
         <div className="mb-6">
           <div className="flex items-center justify-between">
             <div>
               {engagementStats.isReturningUser ? (
                 <>
-                  <h1 className="text-2xl font-bold text-slate-900">
-                    Welcome back, {session.user.name || "Learner"}! 👋
+                  <h1 className="text-2xl font-bold text-white tracking-tight">
+                    Welcome back, {session.user.name || "Learner"}
                   </h1>
-                  <p className="text-slate-600 mt-1">
+                  <p className="text-slate-400 mt-1">
                     {getLastActiveDescription(engagementStats.daysSinceLastVisit)}
                     {" · "}
-                    <span className="text-emerald-600 font-medium">{levelProgress.label}</span>
+                    <span className="text-teal-400 font-medium">{levelProgress.label}</span>
                   </p>
                 </>
               ) : (
                 <>
-                  <h1 className="text-2xl font-bold text-slate-900">
-                    Welcome to Chessio, {session.user.name || "Learner"}! ♟️
+                  <h1 className="text-2xl font-bold text-white tracking-tight">
+                    Welcome to Chessio, {session.user.name || "Learner"}
                   </h1>
-                  <p className="text-slate-600 mt-1">
+                  <p className="text-slate-400 mt-1">
                     Start your chess journey with bite-sized lessons
                   </p>
                 </>
@@ -205,7 +221,7 @@ export default async function DashboardPage() {
               {engagementStats.sessionCount > 0 && (
                 <div className="hidden sm:block text-right">
                   <p className="text-xs text-slate-500">Sessions</p>
-                  <p className="text-lg font-semibold text-slate-700">{engagementStats.sessionCount}</p>
+                  <p className="text-lg font-semibold text-slate-300">{engagementStats.sessionCount}</p>
                 </div>
               )}
               <HowItWorksLink />
@@ -213,29 +229,29 @@ export default async function DashboardPage() {
           </div>
         </div>
 
-        {/* Today's Goal Card (Sprint 03) */}
-        <div className="mb-8 bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-xl p-5">
+        {/* Today's Goal Card (Sprint 03) - Premium Hero */}
+        <div className="mb-8 bg-slate-900/50 border border-white/5 border-t-4 border-t-amber-500/80 rounded-2xl p-6">
           <div className="flex items-start justify-between gap-4">
             <div className="flex-1">
-              <div className="flex items-center gap-2 mb-1">
-                <span className="text-amber-600">🎯</span>
-                <h2 className="text-sm font-semibold text-amber-800 uppercase tracking-wide">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="text-amber-500">🎯</span>
+                <h2 className="text-xs font-semibold text-amber-500/80 uppercase tracking-wide">
                   Today&apos;s Goal
                 </h2>
               </div>
-              <h3 className="text-lg font-bold text-slate-900 mb-1">
+              <h3 className="text-xl font-bold text-white tracking-tight mb-2">
                 {todaysGoal.title}
               </h3>
-              <p className="text-slate-600 text-sm mb-3">
+              <p className="text-slate-400 text-sm mb-4">
                 {todaysGoal.description}
               </p>
               {todaysGoal.progress && (
                 <div className="mb-3">
-                  <div className="flex items-center justify-between text-xs text-slate-500 mb-1">
+                  <div className="flex items-center justify-between text-xs text-slate-500 mb-1.5">
                     <span>{todaysGoal.progress.label}</span>
                     <span>{todaysGoal.progress.completed}/{todaysGoal.progress.total}</span>
                   </div>
-                  <div className="h-1.5 bg-amber-200 rounded-full overflow-hidden">
+                  <div className="h-2 bg-white/10 rounded-full overflow-hidden">
                     <div 
                       className="h-full bg-amber-500 transition-all duration-500"
                       style={{ width: `${(todaysGoal.progress.completed / todaysGoal.progress.total) * 100}%` }}
@@ -246,7 +262,7 @@ export default async function DashboardPage() {
             </div>
             <Link
               href={todaysGoal.action.href}
-              className="shrink-0 px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white font-medium rounded-lg transition-colors text-sm"
+              className="shrink-0 px-5 py-2.5 bg-amber-500 hover:bg-amber-600 text-white font-medium rounded-lg transition-all hover:scale-[1.02] text-sm tracking-tight"
             >
               {todaysGoal.action.label}
             </Link>
@@ -257,45 +273,45 @@ export default async function DashboardPage() {
         <OnboardingModal />
 
         {/* Mobile XP & Session Display */}
-        <div className="sm:hidden mb-6 p-4 bg-white rounded-xl shadow-sm">
+        <div className="sm:hidden mb-6 p-4 bg-slate-900/50 border border-white/5 rounded-2xl">
           <div className="flex items-center justify-between mb-2">
-            <span className="font-medium text-slate-900">{levelProgress.label}</span>
+            <span className="px-2.5 py-1 bg-teal-900/20 text-teal-200 rounded-full font-medium text-xs">{levelProgress.label}</span>
             <div className="flex items-center gap-3">
               {engagementStats.sessionCount > 0 && (
                 <span className="text-xs text-slate-500">{engagementStats.sessionCount} sessions</span>
               )}
-              <span className="text-sm text-slate-500">{userXp} XP</span>
+              <span className="text-sm text-slate-400">{userXp} XP</span>
             </div>
           </div>
-          <div className="w-full h-2 bg-slate-200 rounded-full overflow-hidden">
+          <div className="w-full h-2 bg-white/10 rounded-full overflow-hidden">
             <div 
-              className="h-full bg-emerald-500 transition-all duration-500"
+              className="h-full bg-teal-500 transition-all duration-500"
               style={{ width: `${levelProgress.progressPercent}%` }}
             />
           </div>
           {nextLevel ? (
-            <p className="text-xs text-slate-500 mt-1">{levelProgress.xpToNextLevel} XP to {nextLevel.label}</p>
+            <p className="text-xs text-slate-500 mt-1.5">{levelProgress.xpToNextLevel} XP to {nextLevel.label}</p>
           ) : (
-            <p className="text-xs text-emerald-600 mt-1">Max level reached! 🏆</p>
+            <p className="text-xs text-teal-400 mt-1.5">Max level reached! 🏆</p>
           )}
         </div>
 
-        {/* Level 0 Card */}
-        <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+        {/* Level 0 Card - Always Visible */}
+        <div className="bg-slate-900/50 border border-white/5 rounded-2xl overflow-hidden">
           {/* Card Header */}
-          <div className="p-6 bg-gradient-to-r from-emerald-500 to-emerald-600">
+          <div className="p-6 bg-gradient-to-r from-teal-600 to-teal-700">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-emerald-100 text-sm font-medium">Level 0</p>
-                <h2 className="text-2xl font-bold text-white mt-1">Learn the Pieces</h2>
+                <p className="text-teal-100 text-sm font-medium">Level 0</p>
+                <h2 className="text-2xl font-bold text-white tracking-tight mt-1">Learn the Pieces</h2>
               </div>
               <div className="text-right">
-                <p className="text-emerald-100 text-sm">Progress</p>
+                <p className="text-teal-100 text-sm">Progress</p>
                 <p className="text-2xl font-bold text-white">{level0ProgressPercent}%</p>
               </div>
             </div>
             {/* Progress bar */}
-            <div className="mt-4 w-full h-2 bg-emerald-400/30 rounded-full overflow-hidden">
+            <div className="mt-4 w-full h-2 bg-teal-400/30 rounded-full overflow-hidden">
               <div 
                 className="h-full bg-white transition-all duration-500"
                 style={{ width: `${level0ProgressPercent}%` }}
@@ -305,7 +321,7 @@ export default async function DashboardPage() {
 
           {/* Lesson List */}
           <div className="p-6">
-            <h3 className="text-sm font-medium text-slate-500 uppercase tracking-wide mb-4">
+            <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-4">
               Lessons
             </h3>
             <div className="space-y-3">
@@ -315,22 +331,22 @@ export default async function DashboardPage() {
                 return (
                   <div
                     key={lesson.slug}
-                    className={`flex items-center gap-3 p-4 rounded-xl border transition-colors ${
+                    className={`flex items-center gap-3 p-4 rounded-xl border transition-all ${
                       isCompleted
-                        ? "bg-emerald-50 border-emerald-200"
+                        ? "bg-teal-900/20 border-teal-500/20"
                         : isAvailable
-                        ? "bg-white border-slate-200 hover:border-emerald-300 hover:shadow-sm"
-                        : "bg-slate-50 border-slate-200 opacity-60"
+                        ? "bg-slate-800/50 border-white/5 hover:border-teal-500/20 hover:scale-[1.01]"
+                        : "bg-slate-800/30 border-white/5 opacity-60"
                     }`}
                   >
                     {/* Status Icon */}
                     <div
                       className={`w-10 h-10 shrink-0 rounded-full flex items-center justify-center text-lg ${
                         isCompleted
-                          ? "bg-emerald-500 text-white"
+                          ? "bg-teal-500 text-white"
                           : isAvailable
-                          ? "bg-emerald-100 text-emerald-600"
-                          : "bg-slate-200 text-slate-400"
+                          ? "bg-teal-900/30 text-teal-400"
+                          : "bg-slate-700 text-slate-500"
                       }`}
                     >
                       {isCompleted ? "✓" : isLocked ? "🔒" : "▶"}
@@ -338,13 +354,13 @@ export default async function DashboardPage() {
 
                     {/* Lesson Info */}
                     <div className="flex-1 min-w-0">
-                      <h4 className={`font-medium ${
-                        isLocked ? "text-slate-400" : "text-slate-900"
+                      <h4 className={`font-medium tracking-tight ${
+                        isLocked ? "text-slate-500" : "text-white"
                       }`}>
                         {lesson.title}
                       </h4>
                       <p className={`text-sm ${
-                        isLocked ? "text-slate-400" : "text-emerald-600"
+                        isLocked ? "text-slate-600" : "text-teal-400"
                       }`}>
                         +{lesson.xpReward} XP
                       </p>
@@ -354,19 +370,19 @@ export default async function DashboardPage() {
                     {isCompleted ? (
                       <Link
                         href={`/lessons/${lesson.slug}`}
-                        className="shrink-0 px-3 py-2 text-sm font-medium text-emerald-600 hover:text-emerald-700"
+                        className="shrink-0 px-3 py-2 text-sm font-medium text-teal-400 hover:text-teal-300 transition-colors"
                       >
                         Replay
                       </Link>
                     ) : isAvailable ? (
                       <Link
                         href={`/lessons/${lesson.slug}`}
-                        className="shrink-0 px-3 py-2 text-sm font-medium bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors"
+                        className="shrink-0 px-4 py-2 text-sm font-medium bg-teal-500 text-white rounded-lg hover:bg-teal-600 transition-all hover:scale-[1.02]"
                       >
                         Start
                       </Link>
                     ) : (
-                      <span className="shrink-0 px-3 py-2 text-sm text-slate-400">
+                      <span className="shrink-0 px-3 py-2 text-sm text-slate-500">
                         Locked
                       </span>
                     )}
@@ -377,8 +393,9 @@ export default async function DashboardPage() {
           </div>
         </div>
 
-        {/* Level 1 Card */}
-        <div className={`mt-8 bg-white rounded-2xl shadow-lg overflow-hidden ${!level0Complete ? "opacity-75" : ""}`}>
+        {/* Level 1 Card - Blinders: Only show if user has XP > 0 */}
+        {userXp > 0 && (
+        <div className={`mt-8 bg-slate-900/50 border border-white/5 rounded-2xl overflow-hidden ${!level0Complete ? "opacity-75" : ""}`}>
           {/* Card Header */}
           <div className="p-6 bg-gradient-to-r from-blue-500 to-blue-600">
             <div className="flex items-center justify-between">
@@ -402,7 +419,7 @@ export default async function DashboardPage() {
 
           {/* Lesson List */}
           <div className="p-6">
-            <h3 className="text-sm font-medium text-slate-500 uppercase tracking-wide mb-4">
+            <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-4">
               Lessons
             </h3>
             <div className="space-y-3">
@@ -412,12 +429,12 @@ export default async function DashboardPage() {
                 return (
                   <div
                     key={lesson.slug}
-                    className={`flex items-center gap-3 p-4 rounded-xl border transition-colors ${
+                    className={`flex items-center gap-3 p-4 rounded-xl border transition-all ${
                       isCompleted
-                        ? "bg-blue-50 border-blue-200"
+                        ? "bg-blue-900/20 border-blue-500/20"
                         : isAvailable
-                        ? "bg-white border-slate-200 hover:border-blue-300 hover:shadow-sm"
-                        : "bg-slate-50 border-slate-200 opacity-60"
+                        ? "bg-slate-800/50 border-white/5 hover:border-blue-500/20 hover:scale-[1.01]"
+                        : "bg-slate-800/30 border-white/5 opacity-60"
                     }`}
                   >
                     {/* Status Icon */}
@@ -426,8 +443,8 @@ export default async function DashboardPage() {
                         isCompleted
                           ? "bg-blue-500 text-white"
                           : isAvailable
-                          ? "bg-blue-100 text-blue-600"
-                          : "bg-slate-200 text-slate-400"
+                          ? "bg-blue-900/30 text-blue-400"
+                          : "bg-slate-700 text-slate-500"
                       }`}
                     >
                       {isCompleted ? "✓" : isLocked ? "🔒" : "▶"}
@@ -435,13 +452,13 @@ export default async function DashboardPage() {
 
                     {/* Lesson Info */}
                     <div className="flex-1 min-w-0">
-                      <h4 className={`font-medium ${
-                        isLocked ? "text-slate-400" : "text-slate-900"
+                      <h4 className={`font-medium tracking-tight ${
+                        isLocked ? "text-slate-500" : "text-white"
                       }`}>
                         {lesson.title}
                       </h4>
                       <p className={`text-sm ${
-                        isLocked ? "text-slate-400" : "text-blue-600"
+                        isLocked ? "text-slate-600" : "text-blue-400"
                       }`}>
                         +{lesson.xpReward} XP
                       </p>
@@ -451,19 +468,19 @@ export default async function DashboardPage() {
                     {isCompleted ? (
                       <Link
                         href={`/lessons/${lesson.slug}`}
-                        className="shrink-0 px-3 py-2 text-sm font-medium text-blue-600 hover:text-blue-700"
+                        className="shrink-0 px-3 py-2 text-sm font-medium text-blue-400 hover:text-blue-300 transition-colors"
                       >
                         Replay
                       </Link>
                     ) : isAvailable ? (
                       <Link
                         href={`/lessons/${lesson.slug}`}
-                        className="shrink-0 px-3 py-2 text-sm font-medium bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                        className="shrink-0 px-4 py-2 text-sm font-medium bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-all hover:scale-[1.02]"
                       >
                         Start
                       </Link>
                     ) : (
-                      <span className="shrink-0 px-3 py-2 text-sm text-slate-400">
+                      <span className="shrink-0 px-3 py-2 text-sm text-slate-500">
                         Locked
                       </span>
                     )}
@@ -473,9 +490,11 @@ export default async function DashboardPage() {
             </div>
           </div>
         </div>
+        )}
 
-        {/* Puzzles Card */}
-        <div className={`mt-8 bg-white rounded-2xl shadow-lg overflow-hidden ${!level1Complete ? "opacity-75" : ""}`}>
+        {/* Puzzles Card - Blinders: Only show if Level 0 complete */}
+        {level0Complete && (
+        <div className={`mt-8 bg-slate-900/50 border border-white/5 rounded-2xl overflow-hidden ${!level1Complete ? "opacity-75" : ""}`}>
           {/* Card Header */}
           <div className="p-6 bg-gradient-to-r from-purple-500 to-purple-600">
             <div className="flex items-center justify-between">
@@ -499,7 +518,7 @@ export default async function DashboardPage() {
 
           {/* Puzzle List */}
           <div className="p-6">
-            <h3 className="text-sm font-medium text-slate-500 uppercase tracking-wide mb-4">
+            <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-4">
               Puzzle Sets
             </h3>
             <div className="space-y-3">
@@ -509,12 +528,12 @@ export default async function DashboardPage() {
                 return (
                   <div
                     key={lesson.slug}
-                    className={`flex items-center gap-3 p-4 rounded-xl border transition-colors ${
+                    className={`flex items-center gap-3 p-4 rounded-xl border transition-all ${
                       isCompleted
-                        ? "bg-purple-50 border-purple-200"
+                        ? "bg-purple-900/20 border-purple-500/20"
                         : isAvailable
-                        ? "bg-white border-slate-200 hover:border-purple-300 hover:shadow-sm"
-                        : "bg-slate-50 border-slate-200 opacity-60"
+                        ? "bg-slate-800/50 border-white/5 hover:border-purple-500/20 hover:scale-[1.01]"
+                        : "bg-slate-800/30 border-white/5 opacity-60"
                     }`}
                   >
                     {/* Status Icon */}
@@ -523,8 +542,8 @@ export default async function DashboardPage() {
                         isCompleted
                           ? "bg-purple-500 text-white"
                           : isAvailable
-                          ? "bg-purple-100 text-purple-600"
-                          : "bg-slate-200 text-slate-400"
+                          ? "bg-purple-900/30 text-purple-400"
+                          : "bg-slate-700 text-slate-500"
                       }`}
                     >
                       {isCompleted ? "✓" : isLocked ? "🔒" : "🧩"}
@@ -532,13 +551,13 @@ export default async function DashboardPage() {
 
                     {/* Puzzle Info */}
                     <div className="flex-1 min-w-0">
-                      <h4 className={`font-medium ${
-                        isLocked ? "text-slate-400" : "text-slate-900"
+                      <h4 className={`font-medium tracking-tight ${
+                        isLocked ? "text-slate-500" : "text-white"
                       }`}>
                         {lesson.title}
                       </h4>
                       <p className={`text-sm ${
-                        isLocked ? "text-slate-400" : "text-purple-600"
+                        isLocked ? "text-slate-600" : "text-purple-400"
                       }`}>
                         +{lesson.xpReward} XP
                       </p>
@@ -548,19 +567,19 @@ export default async function DashboardPage() {
                     {isCompleted ? (
                       <Link
                         href={`/lessons/${lesson.slug}`}
-                        className="shrink-0 px-3 py-2 text-sm font-medium text-purple-600 hover:text-purple-700"
+                        className="shrink-0 px-3 py-2 text-sm font-medium text-purple-400 hover:text-purple-300 transition-colors"
                       >
                         Replay
                       </Link>
                     ) : isAvailable ? (
                       <Link
                         href={`/lessons/${lesson.slug}`}
-                        className="shrink-0 px-3 py-2 text-sm font-medium bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+                        className="shrink-0 px-4 py-2 text-sm font-medium bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-all hover:scale-[1.02]"
                       >
                         Start
                       </Link>
                     ) : (
-                      <span className="shrink-0 px-3 py-2 text-sm text-slate-400">
+                      <span className="shrink-0 px-3 py-2 text-sm text-slate-500">
                         Locked
                       </span>
                     )}
@@ -570,9 +589,11 @@ export default async function DashboardPage() {
             </div>
           </div>
         </div>
+        )}
 
-        {/* Level 2 Card - Edge Cases */}
-        <div className={`mt-8 bg-white rounded-2xl shadow-lg overflow-hidden ${!puzzlesComplete ? "opacity-75" : ""}`}>
+        {/* Level 2 Card - Blinders: Only show if Level 1 complete */}
+        {level1Complete && (
+        <div className={`mt-8 bg-slate-900/50 border border-white/5 rounded-2xl overflow-hidden ${!puzzlesComplete ? "opacity-75" : ""}`}>
           {/* Card Header */}
           <div className="p-6 bg-gradient-to-r from-amber-500 to-orange-500">
             <div className="flex items-center justify-between">
@@ -596,7 +617,7 @@ export default async function DashboardPage() {
 
           {/* Level 2 Lessons */}
           <div className="p-6">
-            <h3 className="text-sm font-medium text-slate-500 uppercase tracking-wide mb-4">
+            <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-4">
               Special Rules
             </h3>
             <div className="space-y-3">
@@ -606,12 +627,12 @@ export default async function DashboardPage() {
                 return (
                   <div
                     key={lesson.slug}
-                    className={`flex items-center gap-3 p-4 rounded-xl border transition-colors ${
+                    className={`flex items-center gap-3 p-4 rounded-xl border transition-all ${
                       isCompleted
-                        ? "bg-amber-50 border-amber-200"
+                        ? "bg-amber-900/20 border-amber-500/20"
                         : isAvailable
-                        ? "bg-white border-slate-200 hover:border-amber-300 hover:shadow-sm"
-                        : "bg-slate-50 border-slate-200 opacity-60"
+                        ? "bg-slate-800/50 border-white/5 hover:border-amber-500/20 hover:scale-[1.01]"
+                        : "bg-slate-800/30 border-white/5 opacity-60"
                     }`}
                   >
                     {/* Status Icon */}
@@ -620,8 +641,8 @@ export default async function DashboardPage() {
                         isCompleted
                           ? "bg-amber-500 text-white"
                           : isAvailable
-                          ? "bg-amber-100 text-amber-600"
-                          : "bg-slate-200 text-slate-400"
+                          ? "bg-amber-900/30 text-amber-400"
+                          : "bg-slate-700 text-slate-500"
                       }`}
                     >
                       {isCompleted ? "✓" : isLocked ? "🔒" : lesson.slug.includes("en-passant") ? "♟" : "½"}
@@ -629,13 +650,13 @@ export default async function DashboardPage() {
 
                     {/* Lesson Info */}
                     <div className="flex-1 min-w-0">
-                      <h4 className={`font-medium ${
-                        isLocked ? "text-slate-400" : "text-slate-900"
+                      <h4 className={`font-medium tracking-tight ${
+                        isLocked ? "text-slate-500" : "text-white"
                       }`}>
                         {lesson.title}
                       </h4>
                       <p className={`text-sm ${
-                        isLocked ? "text-slate-400" : "text-amber-600"
+                        isLocked ? "text-slate-600" : "text-amber-400"
                       }`}>
                         +{lesson.xpReward} XP
                       </p>
@@ -645,19 +666,19 @@ export default async function DashboardPage() {
                     {isCompleted ? (
                       <Link
                         href={`/lessons/${lesson.slug}`}
-                        className="shrink-0 px-3 py-2 text-sm font-medium text-amber-600 hover:text-amber-700"
+                        className="shrink-0 px-3 py-2 text-sm font-medium text-amber-400 hover:text-amber-300 transition-colors"
                       >
                         Replay
                       </Link>
                     ) : isAvailable ? (
                       <Link
                         href={`/lessons/${lesson.slug}`}
-                        className="shrink-0 px-3 py-2 text-sm font-medium bg-amber-500 text-white rounded-lg hover:bg-amber-600 transition-colors"
+                        className="shrink-0 px-4 py-2 text-sm font-medium bg-amber-500 text-white rounded-lg hover:bg-amber-600 transition-all hover:scale-[1.02]"
                       >
                         Start
                       </Link>
                     ) : (
-                      <span className="shrink-0 px-3 py-2 text-sm text-slate-400">
+                      <span className="shrink-0 px-3 py-2 text-sm text-slate-500">
                         Locked
                       </span>
                     )}
@@ -667,6 +688,7 @@ export default async function DashboardPage() {
             </div>
           </div>
         </div>
+        )}
       </main>
 
       {/* Floating Feedback Button */}

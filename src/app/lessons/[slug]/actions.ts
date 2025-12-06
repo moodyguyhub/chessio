@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { auth } from "@/lib/auth";
 import {
   completeLessonAndAwardXp,
@@ -38,6 +39,9 @@ export async function completeLessonAction(
 
   // Compute next best step
   const nextStep = getNextBestStep(completedSlugs, lessonSlug);
+
+  // Revalidate dashboard cache so Today's Goal updates (Sprint 04)
+  revalidatePath("/(protected)/app", "page");
 
   return {
     ...result,

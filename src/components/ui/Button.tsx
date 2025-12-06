@@ -9,13 +9,13 @@ type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className = "", variant = "primary", size = "md", isLoading, children, ...props }, ref) => {
     
-    const baseStyles = "inline-flex items-center justify-center font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none rounded-lg";
+    const baseStyles = "inline-flex items-center justify-center font-medium transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-950 disabled:opacity-50 disabled:pointer-events-none rounded-lg tracking-tight";
     
     const variants = {
-      primary: "bg-chessio-primary text-white hover:bg-indigo-700 dark:bg-chessio-primary-dark dark:hover:bg-indigo-600 focus:ring-chessio-primary",
-      secondary: "bg-transparent border border-chessio-border text-chessio-text hover:bg-slate-100 dark:border-chessio-border-dark dark:text-chessio-text-dark dark:hover:bg-slate-800",
-      ghost: "bg-transparent text-chessio-text hover:bg-slate-100 dark:text-chessio-text-dark dark:hover:bg-slate-800",
-      destructive: "bg-chessio-danger text-white hover:bg-red-700 focus:ring-red-500",
+      primary: "bg-teal-500 text-white hover:bg-teal-600 hover:scale-[1.02] focus:ring-teal-500/50",
+      secondary: "bg-slate-800/50 border border-white/10 text-white hover:bg-slate-800 hover:border-white/20",
+      ghost: "bg-transparent text-slate-300 hover:bg-slate-800/50 hover:text-white",
+      destructive: "bg-red-600 text-white hover:bg-red-700 focus:ring-red-500/50",
     };
 
     const sizes = {

@@ -1,0 +1,13 @@
+<svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Filled circle background (amber-200) -->
+  <circle cx="50" cy="50" r="50" fill="#FDE68A"/>
+  
+  <!-- Pawn silhouette (dark for contrast) -->
+  <path d="M50 28C45.0294 28 41 32.0294 41 37C41 41 43.5 44.4 47 45.5L42 68H58L53 45.5C56.5 44.4 59 41 59 37C59 32.0294 54.9706 28 50 28Z" fill="#0A0A0A"/>
+  
+  <!-- Base -->
+  <rect x="36" y="68" width="28" height="6" rx="2" fill="#0A0A0A"/>
+  
+  <!-- Base accent line -->
+  <path d="M38 71H62" stroke="#0A0A0A" stroke-width="2.5" stroke-linecap="round"/>
+</svg>

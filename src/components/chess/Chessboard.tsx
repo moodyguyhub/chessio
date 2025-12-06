@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useCallback, useMemo } from "react";
+import { PIECE_COMPONENTS } from "./ChessPieces";
 
 // ============================================
 // TYPES
@@ -35,12 +36,6 @@ export interface ChessboardProps {
 // ============================================
 // CONSTANTS
 // ============================================
-
-// Piece characters for rendering (using filled black symbols for all, colored via CSS)
-const PIECE_SYMBOLS: Record<string, string> = {
-  K: "♚", Q: "♛", R: "♜", B: "♝", N: "♞", P: "♟",
-  k: "♚", q: "♛", r: "♜", b: "♝", n: "♞", p: "♟",
-};
 
 // Map highlight kinds to CSS classes (defined in globals.css)
 const HIGHLIGHT_CLASSES: Record<HighlightKind, string> = {
@@ -134,7 +129,7 @@ export function Chessboard({
       {/* Board */}
       <div 
         className={`
-          grid grid-cols-8 rounded-lg overflow-hidden bg-amber-700
+          grid grid-cols-8 rounded-lg overflow-hidden bg-stone-700
           ${state.isError ? "animate-shake" : ""}
         `}
       >
@@ -149,25 +144,26 @@ export function Chessboard({
               className={`
                 aspect-square flex items-center justify-center relative
                 transition-all duration-150
-                ${isLight ? "bg-amber-100" : "bg-amber-700"}
+                ${isLight ? "bg-stone-100" : "bg-stone-700"}
                 ${highlightClass}
                 ${isDisabled ? "cursor-not-allowed" : "cursor-pointer"}
               `}
               onClick={() => handleSquareClick(square)}
             >
-              {/* Piece */}
-              {piece && (
-                <span
-                  className={`
-                    text-4xl sm:text-5xl select-none pointer-events-none
-                    ${piece === piece.toUpperCase() 
-                      ? "text-amber-50 drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)]" 
-                      : "text-slate-800 drop-shadow-[0_1px_1px_rgba(255,255,255,0.2)]"}
-                  `}
-                >
-                  {PIECE_SYMBOLS[piece]}
-                </span>
-              )}
+              {/* Piece - Flat Staunton SVG */}
+              {piece && (() => {
+                const PieceComponent = PIECE_COMPONENTS[piece];
+                const isSelected = highlightKind === "selected";
+                return PieceComponent ? (
+                  <PieceComponent 
+                    className={`
+                      w-[80%] h-[80%] select-none pointer-events-none
+                      transition-transform duration-150
+                      ${isSelected ? "scale-105" : ""}
+                    `}
+                  />
+                ) : null;
+              })()}
             </div>
           );
         })}

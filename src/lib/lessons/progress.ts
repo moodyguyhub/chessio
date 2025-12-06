@@ -36,6 +36,7 @@ export type CompleteLessonResult = {
   leveledUp: boolean;
   newLevel: number;
   contentTypeLabel: string; // e.g., "Core Lesson"
+  bishopAchieved?: boolean; // Sprint 04: First time reaching Bishop (375+ XP)
 };
 
 // ============================================
@@ -118,6 +119,10 @@ export async function completeLessonAndAwardXp({
     const newLevel = calculateLevelFromXp(user.xp);
     const leveledUp = newLevel > previousLevel;
 
+    // Check if user just achieved Bishop (375+ XP) for the first time
+    const BISHOP_THRESHOLD = 375;
+    const bishopAchieved = user.xp >= BISHOP_THRESHOLD && previousXp < BISHOP_THRESHOLD;
+
     // Log telemetry events (async, fire-and-forget)
     logLessonCompleted({
       userId,
@@ -146,6 +151,7 @@ export async function completeLessonAndAwardXp({
       leveledUp,
       newLevel,
       contentTypeLabel,
+      bishopAchieved,
     };
   });
 }

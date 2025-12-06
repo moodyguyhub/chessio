@@ -12,8 +12,7 @@ import {
   getLevel0Lessons, 
   getLevel1Lessons, 
   getPuzzles, 
-  getLevel2Lessons,
-  type Lesson 
+  getLevel2Lessons
 } from "@/lib/lessons";
 import { getLevelForXp } from "@/lib/gamification/config";
 
@@ -157,9 +156,28 @@ export function getTodaysGoalForUser(progress: UserProgressContext): TodaysGoal 
     };
   }
 
-  // Rule 5: Everything completed!
+  // Rule 5: Everything completed or Bishop reached!
   const totalCompleted = completedSlugs.length;
   const totalLessons = allLessons.length;
+  const isBishop = levelInfo.level >= 3; // Bishop or higher
+
+  if (isBishop) {
+    // Bishop users get a graceful celebration message
+    return {
+      title: "Bishop Achieved – Arc Complete! ♗",
+      description: `You've reached the end of the current season. ${totalCompleted}/${totalLessons} completed. Review favorites or take a well-deserved break!`,
+      action: {
+        type: "review",
+        label: "Browse Lessons",
+        href: "/app",
+      },
+      progress: {
+        completed: totalCompleted,
+        total: totalLessons,
+        label: "Season Progress",
+      },
+    };
+  }
 
   return {
     title: "You've Completed Everything! 🎉",

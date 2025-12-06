@@ -3,17 +3,16 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/Button";
 
-type FeedbackCategory = "bug" | "suggestion" | "praise" | "general";
-
 interface FeedbackButtonProps {
   /** Whether user has already given feedback (hides bounty message) */
   hasGivenFeedback?: boolean;
+  /** Optional lesson/puzzle context for this feedback */
+  lessonSlug?: string;
 }
 
-export function FeedbackButton({ hasGivenFeedback = false }: FeedbackButtonProps) {
+export function FeedbackButton({ hasGivenFeedback = false, lessonSlug }: FeedbackButtonProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [text, setText] = useState("");
-  const [category, setCategory] = useState<FeedbackCategory>("general");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [result, setResult] = useState<{
     success: boolean;
@@ -30,7 +29,7 @@ export function FeedbackButton({ hasGivenFeedback = false }: FeedbackButtonProps
       const res = await fetch("/api/feedback", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text, category }),
+        body: JSON.stringify({ text, category: "general", lessonSlug }),
       });
 
       const data = await res.json();
@@ -68,7 +67,7 @@ export function FeedbackButton({ hasGivenFeedback = false }: FeedbackButtonProps
       {/* Floating Button */}
       <button
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-4 right-4 z-40 flex items-center gap-2 px-4 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-full shadow-lg transition-all hover:scale-105"
+        className="fixed bottom-4 right-4 z-40 flex items-center gap-2 px-4 py-3 bg-teal-500 hover:bg-teal-600 text-white rounded-full shadow-lg transition-all hover:scale-[1.02]"
         aria-label="Send feedback"
       >
         <span className="text-lg">💬</span>
@@ -80,11 +79,11 @@ export function FeedbackButton({ hasGivenFeedback = false }: FeedbackButtonProps
       {/* Modal Overlay */}
       {isOpen && (
         <div 
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/90 backdrop-blur-sm p-4"
           onClick={handleClose}
         >
           <div 
-            className="bg-white dark:bg-slate-800 rounded-2xl shadow-xl max-w-md w-full p-6 transform transition-all"
+            className="bg-slate-900/50 border border-white/10 rounded-2xl shadow-xl max-w-md w-full p-6 transform transition-all animate-slide-up"
             onClick={(e) => e.stopPropagation()}
           >
             {result ? (
@@ -93,15 +92,15 @@ export function FeedbackButton({ hasGivenFeedback = false }: FeedbackButtonProps
                 <div className="text-5xl">
                   {result.success ? "🎉" : "😕"}
                 </div>
-                <h3 className="text-xl font-bold text-slate-900 dark:text-white">
-                  {result.success ? "Thank You!" : "Oops"}
+                <h3 className="text-xl font-bold text-white tracking-tight">
+                  {result.success ? "Thank You" : "Oops"}
                 </h3>
-                <p className="text-slate-600 dark:text-slate-300">
+                <p className="text-slate-300">
                   {result.message}
                 </p>
                 {result.xpAwarded && result.xpAwarded > 0 && (
-                  <div className="inline-block px-4 py-2 bg-emerald-100 dark:bg-emerald-900 text-emerald-700 dark:text-emerald-300 rounded-full font-medium">
-                    +{result.xpAwarded} XP Earned!
+                  <div className="inline-block px-4 py-2 bg-teal-900/30 text-teal-300 rounded-full font-medium">
+                    +{result.xpAwarded} XP Earned
                   </div>
                 )}
                 <Button variant="primary" onClick={handleClose} className="w-full mt-4">
@@ -112,61 +111,38 @@ export function FeedbackButton({ hasGivenFeedback = false }: FeedbackButtonProps
               // Form State
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-lg font-bold text-slate-900 dark:text-white">
+                  <h3 className="text-lg font-bold text-white tracking-tight">
                     Send Feedback
                   </h3>
                   <button
                     type="button"
                     onClick={handleClose}
-                    className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
+                    className="text-slate-400 hover:text-white transition-colors"
                   >
                     ✕
                   </button>
                 </div>
 
                 {!hasGivenFeedback && (
-                  <div className="bg-amber-50 dark:bg-amber-900/30 border border-amber-200 dark:border-amber-700 rounded-lg p-3">
-                    <p className="text-sm text-amber-800 dark:text-amber-200">
-                      🎁 <strong>Founder&apos;s Bonus:</strong> Submit your first feedback and earn <strong>+15 XP</strong>!
+                  <div className="bg-amber-900/20 border border-amber-500/20 rounded-lg p-3">
+                    <p className="text-sm text-amber-300">
+                      🎁 <strong>Founder&apos;s Bonus:</strong> Submit your first feedback and earn <strong>+15 XP</strong>
                     </p>
                   </div>
                 )}
-
-                {/* Category Selection */}
-                <div className="flex flex-wrap gap-2">
-                  {[
-                    { value: "bug", label: "🐛 Bug" },
-                    { value: "suggestion", label: "💡 Idea" },
-                    { value: "praise", label: "❤️ Love it" },
-                    { value: "general", label: "💬 General" },
-                  ].map((cat) => (
-                    <button
-                      key={cat.value}
-                      type="button"
-                      onClick={() => setCategory(cat.value as FeedbackCategory)}
-                      className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
-                        category === cat.value
-                          ? "bg-indigo-600 text-white"
-                          : "bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600"
-                      }`}
-                    >
-                      {cat.label}
-                    </button>
-                  ))}
-                </div>
 
                 {/* Textarea */}
                 <textarea
                   value={text}
                   onChange={(e) => setText(e.target.value)}
-                  placeholder="What's on your mind? Bug reports, suggestions, or just say hi..."
-                  className="w-full h-32 px-4 py-3 rounded-lg border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none"
+                  placeholder="Share your thoughts: bugs, ideas, or just say hi..."
+                  className="w-full h-32 px-4 py-3 rounded-lg border border-white/10 bg-slate-800/50 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 resize-none"
                   maxLength={2000}
                 />
 
-                <div className="flex items-center justify-between text-sm text-slate-500">
+                <div className="flex items-center justify-between text-sm text-slate-400">
                   <span>{text.length}/2000</span>
-                  <span className={text.length < 10 ? "text-amber-500" : "text-emerald-500"}>
+                  <span className={text.length < 10 ? "text-amber-400" : "text-teal-400"}>
                     {text.length < 10 ? `${10 - text.length} more chars needed` : "✓ Ready"}
                   </span>
                 </div>

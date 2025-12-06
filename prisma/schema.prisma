@@ -131,16 +131,20 @@ model UserLessonProgress {
 
 // ============================================
 // BETA VOICE (XP BOUNTY) - Feedback System
+// Sprint 04: Enhanced with context fields
 // ============================================
 
 model Feedback {
-  id        String   @id @default(cuid())
-  userId    String
-  text      String   @db.Text
-  category  String   @default("general") // "bug", "suggestion", "praise", "general"
-  createdAt DateTime @default(now())
+  id          String   @id @default(cuid())
+  userId      String
+  text        String   @db.Text
+  category    String   @default("general") // "bug", "suggestion", "praise", "general"
+  levelAtTime Int      @default(0) // User's level when feedback was given
+  lessonSlug  String?  // Optional: lesson/puzzle context
+  createdAt   DateTime @default(now())
   
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
   
   @@index([userId])
+  @@index([createdAt])
 }

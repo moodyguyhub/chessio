@@ -20,7 +20,7 @@ export async function POST(req: Request) {
 
     const userId = session.user.id; // Store for TypeScript narrowing
 
-    const { text, category = "general" } = await req.json();
+    const { text, category = "general", lessonSlug } = await req.json();
 
     if (!text || typeof text !== "string" || text.trim().length < 10) {
       return NextResponse.json(
@@ -54,14 +54,20 @@ export async function POST(req: Request) {
 
     const isFirstFeedback = !user.feedbackGiven;
 
+    // Calculate level from XP for context
+    const { getLevelForXp } = await import("@/lib/gamification");
+    const levelInfo = getLevelForXp(user.xp);
+
     // Use transaction to ensure atomicity
     const result = await db.$transaction(async (tx) => {
-      // Create feedback
+      // Create feedback with context
       await tx.feedback.create({
         data: {
           userId,
           text: text.trim(),
           category: safeCategory,
+          levelAtTime: levelInfo.level,
+          lessonSlug: lessonSlug || null,
         },
       });
 

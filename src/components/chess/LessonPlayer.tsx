@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/Button";
 import { Card, CardContent } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { XpBreakdown } from "@/components/ui/XpBreakdown";
+import { BishopModal } from "@/components/ui/BishopModal";
 import {
   type Lesson,
   type LessonTask,
@@ -207,8 +208,9 @@ function TaskPlayer({ task, taskIndex, totalTasks, onComplete, isLast, playSound
             </div>
 
             {/* Task Prompt */}
-            <div className="bg-chessio-bg dark:bg-chessio-bg-dark rounded-lg p-4">
-              <p className="font-medium text-chessio-text dark:text-chessio-text-dark">
+            <div className="bg-slate-800/30 border border-white/5 rounded-lg p-4">
+              <p className="text-sm text-slate-400 mb-1">Your task</p>
+              <p className="font-medium text-white tracking-tight">
                 {task.prompt}
               </p>
             </div>
@@ -216,7 +218,7 @@ function TaskPlayer({ task, taskIndex, totalTasks, onComplete, isLast, playSound
             {/* Feedback Area - Fixed height to prevent layout jump */}
             <div className="min-h-[48px] flex items-center">
               {feedback === "correct" && (
-                <p className="text-sm text-chessio-success flex items-center gap-2">
+                <p className="text-sm text-teal-400 flex items-center gap-2 font-medium">
                   <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
@@ -224,7 +226,7 @@ function TaskPlayer({ task, taskIndex, totalTasks, onComplete, isLast, playSound
                 </p>
               )}
               {feedback === "error" && (
-                <p className="text-sm text-chessio-warning flex items-center gap-2">
+                <p className="text-sm text-amber-400 flex items-center gap-2 font-medium">
                   <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                   </svg>
@@ -234,9 +236,9 @@ function TaskPlayer({ task, taskIndex, totalTasks, onComplete, isLast, playSound
             </div>
 
             {/* Hint Section */}
-            <div className="pt-2 border-t border-chessio-border dark:border-chessio-border-dark">
+            <div className="pt-2 border-t border-white/5">
               {showHint ? (
-                <p className="text-sm text-chessio-muted dark:text-chessio-muted-dark italic">
+                <p className="text-sm text-slate-400 italic">
                   💡 {hintMessage}
                 </p>
               ) : (
@@ -286,6 +288,8 @@ export function LessonPlayer({ lesson, initialXpStats }: LessonPlayerProps) {
   const [leveledUp, setLeveledUp] = useState(false);
   const [newLevel, setNewLevel] = useState<number | null>(null);
   const [contentTypeLabel, setContentTypeLabel] = useState<string | null>(null);
+  const [bishopAchieved, setBishopAchieved] = useState(false);
+  const [showBishopModal, setShowBishopModal] = useState(false);
 
   // Next step recommendation (computed server-side after completion)
   const [nextStep, setNextStep] = useState<NextStep | null>(null);
@@ -317,6 +321,15 @@ export function LessonPlayer({ lesson, initialXpStats }: LessonPlayerProps) {
     }
   }, [isLessonComplete, play]);
 
+  // Show Bishop modal when bishopAchieved is true (after XP breakdown)
+  useEffect(() => {
+    if (bishopAchieved && isLessonComplete && !isSaving) {
+      // Delay modal to let XP breakdown show first
+      const timer = setTimeout(() => setShowBishopModal(true), 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [bishopAchieved, isLessonComplete, isSaving]);
+
   // Handle task completion - advance to next or complete lesson
   const handleTaskComplete = useCallback(
     (isCorrect: boolean) => {
@@ -336,6 +349,7 @@ export function LessonPlayer({ lesson, initialXpStats }: LessonPlayerProps) {
               setLeveledUp(result.leveledUp);
               setNewLevel(result.newLevel);
               setContentTypeLabel(result.contentTypeLabel);
+              setBishopAchieved(result.bishopAchieved ?? false);
               setNextStep(result.nextStep);
             })
             .catch((err) => {
@@ -384,7 +398,7 @@ export function LessonPlayer({ lesson, initialXpStats }: LessonPlayerProps) {
   if (!currentTask) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
-        <p className="text-chessio-muted">No tasks found for this lesson.</p>
+        <p className="text-slate-400">No tasks found for this lesson.</p>
       </div>
     );
   }
@@ -395,14 +409,14 @@ export function LessonPlayer({ lesson, initialXpStats }: LessonPlayerProps) {
       <Card>
         <CardContent className="pt-6">
           <div className="flex items-center justify-between mb-2">
-            <h2 className="font-semibold text-lg text-chessio-text dark:text-chessio-text-dark">
+            <h2 className="font-semibold text-lg text-white tracking-tight">
               {lesson.title}
             </h2>
             <Badge variant="default">
               Level {lesson.level}
             </Badge>
           </div>
-          <p className="text-sm text-chessio-muted dark:text-chessio-muted-dark">
+          <p className="text-sm text-slate-400">
             {lesson.description}
           </p>
         </CardContent>
@@ -415,21 +429,21 @@ export function LessonPlayer({ lesson, initialXpStats }: LessonPlayerProps) {
             <div 
               className={`
                 text-center space-y-4 py-8
-                transition-all duration-500 ease-out transform
+                transition-all duration-500 ease-out transform animate-slide-up
                 ${showSuccess ? "opacity-100 scale-100 translate-y-0" : "opacity-0 scale-95 translate-y-4"}
               `}
             >
               <div className="text-5xl mb-4">🎉</div>
-              <h3 className="text-xl font-bold text-chessio-text dark:text-chessio-text-dark">
-                Lesson Complete!
+              <h3 className="text-2xl font-bold text-white tracking-tight">
+                Lesson Complete
               </h3>
-              <p className="text-chessio-muted dark:text-chessio-muted-dark">
+              <p className="text-slate-400">
                 You&apos;ve finished &quot;{lesson.title}&quot;
               </p>
 
               {/* XP Breakdown */}
               {isSaving ? (
-                <p className="text-sm text-chessio-muted dark:text-chessio-muted-dark animate-pulse">
+                <p className="text-sm text-slate-400 animate-pulse">
                   Saving your progress...
                 </p>
               ) : xpAwarded !== null && totalXp !== null ? (
@@ -441,6 +455,7 @@ export function LessonPlayer({ lesson, initialXpStats }: LessonPlayerProps) {
                   leveledUp={leveledUp}
                   newLevel={newLevel ?? undefined}
                   alreadyCompleted={alreadyCompleted}
+                  bishopAchieved={bishopAchieved}
                 />
               ) : (
                 // Fallback if server call failed
@@ -455,7 +470,7 @@ export function LessonPlayer({ lesson, initialXpStats }: LessonPlayerProps) {
                   <>
                     {/* Level completion celebration message */}
                     {nextStep.type === "level-complete" && (
-                      <div className="text-sm text-chessio-success font-medium mb-2">
+                      <div className="text-sm text-teal-400 font-medium mb-2">
                         {nextStep.message}
                       </div>
                     )}
@@ -463,7 +478,7 @@ export function LessonPlayer({ lesson, initialXpStats }: LessonPlayerProps) {
                     {/* All complete message */}
                     {nextStep.type === "all-complete" && (
                       <div className="space-y-3">
-                        <div className="text-sm text-chessio-success font-medium">
+                        <div className="text-sm text-teal-400 font-medium">
                           {nextStep.message}
                         </div>
                         <Button variant="primary" size="lg" onClick={handleBackToDashboard} className="w-full">
@@ -513,6 +528,12 @@ export function LessonPlayer({ lesson, initialXpStats }: LessonPlayerProps) {
           playSound={play}
         />
       )}
+
+      {/* Bishop Modal - Shows after completing lesson that crosses 375 XP threshold */}
+      <BishopModal
+        isOpen={showBishopModal}
+        onClose={() => setShowBishopModal(false)}
+      />
     </div>
   );
 }

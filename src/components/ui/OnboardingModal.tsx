@@ -94,7 +94,7 @@ export function OnboardingModal({ forceOpen = false, onClose }: OnboardingModalP
 
         {/* CTA */}
         <Button variant="primary" size="lg" onClick={handleClose} className="w-full">
-          Let&apos;s Go! 🚀
+          Start Learning
         </Button>
       </div>
     </div>

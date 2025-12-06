@@ -75,13 +75,13 @@ export default async function LessonPage({ params }: LessonPageProps) {
   // Show locked message if trying to access a locked lesson
   if (isLocked && previousLesson) {
     return (
-      <div className="min-h-dvh flex flex-col bg-chessio-bg dark:bg-chessio-bg-dark">
+      <div className="min-h-dvh flex flex-col bg-slate-950">
         {/* Header */}
-        <header className="bg-chessio-card dark:bg-chessio-card-dark border-b border-chessio-border dark:border-chessio-border-dark">
+        <header className="glass-panel border-b border-white/10">
           <div className="container mx-auto px-4 py-4 flex items-center justify-between">
             <Link 
               href="/app" 
-              className="flex items-center gap-2 text-chessio-muted hover:text-chessio-text dark:hover:text-chessio-text-dark transition-colors"
+              className="flex items-center gap-2 text-slate-400 hover:text-white transition-colors"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -104,10 +104,10 @@ export default async function LessonPage({ params }: LessonPageProps) {
             <CardContent className="pt-6">
               <div className="text-center space-y-4 py-8">
                 <div className="text-5xl mb-4">🔒</div>
-                <h3 className="text-xl font-bold text-chessio-text dark:text-chessio-text-dark">
+                <h3 className="text-xl font-bold text-white tracking-tight">
                   Lesson Locked
                 </h3>
-                <p className="text-chessio-muted dark:text-chessio-muted-dark">
+                <p className="text-slate-400">
                   Complete &quot;{previousLesson.title}&quot; first to unlock this lesson.
                 </p>
                 <div className="flex flex-col gap-3 pt-4">
@@ -131,14 +131,14 @@ export default async function LessonPage({ params }: LessonPageProps) {
   }
 
   return (
-    <div className="min-h-dvh flex flex-col bg-chessio-bg dark:bg-chessio-bg-dark">
+    <div className="min-h-dvh flex flex-col bg-slate-950">
       {/* Header */}
-      <header className="bg-chessio-card dark:bg-chessio-card-dark border-b border-chessio-border dark:border-chessio-border-dark">
+      <header className="glass-panel border-b border-white/10">
         <div className="container mx-auto px-4 py-3">
           <div className="flex items-center justify-between mb-2">
             <Link 
               href="/app" 
-              className="flex items-center gap-2 text-chessio-muted hover:text-chessio-text dark:hover:text-chessio-text-dark transition-colors"
+              className="flex items-center gap-2 text-slate-400 hover:text-white transition-colors"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -148,7 +148,7 @@ export default async function LessonPage({ params }: LessonPageProps) {
             
             <div className="flex items-center gap-2">
               <span className="text-2xl">♟️</span>
-              <span className="text-lg font-bold text-chessio-text dark:text-chessio-text-dark">Chessio</span>
+              <span className="text-lg font-bold text-white tracking-tight">Chessio</span>
             </div>
 
             <div className="w-16 sm:w-24" /> {/* Spacer for centering */}
