@@ -1,4 +1,6 @@
 import { db } from "@/lib/db";
+import { subDays } from "date-fns";
+import { MODEL_REASONING, MODEL_CHEAP } from "@/lib/ai-config";
 
 export const runtime = "nodejs";
 
@@ -10,6 +12,25 @@ export default async function AdminDashboard() {
     db.articleIdea.count(),
     db.aiPromptTemplate.count(),
   ]);
+
+  // AI Health: Last 7 days
+  const since = subDays(new Date(), 7);
+  const aiTasks = await db.aiTask.findMany({
+    where: { createdAt: { gte: since } },
+    select: { 
+      status: true,
+      // Note: model field doesn't exist yet in schema, will track manually
+    },
+  });
+
+  const totalTasks = aiTasks.length;
+  const acceptedTasks = aiTasks.filter(t => t.status === "ACCEPTED").length;
+  const acceptanceRate = totalTasks > 0 ? Math.round((acceptedTasks / totalTasks) * 100) : 0;
+  
+  // For now, estimate model mix (will be accurate once we log model in DB)
+  // Assuming ~90% cheap, ~10% reasoning based on scope distribution
+  const estimatedReasoning = Math.round(totalTasks * 0.1);
+  const estimatedCheap = totalTasks - estimatedReasoning;
 
   return (
     <div className="space-y-8">
@@ -29,6 +50,71 @@ export default async function AdminDashboard() {
         <StatCard label="Keywords" value={keywordCount} sublabel="Blue Ocean targets" className="text-amber-400" />
         <StatCard label="Article Ideas" value={articleCount} sublabel="Season 02 ready" />
         <StatCard label="AI Prompts" value={promptCount} sublabel="Team of 5 ready" />
+      </div>
+
+      {/* AI Health (Last 7 Days) */}
+      <div className="bg-gradient-to-r from-purple-900/20 to-blue-900/20 border border-purple-500/20 rounded-xl p-6">
+        <div className="flex items-center gap-3 mb-4">
+          <div className="text-2xl">🧠</div>
+          <div>
+            <h2 className="text-lg font-semibold text-white">
+              AI Health
+            </h2>
+            <p className="text-sm text-slate-400">
+              Last 7 days · Dual-model system
+            </p>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {/* Total Tasks */}
+          <div>
+            <div className="text-sm text-slate-400 mb-1">Total Requests</div>
+            <div className="text-3xl font-bold text-white">{totalTasks}</div>
+            <div className="text-xs text-slate-500 mt-1">
+              {totalTasks === 0 ? "No requests yet" : "Admin AI calls"}
+            </div>
+          </div>
+
+          {/* Acceptance Rate */}
+          <div>
+            <div className="text-sm text-slate-400 mb-1">Acceptance Rate</div>
+            <div className="text-3xl font-bold text-green-400">{acceptanceRate}%</div>
+            <div className="text-xs text-slate-500 mt-1">
+              {acceptedTasks} accepted, {totalTasks - acceptedTasks} rejected/pending
+            </div>
+          </div>
+
+          {/* Model Mix */}
+          <div>
+            <div className="text-sm text-slate-400 mb-1">Model Mix</div>
+            <div className="flex items-baseline gap-2">
+              <span className="text-xl font-bold text-purple-400" title="gpt-4o (reasoning)">
+                {estimatedReasoning}
+              </span>
+              <span className="text-slate-500">/</span>
+              <span className="text-xl font-bold text-blue-400" title="gpt-4o-mini (cheap)">
+                {estimatedCheap}
+              </span>
+            </div>
+            <div className="text-xs text-slate-500 mt-1">
+              Reasoning / Utility
+            </div>
+          </div>
+        </div>
+
+        {/* Cost Estimate */}
+        {totalTasks > 0 && (
+          <div className="mt-4 pt-4 border-t border-white/10">
+            <div className="text-xs text-slate-400">
+              Est. cost: <span className="text-white font-mono">${((estimatedReasoning * 0.01) + (estimatedCheap * 0.0003)).toFixed(4)}</span>
+              {" · "}
+              <span className="text-purple-400">{MODEL_REASONING}</span>
+              {" + "}
+              <span className="text-blue-400">{MODEL_CHEAP}</span>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Quick Actions */}

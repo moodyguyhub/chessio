@@ -11,10 +11,14 @@ const ROLES = [
 ];
 
 const SCOPES = [
-  { value: "freeform", label: "Freeform (General)" },
-  { value: "seoPage", label: "SEO Page Context" },
-  { value: "article", label: "Article Idea Context" },
-  { value: "keyword", label: "Keyword Context" },
+  { value: "freeform", label: "Freeform (gpt-4o-mini)" },
+  { value: "strategy", label: "Strategy (gpt-4o)" },
+  { value: "protocol", label: "Protocol (gpt-4o)" },
+  { value: "architecture", label: "Architecture (gpt-4o)" },
+  { value: "planning", label: "Planning (gpt-4o)" },
+  { value: "seoPage", label: "SEO Page (gpt-4o-mini)" },
+  { value: "article", label: "Article (gpt-4o-mini)" },
+  { value: "keyword", label: "Keyword (gpt-4o-mini)" },
 ];
 
 export function AiWorkbench() {
@@ -22,7 +26,12 @@ export function AiWorkbench() {
   const [scope, setScope] = useState("freeform");
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
-  const [response, setResponse] = useState<{ taskId: string; output: string } | null>(null);
+  const [response, setResponse] = useState<{ 
+    taskId: string; 
+    output: string;
+    model?: string;
+    estimatedCost?: number;
+  } | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   async function handleSubmit(e: React.FormEvent) {
@@ -160,6 +169,28 @@ export function AiWorkbench() {
               {response.output}
             </pre>
           </div>
+
+          {/* Model & Cost Info */}
+          {(response.model || response.estimatedCost) && (
+            <div className="flex items-center gap-4 text-xs text-slate-400 mb-4 pb-4 border-b border-slate-700">
+              {response.model && (
+                <span className="flex items-center gap-2">
+                  <span className="text-slate-500">Model:</span>
+                  <code className="px-2 py-0.5 rounded bg-slate-700/50 text-purple-400 font-mono">
+                    {response.model}
+                  </code>
+                </span>
+              )}
+              {response.estimatedCost !== undefined && (
+                <span className="flex items-center gap-2">
+                  <span className="text-slate-500">Est. cost:</span>
+                  <code className="px-2 py-0.5 rounded bg-slate-700/50 text-green-400 font-mono">
+                    ${response.estimatedCost.toFixed(6)}
+                  </code>
+                </span>
+              )}
+            </div>
+          )}
 
           <div className="flex gap-3">
             <button
