@@ -83,27 +83,34 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       return true;
     },
     async jwt({ token, user, account }) {
-      if (user) {
+      // Persist email and id when available
+      if (user?.email) {
+        token.email = user.email;
+      }
+      if (user?.id) {
         token.id = user.id;
       }
-      
-      // Fetch fresh user data including role on every token creation
+
+      // For GitHub sign-ins, fetch the freshly upserted user to capture id/role
       if (account?.provider === "github" && token.email) {
         const dbUser = await db.user.findUnique({
           where: { email: token.email },
-          select: { id: true, role: true },
+          select: { id: true, role: true, email: true },
         });
         if (dbUser) {
           token.id = dbUser.id;
           token.role = dbUser.role;
+          token.email = dbUser.email;
         }
       }
-      
+
       return token;
     },
     async session({ session, token }) {
-      if (session.user && token.id) {
-        session.user.id = token.id as string;
+      if (session.user) {
+        if (token.id) session.user.id = token.id as string;
+        if (token.email) session.user.email = token.email as string;
+        if (token.role) (session.user as any).role = token.role;
       }
       return session;
     },
