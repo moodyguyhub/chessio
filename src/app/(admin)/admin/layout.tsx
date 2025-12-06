@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { auth, signOut } from "@/lib/auth";
 import { ChessioLogo } from "@/components/brand/ChessioLogo";
+import { db } from "@/lib/db";
 
 export const runtime = "nodejs";
 
@@ -12,18 +13,20 @@ export default async function AdminLayout({
 }) {
   const session = await auth();
 
-  // Only allow admin users
+  // Only allow logged-in users
   if (!session?.user?.id) {
     redirect("/login");
   }
 
-  // Check if user is admin (in real implementation, check role from DB)
-  // For now, we'll check if user has specific email or add role check
-  const user = session.user;
+  // Check if user is admin
+  const user = await db.user.findUnique({ 
+    where: { id: session.user.id }, 
+    select: { role: true, email: true } 
+  });
   
-  // TODO: Add role check from database
-  // const dbUser = await db.user.findUnique({ where: { id: user.id }, select: { role: true } });
-  // if (dbUser?.role !== 'ADMIN') redirect('/');
+  if (user?.role !== 'ADMIN') {
+    redirect('/app'); // Redirect non-admins to dashboard
+  }
 
   return (
     <div className="min-h-screen bg-slate-950 flex">

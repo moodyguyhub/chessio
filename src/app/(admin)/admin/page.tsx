@@ -1,6 +1,16 @@
+import { db } from "@/lib/db";
+
 export const runtime = "nodejs";
 
-export default function AdminDashboard() {
+export default async function AdminDashboard() {
+  // Fetch real counts from database
+  const [pageCount, keywordCount, articleCount, promptCount] = await Promise.all([
+    db.seoPage.count(),
+    db.seoKeyword.count(),
+    db.articleIdea.count(),
+    db.aiPromptTemplate.count(),
+  ]);
+
   return (
     <div className="space-y-8">
       {/* Header */}
@@ -9,35 +19,16 @@ export default function AdminDashboard() {
           Calm Admin
         </h1>
         <p className="text-slate-400 mt-2">
-          Internal control room for SEO, content, and AI operations
+          Internal control room for SEO, content, and AI operations. Calm, boring, predictable.
         </p>
       </div>
 
       {/* Quick Stats */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <div className="bg-slate-900/50 border border-white/10 rounded-xl p-6">
-          <div className="text-sm text-slate-400 mb-1">SEO Pages</div>
-          <div className="text-2xl font-bold text-white">3</div>
-          <div className="text-xs text-slate-500 mt-1">Home, Login, About</div>
-        </div>
-
-        <div className="bg-slate-900/50 border border-white/10 rounded-xl p-6">
-          <div className="text-sm text-slate-400 mb-1">Keywords</div>
-          <div className="text-2xl font-bold text-amber-400">15</div>
-          <div className="text-xs text-slate-500 mt-1">Blue Ocean targets</div>
-        </div>
-
-        <div className="bg-slate-900/50 border border-white/10 rounded-xl p-6">
-          <div className="text-sm text-slate-400 mb-1">Article Ideas</div>
-          <div className="text-2xl font-bold text-white">3</div>
-          <div className="text-xs text-slate-500 mt-1">Season 02 ready</div>
-        </div>
-
-        <div className="bg-slate-900/50 border border-white/10 rounded-xl p-6">
-          <div className="text-sm text-slate-400 mb-1">AI Prompts</div>
-          <div className="text-2xl font-bold text-white">5</div>
-          <div className="text-xs text-slate-500 mt-1">Team of 5 ready</div>
-        </div>
+        <StatCard label="SEO Pages" value={pageCount} sublabel="Home, Login, About" />
+        <StatCard label="Keywords" value={keywordCount} sublabel="Blue Ocean targets" className="text-amber-400" />
+        <StatCard label="Article Ideas" value={articleCount} sublabel="Season 02 ready" />
+        <StatCard label="AI Prompts" value={promptCount} sublabel="Team of 5 ready" />
       </div>
 
       {/* Quick Actions */}
@@ -128,6 +119,26 @@ export default function AdminDashboard() {
           <li>→ User-first: Every change should make Chessio calmer</li>
         </ul>
       </div>
+    </div>
+  );
+}
+
+function StatCard({ 
+  label, 
+  value, 
+  sublabel,
+  className 
+}: { 
+  label: string; 
+  value: number; 
+  sublabel?: string;
+  className?: string;
+}) {
+  return (
+    <div className="bg-slate-900/50 border border-white/10 rounded-xl p-6">
+      <div className="text-sm text-slate-400 mb-1">{label}</div>
+      <div className={`text-2xl font-bold ${className || 'text-white'}`}>{value}</div>
+      {sublabel && <div className="text-xs text-slate-500 mt-1">{sublabel}</div>}
     </div>
   );
 }
