@@ -218,7 +218,7 @@ function TaskPlayer({ task, taskIndex, totalTasks, onComplete, isLast, playSound
             {/* Feedback Area - Fixed height to prevent layout jump */}
             <div className="min-h-[48px] flex items-center">
               {feedback === "correct" && (
-                <p className="text-sm text-teal-400 flex items-center gap-2 font-medium">
+                <p className="text-sm text-amber-400 flex items-center gap-2 font-medium">
                   <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
@@ -470,7 +470,7 @@ export function LessonPlayer({ lesson, initialXpStats }: LessonPlayerProps) {
                   <>
                     {/* Level completion celebration message */}
                     {nextStep.type === "level-complete" && (
-                      <div className="text-sm text-teal-400 font-medium mb-2">
+                      <div className="text-sm text-amber-400 font-medium mb-2">
                         {nextStep.message}
                       </div>
                     )}
@@ -478,7 +478,7 @@ export function LessonPlayer({ lesson, initialXpStats }: LessonPlayerProps) {
                     {/* All complete message */}
                     {nextStep.type === "all-complete" && (
                       <div className="space-y-3">
-                        <div className="text-sm text-teal-400 font-medium">
+                        <div className="text-sm text-amber-400 font-medium">
                           {nextStep.message}
                         </div>
                         <Button variant="primary" size="lg" onClick={handleBackToDashboard} className="w-full">

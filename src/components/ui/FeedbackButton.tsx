@@ -67,7 +67,7 @@ export function FeedbackButton({ hasGivenFeedback = false, lessonSlug }: Feedbac
       {/* Floating Button */}
       <button
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-4 right-4 z-40 flex items-center gap-2 px-4 py-3 bg-teal-500 hover:bg-teal-600 text-white rounded-full shadow-lg transition-all hover:scale-[1.02]"
+        className="fixed bottom-4 right-4 z-40 flex items-center gap-2 px-4 py-3 bg-amber-500 hover:bg-amber-600 text-white rounded-full shadow-lg transition-all hover:scale-[1.02]"
         aria-label="Send feedback"
       >
         <span className="text-lg">💬</span>
@@ -99,7 +99,7 @@ export function FeedbackButton({ hasGivenFeedback = false, lessonSlug }: Feedbac
                   {result.message}
                 </p>
                 {result.xpAwarded && result.xpAwarded > 0 && (
-                  <div className="inline-block px-4 py-2 bg-teal-900/30 text-teal-300 rounded-full font-medium">
+                  <div className="inline-block px-4 py-2 bg-amber-900/30 text-amber-300 rounded-full font-medium">
                     +{result.xpAwarded} XP Earned
                   </div>
                 )}
@@ -136,13 +136,13 @@ export function FeedbackButton({ hasGivenFeedback = false, lessonSlug }: Feedbac
                   value={text}
                   onChange={(e) => setText(e.target.value)}
                   placeholder="Share your thoughts: bugs, ideas, or just say hi..."
-                  className="w-full h-32 px-4 py-3 rounded-lg border border-white/10 bg-slate-800/50 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 resize-none"
+                  className="w-full h-32 px-4 py-3 rounded-lg border border-white/10 bg-slate-800/50 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-500/50 resize-none"
                   maxLength={2000}
                 />
 
                 <div className="flex items-center justify-between text-sm text-slate-400">
                   <span>{text.length}/2000</span>
-                  <span className={text.length < 10 ? "text-amber-400" : "text-teal-400"}>
+                  <span className={text.length < 10 ? "text-amber-400" : "text-amber-400"}>
                     {text.length < 10 ? `${10 - text.length} more chars needed` : "✓ Ready"}
                   </span>
                 </div>
