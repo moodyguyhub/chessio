@@ -59,7 +59,7 @@ export default async function AdminLayout({
         {/* Footer */}
         <div className="p-4 border-t border-white/10">
           <div className="mb-3 text-xs text-slate-500">
-            Signed in as <span className="text-slate-400">{user.email}</span>
+            Signed in as <span className="text-slate-400">{session.user?.email ?? ""}</span>
           </div>
           <div className="flex gap-2">
             <Link
