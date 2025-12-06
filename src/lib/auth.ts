@@ -2,7 +2,6 @@ import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import GitHub from "next-auth/providers/github";
 import bcrypt from "bcryptjs";
-import { db } from "./db";
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   session: { strategy: "jwt" },
@@ -20,32 +19,28 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        if (!credentials?.email || !credentials?.password) {
-          return null;
-        }
-        
-        const user = await db.user.findUnique({
-          where: { email: credentials.email as string },
-        });
-        
-        if (!user || !user.passwordHash) {
-          return null;
-        }
-        
-        const isValid = await bcrypt.compare(
-          credentials.password as string,
-          user.passwordHash
-        );
+        if (!credentials?.email || !credentials?.password) return null;
 
-        if (!isValid) {
-          return null;
+        // Env-based admin credentials (no DB)
+        const adminEmail = process.env.ADMIN_EMAIL;
+        const adminPassword = process.env.ADMIN_PASSWORD;
+        const adminPasswordHash = process.env.ADMIN_PASSWORD_HASH;
+
+        if (!adminEmail) return null;
+
+        if (credentials.email !== adminEmail) return null;
+
+        let ok = false;
+        if (adminPassword && credentials.password === adminPassword) ok = true;
+        if (!ok && adminPasswordHash) {
+          ok = await bcrypt.compare(credentials.password as string, adminPasswordHash);
         }
+        if (!ok) return null;
 
         return {
-          id: user.id,
-          email: user.email,
-          name: user.name,
-          image: user.image,
+          id: "admin",
+          email: adminEmail,
+          name: "Admin",
         };
       },
     }),
@@ -53,7 +48,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   callbacks: {
     async signIn({ user, account }) {
       if (account?.provider === "github" && user.email) {
-        // Accept GitHub users without touching the DB to avoid schema mismatches
         return true;
       }
       return true;
