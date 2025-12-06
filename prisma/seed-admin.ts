@@ -209,13 +209,11 @@ async function seedCalmAdmin() {
     }
   ];
 
-  for (const article of articles) {
-    await db.articleIdea.upsert({
-      where: { slug: article.slug },
-      update: article,
-      create: article
-    });
-  }
+  // Delete existing articles and recreate (slug is not unique)
+  await db.articleIdea.deleteMany({});
+  await db.articleIdea.createMany({
+    data: articles
+  });
   console.log(`✓ Created ${articles.length} article ideas\n`);
 
   // ============================================
