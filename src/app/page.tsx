@@ -7,28 +7,35 @@ import { db } from "@/lib/db";
 export const runtime = "nodejs";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const seo = await db.seoPage.findUnique({ where: { slug: "home" } });
-  
-  if (!seo) {
-    // Fallback to default metadata if not found
-    return {
-      title: "Chessio – Learn chess calmly",
-      description: "Learn chess from zero with short, guided lessons. No timers, no pressure—just clear guidance and one idea per lesson."
-    };
-  }
-
-  return {
-    title: seo.title,
-    description: seo.description,
-    openGraph: {
-      title: seo.ogTitle || seo.title,
-      description: seo.ogDescription || seo.description,
-    },
-    twitter: {
-      title: seo.ogTitle || seo.title,
-      description: seo.ogDescription || seo.description,
-    }
+  // Default metadata (used if table doesn't exist or no data found)
+  const defaultMeta = {
+    title: "Chessio – Learn chess calmly",
+    description: "Learn chess from zero with short, guided lessons. No timers, no pressure—just clear guidance and one idea per lesson."
   };
+
+  try {
+    const seo = await db.seoPage.findUnique({ where: { slug: "home" } });
+    
+    if (!seo) {
+      return defaultMeta;
+    }
+
+    return {
+      title: seo.title,
+      description: seo.description,
+      openGraph: {
+        title: seo.ogTitle || seo.title,
+        description: seo.ogDescription || seo.description,
+      },
+      twitter: {
+        title: seo.ogTitle || seo.title,
+        description: seo.ogDescription || seo.description,
+      }
+    };
+  } catch (error) {
+    // Table doesn't exist yet (before migration) - use defaults
+    return defaultMeta;
+  }
 }
 
 export default function LandingPage() {
