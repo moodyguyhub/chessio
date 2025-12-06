@@ -21,6 +21,10 @@ model User {
   // Gamification
   xp            Int       @default(0)
   
+  // Engagement & Retention (Sprint 03)
+  lastActiveAt  DateTime? // Last time user was active
+  sessionCount  Int       @default(0) // Number of unique daily sessions
+  
   // Beta Voice (XP Bounty)
   feedbackGiven Boolean   @default(false)
   

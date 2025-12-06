@@ -14,3 +14,17 @@ export {
   type ProgressionEvent,
   type ProgressionEventType,
 } from "./progression";
+
+export {
+  logRetentionEvent,
+  logDashboardViewed,
+  logTodaysGoalClicked,
+  logSessionStarted,
+  logWelcomeBackShown,
+  getEventBuffer,
+  getRecentEvents,
+  clearEventBuffer,
+  getEventSummary,
+  type RetentionEvent,
+  type RetentionEventType,
+} from "./retention";

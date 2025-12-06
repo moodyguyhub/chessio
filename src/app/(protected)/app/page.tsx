@@ -6,6 +6,9 @@ import { getCompletedLessonSlugs, getUserXp, hasUserGivenFeedback } from "@/lib/
 import { getLevelForXp, LEVELS } from "@/lib/gamification";
 import { FeedbackButton } from "@/components/ui/FeedbackButton";
 import { OnboardingModal, HowItWorksLink } from "@/components/ui/OnboardingModal";
+import { recordDashboardVisit, getLastActiveDescription } from "@/lib/engagement";
+import { getTodaysGoalForUser, getProgressSummary } from "@/lib/engagement/todays-goal";
+import { logDashboardViewed, logWelcomeBackShown } from "@/lib/telemetry";
 
 export default async function DashboardPage() {
   const session = await auth();
@@ -23,7 +26,42 @@ export default async function DashboardPage() {
     hasUserGivenFeedback(userId),
   ]);
 
+  // Record dashboard visit and get engagement stats (Sprint 03)
+  const engagementStats = await recordDashboardVisit(userId);
   const completedSet = new Set(completedSlugs);
+
+  // Get level info for telemetry
+  const levelProgress = getLevelForXp(userXp);
+  
+  // Log dashboard viewed event (Sprint 03 telemetry)
+  logDashboardViewed({
+    userId,
+    sessionCount: engagementStats.sessionCount,
+    currentLevel: levelProgress.level,
+    currentLevelLabel: levelProgress.label,
+    totalXp: userXp,
+    isNewSession: !engagementStats.isReturningToday,
+    daysSinceLastVisit: engagementStats.daysSinceLastVisit,
+  });
+
+  // Log welcome state shown
+  logWelcomeBackShown({
+    userId,
+    sessionCount: engagementStats.sessionCount,
+    currentLevel: levelProgress.level,
+    currentLevelLabel: levelProgress.label,
+    totalXp: userXp,
+    welcomeType: engagementStats.isReturningUser ? "returning_user" : "new_user",
+  });
+
+  // Get today's goal (Sprint 03)
+  const todaysGoal = getTodaysGoalForUser({
+    completedSlugs,
+    totalXp: userXp,
+  });
+
+  // Get progress summary (Sprint 03)
+  const progressSummary = getProgressSummary(completedSlugs);
 
   // Get lessons by level from lessons.ts (source of truth)
   const level0Lessons = getLevel0Lessons();
@@ -65,8 +103,7 @@ export default async function DashboardPage() {
     ...getLessonStatus(lesson),
   }));
 
-  // Use centralized level config
-  const levelProgress = getLevelForXp(userXp);
+  // Next level for progress display (levelProgress already defined above)
   const nextLevel = levelProgress.level < LEVELS.length - 1 ? LEVELS[levelProgress.level + 1] : null;
   
   // Calculate level 0 progress
@@ -137,27 +174,98 @@ export default async function DashboardPage() {
 
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8">
-        {/* Greeting */}
-        <div className="mb-8">
+        {/* Welcome Back State (Sprint 03) */}
+        <div className="mb-6">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-bold text-slate-900">
-                Hi, {session.user.name || "Learner"} 👋
-              </h1>
-              <p className="text-slate-600 mt-1">Ready to learn some chess?</p>
+              {engagementStats.isReturningUser ? (
+                <>
+                  <h1 className="text-2xl font-bold text-slate-900">
+                    Welcome back, {session.user.name || "Learner"}! 👋
+                  </h1>
+                  <p className="text-slate-600 mt-1">
+                    {getLastActiveDescription(engagementStats.daysSinceLastVisit)}
+                    {" · "}
+                    <span className="text-emerald-600 font-medium">{levelProgress.label}</span>
+                  </p>
+                </>
+              ) : (
+                <>
+                  <h1 className="text-2xl font-bold text-slate-900">
+                    Welcome to Chessio, {session.user.name || "Learner"}! ♟️
+                  </h1>
+                  <p className="text-slate-600 mt-1">
+                    Start your chess journey with bite-sized lessons
+                  </p>
+                </>
+              )}
             </div>
-            <HowItWorksLink />
+            <div className="flex items-center gap-3">
+              {/* Session Counter (Sprint 03) */}
+              {engagementStats.sessionCount > 0 && (
+                <div className="hidden sm:block text-right">
+                  <p className="text-xs text-slate-500">Sessions</p>
+                  <p className="text-lg font-semibold text-slate-700">{engagementStats.sessionCount}</p>
+                </div>
+              )}
+              <HowItWorksLink />
+            </div>
+          </div>
+        </div>
+
+        {/* Today's Goal Card (Sprint 03) */}
+        <div className="mb-8 bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-xl p-5">
+          <div className="flex items-start justify-between gap-4">
+            <div className="flex-1">
+              <div className="flex items-center gap-2 mb-1">
+                <span className="text-amber-600">🎯</span>
+                <h2 className="text-sm font-semibold text-amber-800 uppercase tracking-wide">
+                  Today&apos;s Goal
+                </h2>
+              </div>
+              <h3 className="text-lg font-bold text-slate-900 mb-1">
+                {todaysGoal.title}
+              </h3>
+              <p className="text-slate-600 text-sm mb-3">
+                {todaysGoal.description}
+              </p>
+              {todaysGoal.progress && (
+                <div className="mb-3">
+                  <div className="flex items-center justify-between text-xs text-slate-500 mb-1">
+                    <span>{todaysGoal.progress.label}</span>
+                    <span>{todaysGoal.progress.completed}/{todaysGoal.progress.total}</span>
+                  </div>
+                  <div className="h-1.5 bg-amber-200 rounded-full overflow-hidden">
+                    <div 
+                      className="h-full bg-amber-500 transition-all duration-500"
+                      style={{ width: `${(todaysGoal.progress.completed / todaysGoal.progress.total) * 100}%` }}
+                    />
+                  </div>
+                </div>
+              )}
+            </div>
+            <Link
+              href={todaysGoal.action.href}
+              className="shrink-0 px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white font-medium rounded-lg transition-colors text-sm"
+            >
+              {todaysGoal.action.label}
+            </Link>
           </div>
         </div>
 
         {/* First-time Onboarding Modal */}
         <OnboardingModal />
 
-        {/* Mobile XP Display */}
+        {/* Mobile XP & Session Display */}
         <div className="sm:hidden mb-6 p-4 bg-white rounded-xl shadow-sm">
           <div className="flex items-center justify-between mb-2">
             <span className="font-medium text-slate-900">{levelProgress.label}</span>
-            <span className="text-sm text-slate-500">{userXp} XP total</span>
+            <div className="flex items-center gap-3">
+              {engagementStats.sessionCount > 0 && (
+                <span className="text-xs text-slate-500">{engagementStats.sessionCount} sessions</span>
+              )}
+              <span className="text-sm text-slate-500">{userXp} XP</span>
+            </div>
           </div>
           <div className="w-full h-2 bg-slate-200 rounded-full overflow-hidden">
             <div 
