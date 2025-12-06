@@ -532,6 +532,205 @@ export const LEVEL_1_LESSONS: Lesson[] = [
       },
     ],
   },
+  // ============================================
+  // BISHOP BRIDGE PACK - Level 1 Additions
+  // ============================================
+  // ----------------------------------------
+  // Level 1 Intro: Safe Development Warm-Up
+  // ----------------------------------------
+  {
+    slug: "level-1-lesson-5-intro-safe-development",
+    title: "Level 1 Warm-up: Safe Development",
+    description:
+      "Before tactics come safety. Learn to develop pieces toward the center without hanging them.",
+    level: 1,
+    xpReward: 10,
+    tasks: [
+      {
+        id: "safe-dev-1",
+        kind: "move-piece",
+        prompt: "Develop your Knight to a safe, central square. Move Nb1 to c3.",
+        initialFen: "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 1",
+        expectedMove: { from: "b1", to: "c3" },
+        messages: {
+          success: "Perfect! The Knight controls the center from c3 and isn't attacked.",
+          failure: "Try moving the Knight from b1 to c3 — a strong central square.",
+          hint: "Click on the Knight at b1, then click c3. Central knights are happy knights!",
+        },
+      },
+      {
+        id: "safe-dev-2",
+        kind: "move-piece",
+        prompt: "Develop your Bishop to an active diagonal. Move Bf1 to c4 where it eyes the center.",
+        initialFen: "rnbqkbnr/pppp1ppp/8/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq - 0 1",
+        expectedMove: { from: "f1", to: "c4" },
+        messages: {
+          success: "Great development! The Bishop now controls a powerful diagonal toward f7.",
+          failure: "Move the Bishop from f1 to c4 — it aims at the weak f7 square.",
+          hint: "Bishops love long diagonals. c4 is a classic development square.",
+        },
+      },
+      {
+        id: "safe-dev-3",
+        kind: "move-piece",
+        prompt: "DON'T move your Queen out too early! Instead, castle to safety. Move King e1 to g1.",
+        initialFen: "r1bqkb1r/pppp1ppp/2n2n2/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 0 1",
+        expectedMove: { from: "e1", to: "g1" },
+        messages: {
+          success: "Smart! Castling early keeps your King safe while connecting your Rooks.",
+          failure: "Castle by moving the King two squares toward the Rook (e1 to g1).",
+          hint: "Early Queen adventures often lead to trouble. Castle first, then attack!",
+        },
+      },
+    ],
+  },
+  // ----------------------------------------
+  // Level 1 Core: Don't Hang Pieces
+  // ----------------------------------------
+  {
+    slug: "level-1-lesson-6-concept-hanging-pieces",
+    title: "Don't Hang Pieces: Spot the Threat",
+    description:
+      "Before every move, ask: 'What is attacked? What is undefended?' Learn to keep your pieces safe.",
+    level: 1,
+    xpReward: 15,
+    tasks: [
+      {
+        id: "hang-1",
+        kind: "move-piece",
+        prompt: "Your Bishop on c4 is attacked by a pawn! Move it to safety on b3.",
+        initialFen: "r1bqkbnr/pppp1ppp/2n5/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 0 1",
+        expectedMove: { from: "c4", to: "b3" },
+        messages: {
+          success: "Safe! Always notice when your pieces are under attack.",
+          failure: "The pawn on d5 can capture your Bishop. Move it to b3.",
+          hint: "The Bishop is worth 3 points, the pawn only 1. Don't trade down!",
+        },
+      },
+      {
+        id: "hang-2",
+        kind: "move-piece",
+        prompt: "Your Knight on f3 is undefended and the Queen eyes it! Defend it by moving pawn g2 to g3.",
+        initialFen: "r1b1kb1r/ppppqppp/2n2n2/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 0 1",
+        expectedMove: { from: "g2", to: "g3" },
+        messages: {
+          success: "Defended! The pawn on g3 protects the Knight if the Queen attacks.",
+          failure: "The black Queen on e7 threatens your Knight. Push g2 to g3 to defend.",
+          hint: "Defended pieces are hard to attack. Create a support structure!",
+        },
+      },
+      {
+        id: "hang-3",
+        kind: "move-piece",
+        prompt: "Multiple pieces undefended? Save the most valuable first! Move your Queen from d1 to e2.",
+        initialFen: "r1bqk2r/pppp1ppp/2n2n2/2b1p3/2B1P3/3P1N2/PPP2PPP/RNBQK2R w KQkq - 0 1",
+        expectedMove: { from: "d1", to: "e2" },
+        messages: {
+          success: "Good prioritization! The Queen is your most valuable piece after the King.",
+          failure: "Your Queen on d1 could become a target. Move her to e2 for safety.",
+          hint: "Queens are worth 9 points — protect her first, then worry about minor pieces.",
+        },
+      },
+    ],
+  },
+  // ----------------------------------------
+  // Level 1 Core: Center Control with Pawns
+  // ----------------------------------------
+  {
+    slug: "level-1-lesson-7-concept-center-control",
+    title: "Own the Center: Pawn Control",
+    description:
+      "Central pawns (e4, d4, e5, d5) give your pieces room to breathe and attack. Control the center to control the game.",
+    level: 1,
+    xpReward: 15,
+    tasks: [
+      {
+        id: "center-1",
+        kind: "move-piece",
+        prompt: "Stake your claim! Push your pawn from e2 to e4 to control the center.",
+        initialFen: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+        expectedMove: { from: "e2", to: "e4" },
+        messages: {
+          success: "Classic! e4 controls d5 and f5 — central squares where the action happens.",
+          failure: "Start with e2 to e4 — the King's Pawn opening, played for centuries!",
+          hint: "The center squares (d4, d5, e4, e5) are the most important real estate on the board.",
+        },
+      },
+      {
+        id: "center-2",
+        kind: "move-piece",
+        prompt: "Double up! Push d2 to d4 to create a powerful pawn duo in the center.",
+        initialFen: "rnbqkbnr/ppp1pppp/8/3p4/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 1",
+        expectedMove: { from: "d2", to: "d4" },
+        messages: {
+          success: "Two central pawns! They work together to control the key squares.",
+          failure: "Your e-pawn needs backup. Push d2 to d4!",
+          hint: "Pawns side by side support each other and control more squares together.",
+        },
+      },
+      {
+        id: "center-3",
+        kind: "move-piece",
+        prompt: "Black just played a flank move (a6). Punish it by advancing e4 to e5, gaining space!",
+        initialFen: "rnbqkbnr/1ppppppp/p7/8/3PP3/8/PPP2PPP/RNBQKBNR w KQkq - 0 1",
+        expectedMove: { from: "e4", to: "e5" },
+        messages: {
+          success: "Space advantage! Your pawns push Black's pieces back and limit their options.",
+          failure: "While Black played on the edge, you can grab more center space with e5!",
+          hint: "When your opponent ignores the center, take it over!",
+        },
+      },
+    ],
+  },
+  // ----------------------------------------
+  // Level 1 Intro: Piece Values Recap
+  // ----------------------------------------
+  {
+    slug: "level-1-lesson-8-intro-piece-values",
+    title: "Piece Values: Know Your Worth",
+    description:
+      "Before making trades, know what each piece is worth. A quick recap of chess piece values.",
+    level: 1,
+    xpReward: 10,
+    tasks: [
+      {
+        id: "values-1",
+        kind: "move-piece",
+        prompt: "Trade your Knight (3 points) for the Rook (5 points). Good deal! Capture on a8.",
+        initialFen: "r3k3/8/8/8/8/5N2/8/4K3 w - - 0 1",
+        expectedMove: { from: "f3", to: "g5" },
+        messages: {
+          success: "Wait — that's not the Rook! Knights are worth 3, Rooks are worth 5. Let's try again.",
+          failure: "To capture the Rook, we need to get closer. Move toward it first.",
+          hint: "The Knight needs two moves to reach a8. Let's reposition.",
+        },
+      },
+      {
+        id: "values-2",
+        kind: "move-piece",
+        prompt: "Now capture the Rook! Move the Knight from g5 to e6, then we can take on a8 next.",
+        initialFen: "r3k3/8/8/6N1/8/8/8/4K3 w - - 0 1",
+        expectedMove: { from: "g5", to: "e6" },
+        messages: {
+          success: "Closer! From e6, the Knight can reach important squares. Knight = 3 points.",
+          failure: "Approach the Rook. The Knight needs to get to a square that can reach a8.",
+          hint: "Ne6 gets the Knight closer to the action.",
+        },
+      },
+      {
+        id: "values-3",
+        kind: "move-piece",
+        prompt: "Your Queen (9 points) can capture a protected pawn (1 point). Bad trade! Instead, retreat Qa4 to safety.",
+        initialFen: "rnbqkbnr/ppp2ppp/3p4/4p2Q/4P3/8/PPPP1PPP/RNB1KBNR w KQkq - 0 1",
+        expectedMove: { from: "h5", to: "a4" },
+        messages: {
+          success: "Smart! Never trade your Queen (9) for a pawn (1). That's an 8-point loss!",
+          failure: "The f7 pawn is protected by the King. Trading Queen for pawn is -8 points!",
+          hint: "Retreat the Queen to a4 where she's safe and still active.",
+        },
+      },
+    ],
+  },
 ];
 
 // ============================================
@@ -612,6 +811,301 @@ export const PUZZLES: Lesson[] = [
       },
     ],
   },
+  // ============================================
+  // BISHOP BRIDGE PACK - Puzzle Sets
+  // ============================================
+  // ----------------------------------------
+  // Puzzle Set: Level 1 Safety & Checks
+  // ----------------------------------------
+  {
+    slug: "puzzle-set-level-1-safety-and-checks",
+    title: "Level 1 Drills: Safe Moves & Simple Checks",
+    description:
+      "Practice finding safe moves and simple checks. Don't hang your pieces!",
+    level: 2,
+    xpReward: 20,
+    tasks: [
+      {
+        id: "safety-1",
+        kind: "move-piece",
+        prompt: "Your Bishop is attacked! Move Bc4 to a safe square: b5.",
+        initialFen: "r1bqkbnr/pppp1ppp/2n5/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 0 1",
+        expectedMove: { from: "c4", to: "b5" },
+        messages: {
+          success: "Safe! The Bishop moved out of danger while staying active.",
+          failure: "The pawn on d7 can push to d5 attacking your Bishop. Move it to b5!",
+          hint: "Retreat the Bishop to b5 — it's still on a good diagonal but safe from attack.",
+        },
+      },
+      {
+        id: "safety-2",
+        kind: "move-piece",
+        prompt: "Find the check that doesn't lose your Queen! Move Qd1 to h5.",
+        initialFen: "rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 1",
+        expectedMove: { from: "d1", to: "h5" },
+        messages: {
+          success: "Check! And the Queen is safe — the Black King must deal with the threat.",
+          failure: "Look for a check that doesn't put your Queen in danger.",
+          hint: "Qh5 gives check. The King must respond, and your Queen stays safe!",
+        },
+      },
+      {
+        id: "safety-3",
+        kind: "move-piece",
+        prompt: "Black's Rook is attacking your Knight! Defend by moving Nb1 to c3.",
+        initialFen: "r3kbnr/ppp2ppp/2nq4/3pp3/4P3/2N5/PPPP1PPP/R1BQKBNR w KQkq - 0 1",
+        expectedMove: { from: "c3", to: "d5" },
+        messages: {
+          success: "Counter-attack! Instead of just defending, you attacked Black's Queen!",
+          failure: "Sometimes the best defense is a counter-attack. Look at what your Knight can threaten.",
+          hint: "Move the Knight to d5 — it attacks the Queen and is defended by your pawn!",
+        },
+      },
+      {
+        id: "safety-4",
+        kind: "move-piece",
+        prompt: "Give a safe check with your Rook. Move Rc1 to c8.",
+        initialFen: "4k3/ppp2ppp/8/8/8/8/PPP2PPP/2R1K3 w - - 0 1",
+        expectedMove: { from: "c1", to: "c8" },
+        messages: {
+          success: "Check! And it's actually checkmate — the King has no escape!",
+          failure: "Use your Rook to check the King on the back rank.",
+          hint: "Rc8 delivers check. Look closely — is it more than just check?",
+        },
+      },
+      {
+        id: "safety-5",
+        kind: "move-piece",
+        prompt: "Your Knight is hanging! Move Nf3 to g5 where it's safe AND attacking.",
+        initialFen: "r1bqkb1r/pppp1ppp/2n2n2/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 0 1",
+        expectedMove: { from: "f3", to: "g5" },
+        messages: {
+          success: "Active defense! The Knight is safe and now threatens the weak f7 pawn.",
+          failure: "Move your Knight to an aggressive square that also keeps it safe.",
+          hint: "Ng5 attacks f7 (a weak point) while getting out of potential danger.",
+        },
+      },
+    ],
+  },
+  // ----------------------------------------
+  // Puzzle Set: Find the Fork (Level 2)
+  // ----------------------------------------
+  {
+    slug: "puzzle-set-level-2-forks",
+    title: "Tactics Pack: Find the Fork",
+    description:
+      "Find the move that attacks two things at once. Forks win material!",
+    level: 2,
+    xpReward: 20,
+    tasks: [
+      {
+        id: "fork-1",
+        kind: "move-piece",
+        prompt: "Find the Knight fork! Attack the King and Rook at the same time.",
+        initialFen: "r3k3/8/8/8/3N4/8/8/4K3 w - - 0 1",
+        expectedMove: { from: "d4", to: "c6" },
+        messages: {
+          success: "Fork! The Knight attacks both the King and Rook. After the King moves, you win the Rook!",
+          failure: "Look for a square where your Knight attacks two pieces at once.",
+          hint: "Nc6 puts the Knight between the King and Rook — forking them both!",
+        },
+      },
+      {
+        id: "fork-2",
+        kind: "move-piece",
+        prompt: "Fork the King and Queen with your Knight!",
+        initialFen: "4k3/3q4/8/8/8/5N2/8/4K3 w - - 0 1",
+        expectedMove: { from: "f3", to: "e5" },
+        messages: {
+          success: "Royal fork! The Knight attacks both the King and Queen. You'll win the Queen!",
+          failure: "Find the square where your Knight attacks both the King and Queen.",
+          hint: "Ne5 is the magic square — it attacks both royals!",
+        },
+      },
+      {
+        id: "fork-3",
+        kind: "move-piece",
+        prompt: "Use your Queen to fork the King and Rook!",
+        initialFen: "r3k3/8/8/8/8/8/8/Q3K3 w - - 0 1",
+        expectedMove: { from: "a1", to: "a8" },
+        messages: {
+          success: "Check and attack! After the King moves, the Rook is yours.",
+          failure: "Give check while also attacking the Rook.",
+          hint: "Qa8+ checks the King and attacks the Rook in one move!",
+        },
+      },
+      {
+        id: "fork-4",
+        kind: "move-piece",
+        prompt: "Pawn fork! Move your pawn to attack two pieces.",
+        initialFen: "8/8/2n1b3/8/3P4/8/8/4K3 w - - 0 1",
+        expectedMove: { from: "d4", to: "d5" },
+        messages: {
+          success: "Pawn fork! The humble pawn attacks both the Knight and Bishop.",
+          failure: "Push your pawn to attack both Black pieces.",
+          hint: "d5 attacks both the Knight on c6 and Bishop on e6!",
+        },
+      },
+      {
+        id: "fork-5",
+        kind: "move-piece",
+        prompt: "Find the family fork — Knight attacks King, Queen, AND Rook!",
+        initialFen: "r2qk3/8/8/8/8/4N3/8/4K3 w - - 0 1",
+        expectedMove: { from: "e3", to: "c4" },
+        messages: {
+          success: "Triple fork! King, Queen, and Rook all under attack. You'll win major material!",
+          failure: "Look for a Knight move that attacks three pieces at once.",
+          hint: "Nc4 is the devastating square — it attacks the King, Queen, and Rook!",
+        },
+      },
+    ],
+  },
+  // ----------------------------------------
+  // Puzzle Set: Mate in One - Beginner Pack (Level 2)
+  // ----------------------------------------
+  {
+    slug: "puzzle-set-level-2-mate-in-one",
+    title: "Mates in One: Confidence Builder",
+    description:
+      "Very easy checkmates in one move. Build pattern recognition and confidence!",
+    level: 2,
+    xpReward: 20,
+    tasks: [
+      {
+        id: "easy-mate-1",
+        kind: "move-piece",
+        prompt: "The King is stuck in the corner. Checkmate with your Queen!",
+        initialFen: "k7/8/1K6/8/8/8/8/Q7 w - - 0 1",
+        expectedMove: { from: "a1", to: "a7" },
+        messages: {
+          success: "Checkmate! The King is trapped with nowhere to run.",
+          failure: "Move the Queen to deliver checkmate. The King can't escape!",
+          hint: "Qa7 delivers mate — the King is boxed in by your King!",
+        },
+      },
+      {
+        id: "easy-mate-2",
+        kind: "move-piece",
+        prompt: "Back rank mate! Use your Rook to checkmate.",
+        initialFen: "6k1/5ppp/8/8/8/8/8/4R1K1 w - - 0 1",
+        expectedMove: { from: "e1", to: "e8" },
+        messages: {
+          success: "Back rank mate! The King is trapped by his own pawns.",
+          failure: "Move the Rook to the back rank for checkmate.",
+          hint: "Re8 delivers mate — the pawns block the King's escape!",
+        },
+      },
+      {
+        id: "easy-mate-3",
+        kind: "move-piece",
+        prompt: "Queen and King teamwork! Deliver checkmate.",
+        initialFen: "7k/5Q2/6K1/8/8/8/8/8 w - - 0 1",
+        expectedMove: { from: "f7", to: "g7" },
+        messages: {
+          success: "Checkmate! Your King supports the Queen's deadly attack.",
+          failure: "Move the Queen next to the Black King — your King protects her.",
+          hint: "Qg7 is mate! The King supports the Queen.",
+        },
+      },
+      {
+        id: "easy-mate-4",
+        kind: "move-piece",
+        prompt: "The Bishop helps! Find the checkmate with Queen and Bishop.",
+        initialFen: "4k3/8/8/8/8/4B3/3Q4/4K3 w - - 0 1",
+        expectedMove: { from: "d2", to: "d8" },
+        messages: {
+          success: "Checkmate! The Bishop guards the escape square.",
+          failure: "The Bishop controls a key square. Use the Queen to deliver mate.",
+          hint: "Qd8 is checkmate — the Bishop controls f8!",
+        },
+      },
+      {
+        id: "easy-mate-5",
+        kind: "move-piece",
+        prompt: "Two Rooks! Use the ladder mate pattern.",
+        initialFen: "7k/R7/8/8/8/8/8/1R5K w - - 0 1",
+        expectedMove: { from: "b1", to: "b8" },
+        messages: {
+          success: "Ladder mate! One Rook cuts off escape, the other delivers checkmate.",
+          failure: "One Rook controls the 7th rank. Use the other for mate!",
+          hint: "Rb8 is checkmate — the Rook on a7 traps the King!",
+        },
+      },
+    ],
+  },
+  // ----------------------------------------
+  // Puzzle Set: Find the Pin (Level 2)
+  // ----------------------------------------
+  {
+    slug: "puzzle-set-level-2-pins",
+    title: "Tactics Pack: Find the Pin",
+    description:
+      "Pin enemy pieces to win material. A pinned piece is a paralyzed piece!",
+    level: 2,
+    xpReward: 20,
+    tasks: [
+      {
+        id: "pin-puzzle-1",
+        kind: "move-piece",
+        prompt: "Pin the Knight to the King with your Bishop!",
+        initialFen: "r1bqkb1r/pppp1ppp/2n2n2/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 0 1",
+        expectedMove: { from: "c1", to: "g5" },
+        messages: {
+          success: "Absolute pin! The Knight on f6 cannot move or the Queen falls.",
+          failure: "Put your Bishop where it attacks the Knight AND sees the Queen behind it.",
+          hint: "Bg5 pins the Knight to the Queen!",
+        },
+      },
+      {
+        id: "pin-puzzle-2",
+        kind: "move-piece",
+        prompt: "Use your Rook to create a pin along the file!",
+        initialFen: "3rk3/8/8/8/4B3/8/8/R3K3 w - - 0 1",
+        expectedMove: { from: "a1", to: "a8" },
+        messages: {
+          success: "Check and pin! The Rook pins the Black Rook to the King. You'll win the exchange!",
+          failure: "Put your Rook on the same file as the enemy Rook and King.",
+          hint: "Ra8+ is check, and the Rook is pinned to the King!",
+        },
+      },
+      {
+        id: "pin-puzzle-3",
+        kind: "move-piece",
+        prompt: "Pin the Queen to the King! Move your Bishop to the diagonal.",
+        initialFen: "4k3/3q4/8/8/8/8/5B2/4K3 w - - 0 1",
+        expectedMove: { from: "f2", to: "b6" },
+        messages: {
+          success: "Devastating pin! The Queen is pinned and can be captured next move.",
+          failure: "Put your Bishop where it attacks the Queen with the King behind.",
+          hint: "Bb6 pins the Queen to the King. It's trapped!",
+        },
+      },
+      {
+        id: "pin-puzzle-4",
+        kind: "move-piece",
+        prompt: "The Knight is pinned. Attack it with your pawn to win it!",
+        initialFen: "r1bqkb1r/pppp1ppp/2B2n2/4p3/4P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 0 1",
+        expectedMove: { from: "e4", to: "e5" },
+        messages: {
+          success: "The pinned Knight cannot escape! You'll capture it next turn.",
+          failure: "Attack the pinned piece — it can't run away!",
+          hint: "e5 attacks the Knight, which is pinned to the King by your Bishop!",
+        },
+      },
+      {
+        id: "pin-puzzle-5",
+        kind: "move-piece",
+        prompt: "Create a deadly skewer! Attack the King, and when it moves, win the Queen.",
+        initialFen: "4k3/8/8/8/3q4/8/8/R3K3 w - - 0 1",
+        expectedMove: { from: "a1", to: "a8" },
+        messages: {
+          success: "That's a skewer — like a pin in reverse! The King must move, and you take the Queen.",
+          failure: "Attack the King along the line where the Queen stands behind.",
+          hint: "Ra8+ is check. The King moves, and Rxa4 wins the Queen!",
+        },
+      },
+    ],
+  },
 ];
 
 // ============================================
@@ -619,8 +1113,210 @@ export const PUZZLES: Lesson[] = [
 // ============================================
 
 export const LEVEL_2_LESSONS: Lesson[] = [
+  // ============================================
+  // BISHOP BRIDGE PACK - Level 2 Tactics Lessons
+  // ============================================
   // ----------------------------------------
-  // Lesson 11: En Passant
+  // Level 2 Intro: Tactics Overview
+  // ----------------------------------------
+  {
+    slug: "level-2-lesson-3-intro-tactics-overview",
+    title: "Level 2 Warm-up: What Are Tactics?",
+    description:
+      "Tactics are short sequences that win material or deliver checkmate. Let's learn the building blocks.",
+    level: 3,
+    xpReward: 10,
+    tasks: [
+      {
+        id: "tactics-intro-1",
+        kind: "move-piece",
+        prompt: "This is a FORK — one piece attacks two things at once. Move your Knight to c7 to fork the King and Rook.",
+        initialFen: "r3k3/8/8/8/8/5N2/8/4K3 w - - 0 1",
+        expectedMove: { from: "f3", to: "c6" },
+        messages: {
+          success: "That's a fork! The Knight attacks both the King and Rook. Black must move the King, and you'll capture the Rook.",
+          failure: "Look for the square where your Knight attacks two pieces at once.",
+          hint: "Nc6 attacks both the King and the Rook. That's a fork!",
+        },
+      },
+      {
+        id: "tactics-intro-2",
+        kind: "move-piece",
+        prompt: "This is a PIN — the piece can't move because it would expose the King. Move your Bishop to b5 to pin the Knight.",
+        initialFen: "r1bqkbnr/pppp1ppp/2n5/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq - 0 1",
+        expectedMove: { from: "f1", to: "b5" },
+        messages: {
+          success: "That's a pin! The Knight on c6 is pinned to the King — it can't legally move.",
+          failure: "Put your Bishop on the diagonal where it attacks the Knight and the King is behind it.",
+          hint: "Bb5 pins the Knight. It's stuck because moving would expose the King!",
+        },
+      },
+      {
+        id: "tactics-intro-3",
+        kind: "move-piece",
+        prompt: "Tactics win material! Use a simple check to win the undefended Queen. Play Qa4+.",
+        initialFen: "rnb1kbnr/pppp1ppp/8/4p3/4q3/2N5/PPPPPPPP/R1BQKBNR w KQkq - 0 1",
+        expectedMove: { from: "d1", to: "a4" },
+        messages: {
+          success: "Check! And after the King moves, you capture the Queen. Tactics in action!",
+          failure: "Give check in a way that also attacks the Queen.",
+          hint: "Qa4+ checks the King and attacks the Queen at the same time!",
+        },
+      },
+    ],
+  },
+  // ----------------------------------------
+  // Level 2 Core: Forks
+  // ----------------------------------------
+  {
+    slug: "level-2-lesson-4-concept-forks",
+    title: "Forks: Attack Two Things at Once",
+    description:
+      "A fork is when one piece attacks two or more enemy pieces simultaneously. Knights are especially good at this!",
+    level: 3,
+    xpReward: 15,
+    tasks: [
+      {
+        id: "forks-1",
+        kind: "move-piece",
+        prompt: "Knight fork! Find the square that attacks the King and Queen at the same time.",
+        initialFen: "4k3/4q3/8/8/8/8/4N3/4K3 w - - 0 1",
+        expectedMove: { from: "e2", to: "f4" },
+        messages: {
+          success: "Fork! The Knight attacks both the King and Queen. After the King moves, you win the Queen!",
+          failure: "Look for the L-shaped move that attacks both royals.",
+          hint: "Nf4 attacks the King on e6 and the Queen on e7!",
+        },
+      },
+      {
+        id: "forks-2",
+        kind: "move-piece",
+        prompt: "Queen fork! Your Queen can attack two pieces. Find it.",
+        initialFen: "r3k3/8/8/8/3Q4/8/8/4K3 w - - 0 1",
+        expectedMove: { from: "d4", to: "a4" },
+        messages: {
+          success: "Fork! The Queen attacks the Rook and threatens the King. Something has to give!",
+          failure: "The Queen can move to attack both the Rook and give check.",
+          hint: "Qa4+ checks the King and attacks the Rook on a8!",
+        },
+      },
+      {
+        id: "forks-3",
+        kind: "move-piece",
+        prompt: "Even pawns can fork! Push your pawn to attack two pieces.",
+        initialFen: "8/8/8/1n1b4/2P5/8/8/4K3 w - - 0 1",
+        expectedMove: { from: "c4", to: "c5" },
+        messages: {
+          success: "Pawn fork! The humble pawn attacks both the Knight and Bishop. You'll win one of them!",
+          failure: "Push the pawn forward to attack both pieces.",
+          hint: "c5 attacks the Knight on b5 and the Bishop on d5!",
+        },
+      },
+    ],
+  },
+  // ----------------------------------------
+  // Level 2 Core: Pins
+  // ----------------------------------------
+  {
+    slug: "level-2-lesson-5-concept-pins",
+    title: "Pins: Freeze the Defender",
+    description:
+      "A pin restricts a piece because moving it would expose something more valuable behind it.",
+    level: 3,
+    xpReward: 15,
+    tasks: [
+      {
+        id: "pins-1",
+        kind: "move-piece",
+        prompt: "Pin the Knight to the King! Move your Bishop to g5.",
+        initialFen: "r1bqkb1r/pppp1ppp/2n2n2/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 0 1",
+        expectedMove: { from: "c1", to: "g5" },
+        messages: {
+          success: "Absolute pin! The Knight on f6 is frozen — moving it would expose the Queen to capture.",
+          failure: "Put your Bishop on a diagonal that goes through the Knight to the Queen.",
+          hint: "Bg5 pins the Knight. If it moves, you take the Queen!",
+        },
+      },
+      {
+        id: "pins-2",
+        kind: "move-piece",
+        prompt: "Use a Rook pin! Move your Rook to e1 to pin the piece to the King.",
+        initialFen: "4k3/8/8/8/4n3/8/8/R3K3 w - - 0 1",
+        expectedMove: { from: "a1", to: "e1" },
+        messages: {
+          success: "Pin! The Knight is pinned to the King. It cannot move without exposing the King to check.",
+          failure: "Put your Rook on the same file as the King, with the Knight in between.",
+          hint: "Re1 pins the Knight to the King!",
+        },
+      },
+      {
+        id: "pins-3",
+        kind: "move-piece",
+        prompt: "Exploit the pin! The Knight is pinned. Win it by attacking it with your pawn.",
+        initialFen: "r1bqkb1r/pppp1ppp/2B2n2/4p3/4P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 0 1",
+        expectedMove: { from: "e4", to: "e5" },
+        messages: {
+          success: "Winning! The pinned Knight can't escape. You'll capture it next move.",
+          failure: "Attack the pinned piece. It can't run away!",
+          hint: "e5 attacks the Knight. Since it's pinned, it cannot move!",
+        },
+      },
+    ],
+  },
+  // ----------------------------------------
+  // Level 2 Core: Basic Checkmates
+  // ----------------------------------------
+  {
+    slug: "level-2-lesson-6-concept-basic-mates",
+    title: "Basic Checkmates: Ladder & Back Rank",
+    description:
+      "Learn the essential mating patterns: the ladder mate with two Rooks and the deadly back rank mate.",
+    level: 3,
+    xpReward: 15,
+    tasks: [
+      {
+        id: "basic-mates-1",
+        kind: "move-piece",
+        prompt: "Ladder mate! Your Rooks work together. Move the bottom Rook to push the King back.",
+        initialFen: "8/8/8/8/8/5k2/1R6/R6K w - - 0 1",
+        expectedMove: { from: "a1", to: "a3" },
+        messages: {
+          success: "Good! You're building a ladder. The Rooks take turns pushing the King to the edge.",
+          failure: "Use one Rook to cut off the King's escape. The Rooks work in tandem.",
+          hint: "Ra3 cuts off the King from the 3rd rank. Now the other Rook can push!",
+        },
+      },
+      {
+        id: "basic-mates-2",
+        kind: "move-piece",
+        prompt: "Continue the ladder! Now use the other Rook to give check and push the King further.",
+        initialFen: "8/8/8/8/5k2/R7/1R6/7K w - - 0 1",
+        expectedMove: { from: "b2", to: "b4" },
+        messages: {
+          success: "Check! The King is pushed to the 5th rank. Keep alternating Rooks!",
+          failure: "Give check with the Rook while the other Rook controls the escape.",
+          hint: "Rb4+ checks the King. The Rook on a3 guards the 3rd rank!",
+        },
+      },
+      {
+        id: "basic-mates-3",
+        kind: "move-piece",
+        prompt: "Back rank mate! The King is trapped behind pawns. Deliver checkmate with your Rook.",
+        initialFen: "6k1/5ppp/8/8/8/8/8/R5K1 w - - 0 1",
+        expectedMove: { from: "a1", to: "a8" },
+        messages: {
+          success: "Checkmate! The back rank mate is one of the most common patterns. The King's own pawns trap him!",
+          failure: "Move the Rook to the 8th rank where the King is trapped.",
+          hint: "Ra8 is checkmate! The King can't escape because his pawns block him.",
+        },
+      },
+    ],
+  },
+  // ----------------------------------------
+  // Original Level 2 Lessons below (Edge Cases)
+  // ----------------------------------------
+  // ----------------------------------------
+  // Lesson: En Passant
   // ----------------------------------------
   {
     slug: "level-2-lesson-1-en-passant",

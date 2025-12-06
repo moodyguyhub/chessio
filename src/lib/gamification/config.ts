@@ -62,14 +62,15 @@ export type ContentType = keyof typeof XP_REWARDS;
  * Infer content type from a slug.
  * 
  * Pattern matching rules:
- * - `intro-*` or `level-0-lesson-1-*` → "intro" (the first board lesson)
+ * - `intro-*` or `*-intro-*` → "intro" (warm-up lessons)
  * - `puzzle-*` → "puzzle"
- * - `concept-*` or `level-X-lesson-*` → "core"
+ * - `concept-*` or `*-concept-*` → "core" (concept lessons)
+ * - `level-X-lesson-*` → "core" (standard lessons)
  * - fallback → "bonus"
  */
 export function getContentTypeFromSlug(slug: string): ContentType {
-  // Explicit intro prefix
-  if (slug.startsWith("intro-")) {
+  // Explicit intro prefix or intro in middle of slug
+  if (slug.startsWith("intro-") || slug.includes("-intro-")) {
     return "intro";
   }
   
@@ -83,8 +84,8 @@ export function getContentTypeFromSlug(slug: string): ContentType {
     return "puzzle";
   }
   
-  // Concept prefix (future-proofing)
-  if (slug.startsWith("concept-")) {
+  // Concept prefix or concept in middle of slug
+  if (slug.startsWith("concept-") || slug.includes("-concept-")) {
     return "core";
   }
   
