@@ -1,7 +1,7 @@
 /**
- * Chessio Logo System v1.3 - Ink & Ivory
- * Spotify-style: Filled amber-200 circle (#FDE68A) with pure black queen (#000000)
- * Creates bold, recognizable icon with high contrast
+ * Chessio Logo System v1.4 - Ink & Ivory
+ * WhatsApp-inspired: Amber-200 circle (#FDE68A) with pure black queen (#000000)
+ * Clean, minimal, recognizable icon design
  * 
  * Usage:
  * - Navbar: <ChessioLogo variant="horizontal" />
@@ -28,14 +28,16 @@ export const ChessioLogo: React.FC<LogoProps> = ({
         xmlns="http://www.w3.org/2000/svg"
         className={className}
       >
+        {/* WhatsApp-style clean circle with queen */}
         <circle cx="50" cy="50" r="50" fill="#FDE68A"/>
-        {/* Queen piece - scaled up ~30% */}
-        <circle cx="38" cy="28" r="3.2" fill="#000000"/>
-        <circle cx="50" cy="23" r="4" fill="#000000"/>
-        <circle cx="62" cy="28" r="3.2" fill="#000000"/>
-        <path d="M35 33C35 33 38 30 41 33L43 52L57 52L59 33C62 30 65 33 65 33L62 56C62 59 59 62 56 62H44C41 62 38 59 38 56L35 33Z" fill="#000000"/>
-        <rect x="33" y="62" width="34" height="8" rx="2" fill="#000000"/>
-        <path d="M30 70H70L67 78H33L30 70Z" fill="#000000"/>
+        <g transform="translate(50, 50)">
+          {/* Simplified queen silhouette - centered */}
+          <circle cx="-10" cy="-18" r="2.5" fill="#000000"/>
+          <circle cx="0" cy="-20" r="3" fill="#000000"/>
+          <circle cx="10" cy="-18" r="2.5" fill="#000000"/>
+          <path d="M-12 -14L-8 8L8 8L12 -14C12 -14 10 -16 8 -14L6 2L0 2L-6 2L-8 -14C-10 -16 -12 -14 -12 -14Z" fill="#000000"/>
+          <ellipse cx="0" cy="12" rx="16" ry="6" fill="#000000"/>
+        </g>
       </svg>
     );
   }
@@ -72,14 +74,16 @@ export const ChessioLogo: React.FC<LogoProps> = ({
       xmlns="http://www.w3.org/2000/svg"
       className={className}
     >
+      {/* WhatsApp-style clean circle with queen */}
       <circle cx="50" cy="50" r="50" fill="#FDE68A"/>
-      {/* Queen piece - scaled up ~30% */}
-      <circle cx="38" cy="28" r="3.2" fill="#000000"/>
-      <circle cx="50" cy="23" r="4" fill="#000000"/>
-      <circle cx="62" cy="28" r="3.2" fill="#000000"/>
-      <path d="M35 33C35 33 38 30 41 33L43 52L57 52L59 33C62 30 65 33 65 33L62 56C62 59 59 62 56 62H44C41 62 38 59 38 56L35 33Z" fill="#000000"/>
-      <rect x="33" y="62" width="34" height="8" rx="2" fill="#000000"/>
-      <path d="M30 70H70L67 78H33L30 70Z" fill="#000000"/>
+      <g transform="translate(50, 50)">
+        {/* Simplified queen silhouette - centered */}
+        <circle cx="-10" cy="-18" r="2.5" fill="#000000"/>
+        <circle cx="0" cy="-20" r="3" fill="#000000"/>
+        <circle cx="10" cy="-18" r="2.5" fill="#000000"/>
+        <path d="M-12 -14L-8 8L8 8L12 -14C12 -14 10 -16 8 -14L6 2L0 2L-6 2L-8 -14C-10 -16 -12 -14 -12 -14Z" fill="#000000"/>
+        <ellipse cx="0" cy="12" rx="16" ry="6" fill="#000000"/>
+      </g>
       
       <text 
         x="120" 
