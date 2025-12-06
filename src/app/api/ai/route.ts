@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { auth } from "@/lib/auth";
 import OpenAI from "openai";
+import { selectModel, estimateCost, AI_ENABLED, AVERAGE_TOKENS } from "@/lib/ai-config";
 
 export const runtime = "nodejs";
 
@@ -10,6 +11,14 @@ const openai = new OpenAI({
 });
 
 export async function POST(req: NextRequest) {
+  // Check if AI is enabled
+  if (!AI_ENABLED) {
+    return NextResponse.json(
+      { error: "AI features are currently disabled" },
+      { status: 503 }
+    );
+  }
+
   // Auth check: admin only
   const session = await auth();
   if (!session?.user?.id) {
@@ -36,6 +45,10 @@ export async function POST(req: NextRequest) {
         { status: 400 }
       );
     }
+
+    // Select appropriate model based on scope
+    // Select model based on scope (can force reasoning with { deep: true })
+    const model = selectModel(scope);
 
     // Get the prompt template for this role
     const template = await db.aiPromptTemplate.findFirst({
@@ -85,9 +98,9 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    // Call OpenAI
+    // Call OpenAI with intelligent model selection
     const completion = await openai.chat.completions.create({
-      model: "gpt-4o-mini", // Using gpt-4o-mini for cost efficiency (you can change to gpt-4o for better quality)
+      model, // Dynamically selected based on scope
       messages: [
         {
           role: "system",
@@ -103,17 +116,28 @@ export async function POST(req: NextRequest) {
     });
 
     const output = completion.choices[0]?.message?.content || "";
+    
+    // Estimate cost for tracking
+    const inputTokens = completion.usage?.prompt_tokens || AVERAGE_TOKENS.input;
+    const outputTokens = completion.usage?.completion_tokens || AVERAGE_TOKENS.output;
+    const estimatedCost = estimateCost(model, inputTokens, outputTokens);
 
-    // Update task with output
+    // Update task with output and metadata
     await db.aiTask.update({
       where: { id: task.id },
-      data: { output },
+      data: { 
+        output,
+        // Store metadata as JSON in a text field if you want to track it
+        // Or add new fields to the schema for model/cost tracking
+      },
     });
 
     return NextResponse.json({
       success: true,
       taskId: task.id,
       output,
+      model, // Show which model was used
+      estimatedCost, // Show cost for transparency
     });
 
   } catch (error: any) {
