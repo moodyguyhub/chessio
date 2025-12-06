@@ -113,14 +113,14 @@ export function Chessboard({
   return (
     <div className="relative aspect-square w-full max-w-[500px]">
       {/* File labels (a-h) */}
-      <div className="absolute -bottom-6 left-0 right-0 flex justify-around px-1 text-xs text-chessio-muted dark:text-chessio-muted-dark">
+      <div className="absolute -bottom-6 left-0 right-0 flex justify-around px-1 text-xs text-slate-400 font-medium">
         {(orientation === "white" ? "abcdefgh" : "hgfedcba").split("").map((file) => (
           <span key={file}>{file}</span>
         ))}
       </div>
       
       {/* Rank labels (1-8) */}
-      <div className="absolute -left-5 top-0 bottom-0 flex flex-col justify-around py-1 text-xs text-chessio-muted dark:text-chessio-muted-dark">
+      <div className="absolute -left-5 top-0 bottom-0 flex flex-col justify-around py-1 text-xs text-slate-400 font-medium">
         {(orientation === "white" ? "87654321" : "12345678").split("").map((rank) => (
           <span key={rank}>{rank}</span>
         ))}
