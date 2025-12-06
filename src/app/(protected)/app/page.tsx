@@ -290,7 +290,9 @@ export default async function DashboardPage() {
             />
           </div>
           {nextLevel ? (
-            <p className="text-xs text-slate-500 mt-1.5">{levelProgress.xpToNextLevel} XP to {nextLevel.label}</p>
+            <p className="text-xs text-slate-500 mt-1.5">
+              {levelProgress.xpIntoLevel}/{nextLevel.cumulativeXpRequired - LEVELS[levelProgress.level].cumulativeXpRequired} XP • {levelProgress.xpToNextLevel} to {nextLevel.label}
+            </p>
           ) : (
             <p className="text-xs text-amber-400 mt-1.5">Max level reached! 🏆</p>
           )}
