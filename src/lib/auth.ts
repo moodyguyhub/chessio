@@ -1,12 +1,10 @@
 import NextAuth from "next-auth";
-import { PrismaAdapter } from "@auth/prisma-adapter";
 import Credentials from "next-auth/providers/credentials";
 import GitHub from "next-auth/providers/github";
 import bcrypt from "bcryptjs";
 import { db } from "./db";
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
-  adapter: PrismaAdapter(db),
   session: { strategy: "jwt" },
   trustHost: true,
   providers: [
@@ -53,21 +51,31 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     }),
   ],
   callbacks: {
-    async signIn({ user, account }) {
+    async signIn({ user, account, profile }) {
       // Auto-grant admin role to GitHub users
       if (account?.provider === "github" && user.email) {
-        // Use upsert to ensure user gets ADMIN role on first sign-in
-        await db.user.upsert({
-          where: { email: user.email },
-          update: { role: "ADMIN" },
-          create: {
-            email: user.email,
-            name: user.name || user.email,
-            image: user.image,
-            role: "ADMIN",
-            xp: 0,
-          },
-        });
+        try {
+          // Use upsert to ensure user gets ADMIN role on first sign-in
+          await db.user.upsert({
+            where: { email: user.email },
+            update: { 
+              role: "ADMIN",
+              name: user.name || profile?.name || user.email,
+              image: user.image || profile?.image,
+            },
+            create: {
+              email: user.email,
+              name: user.name || profile?.name || user.email,
+              image: user.image || profile?.image,
+              role: "ADMIN",
+              xp: 0,
+            },
+          });
+          return true;
+        } catch (error) {
+          console.error("Error in signIn callback:", error);
+          return false;
+        }
       }
       return true;
     },
