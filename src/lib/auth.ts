@@ -51,48 +51,16 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     }),
   ],
   callbacks: {
-    async signIn({ user, account, profile }) {
+    async signIn({ user, account }) {
       if (account?.provider === "github" && user.email) {
-        try {
-          const profileName = profile?.name as string | undefined;
-          const profileImage = profile?.image as string | undefined;
-
-          // Upsert minimal fields to avoid schema mismatch on prod DB
-          await db.user.upsert({
-            where: { email: user.email },
-            update: {
-              name: user.name || profileName || user.email,
-              image: user.image || profileImage || null,
-            },
-            create: {
-              email: user.email,
-              name: user.name || profileName || user.email,
-              image: user.image || profileImage || null,
-            },
-          });
-          return true;
-        } catch (error) {
-          console.error("Error in signIn callback:", error);
-          return false;
-        }
+        // Accept GitHub users without touching the DB to avoid schema mismatches
+        return true;
       }
       return true;
     },
-    async jwt({ token, user, account }) {
+    async jwt({ token, user }) {
       if (user?.email) token.email = user.email;
       if (user?.id) token.id = user.id;
-
-      if (account?.provider === "github" && token.email) {
-        const dbUser = await db.user.findUnique({
-          where: { email: token.email },
-          select: { id: true, email: true },
-        });
-        if (dbUser) {
-          token.id = dbUser.id;
-          token.email = dbUser.email;
-        }
-      }
-
       return token;
     },
     async session({ session, token }) {
