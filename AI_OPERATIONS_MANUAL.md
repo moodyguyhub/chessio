@@ -54,7 +54,74 @@ This makes AI **auditable and reviewable**.
 
 ---
 
-## 2. Roles & Responsibilities
+## 2. Model Strategy (Internal Only)
+
+### 2.1 Dual-Model Architecture
+
+Nova uses **two OpenAI models** to balance cost and quality:
+
+| Model | Use Case | Cost | When to Use |
+|-------|----------|------|-------------|
+| **gpt-4o** | Deep thinking, strategy, architecture | ~$0.01/request | Reasoning-heavy work |
+| **gpt-4o-mini** | Routine admin tasks | ~$0.0003/request | 90-95% of requests |
+
+**Routing is automatic** based on scope selection.
+
+### 2.2 Reasoning Scopes (→ gpt-4o)
+
+Use these for **strategic, architectural, or planning work** that benefits from deeper reasoning:
+
+- **Strategy**: Product decisions, roadmap planning, feature evaluation
+- **Protocol**: API design, system architecture, technical protocols
+- **Architecture**: Database structure, service design, infrastructure decisions
+- **Planning**: Long-form planning, sprint breakdowns, resource allocation
+
+**Cost**: ~$5/$15 per 1M tokens (input/output)  
+**When it's worth it**: High-stakes decisions where quality >> speed
+
+### 2.3 Utility Scopes (→ gpt-4o-mini)
+
+Use these for **routine content work** where the cheap model is more than sufficient:
+
+- **Freeform**: General questions, quick copy suggestions, brainstorming
+- **SEO Page**: Title and meta description suggestions
+- **Article**: Content outlines, intro drafts, section ideas
+- **Keyword**: Keyword research, intent analysis
+
+**Cost**: ~$0.15/$0.60 per 1M tokens (input/output)  
+**When it's enough**: 90%+ of admin tasks
+
+### 2.4 Choosing the Right Scope
+
+**Use Reasoning (gpt-4o) when**:
+- Decision has long-term product impact
+- Answer will inform multiple features
+- Context is complex (architectural, multi-system)
+- Stakes are high (user trust, data integrity)
+
+**Use Utility (gpt-4o-mini) when**:
+- Task is routine (SEO copy, outlines)
+- Speed matters more than perfection
+- Human will heavily edit output anyway
+- It's exploratory or brainstorming
+
+**Rule of thumb**: If you'd review it 5+ times before using, go Reasoning. If you'd tweak and ship, go Utility.
+
+### 2.5 Cost Awareness
+
+**Weekly budget guidance** (Season 01):
+- Admin with ~50 AI requests/week: ~$0.05 (almost free)
+- Heavy user with ~200 requests/week: ~$0.20
+- Mixed usage (180 utility + 20 reasoning): ~$0.25
+
+Nova is **designed to be cheap** at Chessio's scale. We optimize for:
+1. **Quality where it matters** (strategy, architecture)
+2. **Speed everywhere else** (content, SEO)
+3. **Human judgment always** (AI never auto-publishes)
+
+---
+
+## 3. Roles & Responsibilities
 
 ### Product / Strategy
 - **Owns**: Product + Writer role prompts
