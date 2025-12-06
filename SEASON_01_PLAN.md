@@ -1,5 +1,7 @@
 # Chessio International Club – Founding Season 01
 
+**Official Start Date:** Monday, January 6, 2025  
+**Official End Date:** Sunday, February 2, 2025  
 **Duration:** 4 weeks  
 **Target:** Adults / serious beginners who know how pieces move but blunder a lot  
 **Goal:** Gently guide members from **Novice → ~Knight/Bishop** with clear weekly missions
