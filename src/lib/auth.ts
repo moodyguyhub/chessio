@@ -56,6 +56,22 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     }),
   ],
   callbacks: {
+    async signIn({ user, account }) {
+      // Auto-grant admin role to GitHub user (moodyguyhub)
+      if (account?.provider === "github" && user.email) {
+        const dbUser = await db.user.findUnique({
+          where: { email: user.email },
+        });
+        
+        if (dbUser && dbUser.role !== "ADMIN") {
+          await db.user.update({
+            where: { id: dbUser.id },
+            data: { role: "ADMIN" },
+          });
+        }
+      }
+      return true;
+    },
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
