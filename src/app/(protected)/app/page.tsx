@@ -10,6 +10,7 @@ import { OnboardingModal, HowItWorksLink } from "@/components/ui/OnboardingModal
 import { recordDashboardVisit, getLastActiveDescription } from "@/lib/engagement";
 import { getTodaysGoalForUser } from "@/lib/engagement/todays-goal";
 import { logDashboardViewed, logWelcomeBackShown, logSessionStarted } from "@/lib/telemetry";
+import { ChessioLogo } from "@/components/brand/ChessioLogo";
 
 export default async function DashboardPage() {
   const session = await auth();
@@ -148,8 +149,7 @@ export default async function DashboardPage() {
       <header className="sticky top-0 z-50 glass-panel border-b border-white/10">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <Link href="/app" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-            <span className="text-2xl">♟️</span>
-            <span className="text-xl font-bold text-white tracking-tight">Chessio</span>
+            <ChessioLogo variant="horizontal" className="h-8" />
           </Link>
           
           <div className="flex items-center gap-4">

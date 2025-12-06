@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/Button";
 import { Card, CardContent } from "@/components/ui/Card";
+import { ChessioLogo } from "@/components/brand/ChessioLogo";
 
 interface ErrorBoundaryProps {
   error: Error & { digest?: string };
@@ -25,10 +26,7 @@ export default function LessonError({ error, reset }: ErrorBoundaryProps) {
       {/* Header */}
       <header className="bg-chessio-card dark:bg-chessio-card-dark border-b border-chessio-border dark:border-chessio-border-dark">
         <div className="container mx-auto px-4 py-4 flex items-center justify-center">
-          <div className="flex items-center gap-2">
-            <span className="text-2xl">♟️</span>
-            <span className="text-lg font-bold text-chessio-text dark:text-chessio-text-dark">Chessio</span>
-          </div>
+          <ChessioLogo variant="horizontal" className="h-8" />
         </div>
       </header>
 

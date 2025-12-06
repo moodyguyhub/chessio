@@ -9,6 +9,7 @@ import { getUserXpStats } from "@/lib/gamification";
 import { Card, CardContent } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { ProgressHeader } from "@/components/ui/ProgressHeader";
+import { ChessioLogo } from "@/components/brand/ChessioLogo";
 
 export const runtime = "nodejs";
 
@@ -89,10 +90,7 @@ export default async function LessonPage({ params }: LessonPageProps) {
               <span className="text-sm font-medium">Back to Dashboard</span>
             </Link>
             
-            <div className="flex items-center gap-2">
-              <span className="text-2xl">♟️</span>
-              <span className="text-lg font-bold text-chessio-text dark:text-chessio-text-dark">Chessio</span>
-            </div>
+            <ChessioLogo variant="horizontal" className="h-8" />
 
             <div className="w-24" /> {/* Spacer for centering */}
           </div>
@@ -146,10 +144,7 @@ export default async function LessonPage({ params }: LessonPageProps) {
               <span className="text-sm font-medium hidden sm:inline">Dashboard</span>
             </Link>
             
-            <div className="flex items-center gap-2">
-              <span className="text-2xl">♟️</span>
-              <span className="text-lg font-bold text-white tracking-tight">Chessio</span>
-            </div>
+            <ChessioLogo variant="horizontal" className="h-8" />
 
             <div className="w-16 sm:w-24" /> {/* Spacer for centering */}
           </div>
