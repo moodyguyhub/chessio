@@ -18,6 +18,12 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://chessio.io"),
   title: "Chessio — Learn Chess the Fun Way",
   description: "Master chess from zero with friendly, bite-sized lessons. No pressure, just progress.",
+  viewport: {
+    width: "device-width",
+    initialScale: 1,
+    maximumScale: 5,
+    userScalable: true,
+  },
 };
 
 export default function RootLayout({

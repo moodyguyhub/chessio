@@ -39,9 +39,151 @@
 body {
   background: var(--surface-main);
   color: var(--text-primary);
-  font-family: var(--font-sans), 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: var(--font-sans), 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* Cross-platform scrollbar styling */
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--surface-elevated);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(252, 211, 77, 0.3);
+  border-radius: 6px;
+  border: 2px solid var(--surface-elevated);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(252, 211, 77, 0.5);
+}
+
+/* Firefox scrollbar */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(252, 211, 77, 0.3) var(--surface-elevated);
+}
+
+/* ============================================
+   CROSS-PLATFORM OPTIMIZATIONS
+   ============================================ */
+
+/* Better text rendering on Linux/Ubuntu */
+@media (prefers-color-scheme: dark) {
+  body {
+    text-shadow: 0 0 0.5px rgba(255, 255, 255, 0.1);
+  }
+}
+
+/* Windows-specific fixes for font weight */
+@supports (-ms-ime-align: auto) {
+  body {
+    font-weight: 400;
+  }
+}
+
+/* Mac-specific safe area for notch */
+@supports (padding: max(0px)) {
+  body {
+    padding-left: max(0px, env(safe-area-inset-left));
+    padding-right: max(0px, env(safe-area-inset-right));
+  }
+}
+
+/* Prevent text selection issues on Windows/Linux */
+.select-none {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Hardware acceleration for smoother animations across platforms */
+.gpu-accelerated {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+/* ============================================
+   RESPONSIVE BREAKPOINTS (Cross-Platform)
+   ============================================ */
+
+/* Mobile: 320px - 639px */
+@media (max-width: 639px) {
+  .container {
+    max-width: 100%;
+  }
+}
+
+/* Tablet: 640px - 767px */
+@media (min-width: 640px) and (max-width: 767px) {
+  .container {
+    max-width: 640px;
+  }
+}
+
+/* Small Laptop (Common on Linux/Windows): 768px - 1023px */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .container {
+    max-width: 768px;
+  }
+}
+
+/* Medium Laptop (Ubuntu/Windows default): 1024px - 1279px */
+@media (min-width: 1024px) and (max-width: 1279px) {
+  .container {
+    max-width: 1024px;
+  }
+  
+  /* Adjust lesson board size for medium screens */
+  .lesson-board-container {
+    max-width: 450px;
+  }
+}
+
+/* Large Desktop (Mac/Windows): 1280px - 1535px */
+@media (min-width: 1280px) and (max-width: 1535px) {
+  .container {
+    max-width: 1280px;
+  }
+}
+
+/* Extra Large (4K, Mac Studio Display): 1536px+ */
+@media (min-width: 1536px) {
+  .container {
+    max-width: 1536px;
+  }
+  
+  /* Prevent chessboard from being too large on 4K */
+  .lesson-board-container {
+    max-width: 600px;
+  }
+}
+
+/* ============================================
+   HIGH DPI / RETINA DISPLAYS
+   ============================================ */
+
+/* Retina/HiDPI optimization (Mac, modern Windows, Linux) */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  /* Sharper borders on high DPI */
+  .border, [class*="border-"] {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+  }
 }
 
 /* Premium Typography */
