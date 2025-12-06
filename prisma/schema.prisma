@@ -16,25 +16,28 @@ model User {
   email         String    @unique
   emailVerified DateTime?
   image         String?
-  passwordHash  String?   // For credentials auth
-  
+  passwordHash  String? // For credentials auth
+
   // Gamification
-  xp            Int       @default(0)
-  
+  xp Int @default(0)
+
   // Engagement & Retention (Sprint 03)
-  lastActiveAt  DateTime? // Last time user was active
-  sessionCount  Int       @default(0) // Number of unique daily sessions
-  
+  lastActiveAt DateTime? // Last time user was active
+  sessionCount Int       @default(0) // Number of unique daily sessions
+
   // Beta Voice (XP Bounty)
-  feedbackGiven Boolean   @default(false)
-  
+  feedbackGiven Boolean @default(false)
+
+  // Admin access (internal only)
+  role String @default("USER") // "USER" | "ADMIN"
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  accounts          Account[]
-  sessions          Session[]
-  lessonProgress    UserLessonProgress[]
-  feedback          Feedback[]
+  accounts       Account[]
+  sessions       Session[]
+  lessonProgress UserLessonProgress[]
+  feedback       Feedback[]
 }
 
 model Account {
@@ -77,52 +80,52 @@ model VerificationToken {
 // ============================================
 
 model Lesson {
-  id          String   @id // e.g. "level-0-lesson-1-board"
-  slug        String   @unique
-  title       String
-  order       Int      // Ordering within level
-  pieceType   String   // "Board", "Rook", "Bishop", etc.
-  introText   String   @db.Text // 3-sentence explanation
-  xpReward    Int      @default(15)
+  id        String @id // e.g. "level-0-lesson-1-board"
+  slug      String @unique
+  title     String
+  order     Int // Ordering within level
+  pieceType String // "Board", "Rook", "Bishop", etc.
+  introText String @db.Text // 3-sentence explanation
+  xpReward  Int    @default(15)
 
-  tasks       Task[]
+  tasks Task[]
 
   @@index([order])
 }
 
 model Task {
-  id              Int      @id @default(autoincrement())
-  lessonId        String
-  lesson          Lesson   @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  id       Int    @id @default(autoincrement())
+  lessonId String
+  lesson   Lesson @relation(fields: [lessonId], references: [id], onDelete: Cascade)
 
-  index           Int      // 1, 2, 3 within lesson
-  instruction     String   @db.Text
+  index       Int // 1, 2, 3 within lesson
+  instruction String @db.Text
 
-  startingFen     String   // FEN for this task's board state
-  
-  goalType        String   // "move" | "capture" | "select"
-  targetSquare    String   // e.g. "e8" - the goal square
-  startSquare     String?  // e.g. "e1" - where the piece starts (for move tasks)
-  
-  validMoves      String   // JSON array of valid moves, e.g. ["e1-e2", "e1-e3"]
-  
-  successMessage  String   @db.Text
-  failureDefault  String   @db.Text
-  failureSpecific String?  @db.Text // JSON map for specific wrong moves, e.g. {"e1-h4": "Rooks can't move diagonally!"}
-  hintMessage     String   @db.Text
+  startingFen String // FEN for this task's board state
+
+  goalType     String // "move" | "capture" | "select"
+  targetSquare String // e.g. "e8" - the goal square
+  startSquare  String? // e.g. "e1" - where the piece starts (for move tasks)
+
+  validMoves String // JSON array of valid moves, e.g. ["e1-e2", "e1-e3"]
+
+  successMessage  String  @db.Text
+  failureDefault  String  @db.Text
+  failureSpecific String? @db.Text // JSON map for specific wrong moves, e.g. {"e1-h4": "Rooks can't move diagonally!"}
+  hintMessage     String  @db.Text
 
   @@unique([lessonId, index])
   @@index([lessonId])
 }
 
 model UserLessonProgress {
-  id          String   @id @default(cuid())
-  userId      String
-  lessonSlug  String   // Matches slug from lessons.ts (source of truth for Level 0)
-  
+  id         String @id @default(cuid())
+  userId     String
+  lessonSlug String // Matches slug from lessons.ts (source of truth for Level 0)
+
   completedAt DateTime @default(now())
   hintsUsed   Int      @default(0)
-  
+
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, lessonSlug])
@@ -140,11 +143,74 @@ model Feedback {
   text        String   @db.Text
   category    String   @default("general") // "bug", "suggestion", "praise", "general"
   levelAtTime Int      @default(0) // User's level when feedback was given
-  lessonSlug  String?  // Optional: lesson/puzzle context
+  lessonSlug  String? // Optional: lesson/puzzle context
   createdAt   DateTime @default(now())
-  
+
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  
+
   @@index([userId])
   @@index([createdAt])
+}
+
+// ============================================
+// CALM ADMIN - Internal SEO & Content System
+// Not exposed to end users, keeps team operations calm
+// ============================================
+
+model SeoPage {
+  id            String   @id @default(cuid())
+  slug          String   @unique // 'home', 'login', 'about', etc.
+  title         String
+  description   String   @db.Text
+  ogTitle       String?
+  ogDescription String?  @db.Text
+  updatedAt     DateTime @updatedAt
+  createdAt     DateTime @default(now())
+
+  @@index([slug])
+}
+
+model SeoKeyword {
+  id        String   @id @default(cuid())
+  phrase    String   @unique
+  intent    String?  @db.Text // e.g. "chess for anxious beginners"
+  archetype String? // 'Returning Adult' | 'True Beginner' | 'Quiet Worker'
+  notes     String?  @db.Text
+  priority  Int      @default(1)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([priority])
+}
+
+model ArticleIdea {
+  id            String        @id @default(cuid())
+  title         String
+  slug          String?
+  targetKeyword String?
+  archetype     String? // same three archetypes
+  status        ArticleStatus @default(DRAFT)
+  notes         String?       @db.Text // outline, angle, examples
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  @@index([status])
+}
+
+enum ArticleStatus {
+  DRAFT
+  OUTLINED
+  WRITING
+  LIVE
+}
+
+model AiPromptTemplate {
+  id        String   @id @default(cuid())
+  role      String // 'product' | 'seo' | 'writer' | 'designer' | 'dev'
+  name      String // e.g. "Calm SEO Copilot"
+  content   String   @db.Text // the long prompt text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([role])
 }
