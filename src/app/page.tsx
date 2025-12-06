@@ -1,6 +1,35 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import { Chessboard } from "@/components/chess";
 import { ChessioLogo } from "@/components/brand/ChessioLogo";
+import { db } from "@/lib/db";
+
+export const runtime = "nodejs";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const seo = await db.seoPage.findUnique({ where: { slug: "home" } });
+  
+  if (!seo) {
+    // Fallback to default metadata if not found
+    return {
+      title: "Chessio – Learn chess calmly",
+      description: "Learn chess from zero with short, guided lessons. No timers, no pressure—just clear guidance and one idea per lesson."
+    };
+  }
+
+  return {
+    title: seo.title,
+    description: seo.description,
+    openGraph: {
+      title: seo.ogTitle || seo.title,
+      description: seo.ogDescription || seo.description,
+    },
+    twitter: {
+      title: seo.ogTitle || seo.title,
+      description: seo.ogDescription || seo.description,
+    }
+  };
+}
 
 export default function LandingPage() {
   return (
