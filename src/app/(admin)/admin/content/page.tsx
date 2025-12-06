@@ -1,5 +1,6 @@
 import { db } from "@/lib/db";
 import { updateArticleStatus } from "./actions";
+import { ArticleAiHelper } from "./ArticleAiHelper";
 
 export const runtime = "nodejs";
 
@@ -86,6 +87,14 @@ export default async function ContentAdminPage() {
                 </div>
               </div>
             )}
+
+            {/* AI Helper Buttons */}
+            <div className="pt-2 border-t border-white/5">
+              <div className="flex items-center justify-between">
+                <div className="text-xs text-slate-500">Need help? Get AI suggestions:</div>
+                <ArticleAiHelper article={idea} />
+              </div>
+            </div>
           </div>
         ))}
 

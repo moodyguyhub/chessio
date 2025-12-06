@@ -1,5 +1,6 @@
 import { db } from "@/lib/db";
 import { updateSeoPage, createSeoKeyword } from "./actions";
+import { AskNovaButton } from "./AskNovaButton";
 
 export const runtime = "nodejs";
 
@@ -31,12 +32,15 @@ export default async function SeoAdminPage() {
                 <div className="text-xs font-medium uppercase tracking-wide text-amber-400">
                   {page.slug}
                 </div>
-                <button
-                  type="submit"
-                  className="px-4 py-1.5 bg-amber-500 hover:bg-amber-600 text-white text-sm font-medium rounded-lg transition-colors"
-                >
-                  Save Changes
-                </button>
+                <div className="flex items-center gap-2">
+                  <AskNovaButton page={page} />
+                  <button
+                    type="submit"
+                    className="px-4 py-1.5 bg-amber-500 hover:bg-amber-600 text-white text-sm font-medium rounded-lg transition-colors"
+                  >
+                    Save Changes
+                  </button>
+                </div>
               </div>
 
               <div className="grid gap-4">

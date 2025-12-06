@@ -1,5 +1,6 @@
 import { db } from "@/lib/db";
 import { PromptCard } from "./PromptCard";
+import { AiWorkbench } from "./AiWorkbench";
 
 export const runtime = "nodejs";
 
@@ -24,6 +25,17 @@ export default async function AiAdminPage() {
     orderBy: { role: "asc" },
   });
 
+  // Get recent AI tasks
+  const recentTasks = await db.aiTask.findMany({
+    take: 10,
+    orderBy: { createdAt: "desc" },
+    include: {
+      createdBy: {
+        select: { name: true, email: true },
+      },
+    },
+  });
+
   const byRole = prompts.reduce<Record<string, typeof prompts>>((acc, p) => {
     acc[p.role] = acc[p.role] || [];
     acc[p.role].push(p);
@@ -33,16 +45,76 @@ export default async function AiAdminPage() {
   return (
     <div className="space-y-8">
       <header>
-        <h1 className="text-2xl font-bold text-white">AI Prompts · Team of 5</h1>
+        <h1 className="text-2xl font-bold text-white">AI Workbench · Calm Admin</h1>
         <p className="text-sm text-slate-400 mt-1">
-          Canonical prompts for Nova & co. This is the source of truth each teammate copies into their AI tool.
+          Get AI assistance from Nova with full human-in-the-loop review. All interactions are logged and auditable.
+        </p>
+      </header>
+
+      {/* AI Workbench */}
+      <AiWorkbench />
+
+      {/* Recent Tasks */}
+      {recentTasks.length > 0 && (
+        <div className="bg-slate-900/50 border border-white/10 rounded-lg p-6">
+          <h3 className="text-lg font-semibold text-white mb-4">Recent AI Tasks</h3>
+          <div className="space-y-3">
+            {recentTasks.map((task) => (
+              <div
+                key={task.id}
+                className="bg-slate-800/50 border border-slate-700 rounded-lg p-4"
+              >
+                <div className="flex items-start justify-between mb-2">
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs font-medium text-amber-400 uppercase">
+                      {task.role}
+                    </span>
+                    <span className="text-xs text-slate-500">·</span>
+                    <span className="text-xs text-slate-500">{task.scope}</span>
+                    <span className="text-xs text-slate-500">·</span>
+                    <span
+                      className={`text-xs font-medium ${
+                        task.status === "ACCEPTED"
+                          ? "text-emerald-400"
+                          : task.status === "REJECTED"
+                          ? "text-slate-500"
+                          : "text-amber-400"
+                      }`}
+                    >
+                      {task.status}
+                    </span>
+                  </div>
+                  <span className="text-xs text-slate-500">
+                    {new Date(task.createdAt).toLocaleDateString()}
+                  </span>
+                </div>
+                <p className="text-sm text-slate-300 line-clamp-2">{task.input}</p>
+                {task.output && (
+                  <p className="text-xs text-slate-400 mt-2 line-clamp-1">
+                    → {task.output}
+                  </p>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Divider */}
+      <div className="border-t border-white/10" />
+
+      {/* Prompt Library Header */}
+      <header>
+        <h2 className="text-xl font-bold text-white">Prompt Library · Team of 5</h2>
+        <p className="text-sm text-slate-400 mt-1">
+          Canonical prompts for external AI tools. Copy these into ChatGPT, Claude, etc.
         </p>
       </header>
 
       {/* Usage Instructions */}
       <div className="bg-blue-900/10 border border-blue-500/20 rounded-xl p-6">
         <h3 className="text-blue-300 font-semibold mb-2">
-          📋 How to Use
+          📋 How to Use Prompts Externally
         </h3>
         <ol className="text-sm text-slate-300 space-y-1.5 list-decimal list-inside">
           <li>Find your role below (Product, SEO, Writer, Designer, Dev)</li>
@@ -51,7 +123,7 @@ export default async function AiAdminPage() {
           <li>Ask your question - the AI will respond as that role</li>
         </ol>
         <p className="text-xs text-slate-400 mt-3">
-          💡 Tip: Start a new chat for each session to keep context clean.
+          💡 Tip: Use "Ask Nova" above for quick internal requests with auto-logging.
         </p>
       </div>
 

@@ -38,6 +38,7 @@ model User {
   sessions       Session[]
   lessonProgress UserLessonProgress[]
   feedback       Feedback[]
+  aiTasks        AiTask[]
 }
 
 model Account {
@@ -213,4 +214,29 @@ model AiPromptTemplate {
   updatedAt DateTime @updatedAt
 
   @@index([role])
+}
+
+model AiTask {
+  id          String       @id @default(cuid())
+  role        String // 'product' | 'seo' | 'writer' | 'designer' | 'dev'
+  scope       String // 'seoPage' | 'keyword' | 'article' | 'freeform'
+  targetId    String? // e.g. SeoPage.id, ArticleIdea.id
+  input       String       @db.Text // what the human asked
+  output      String?      @db.Text // AI answer
+  createdById String
+  createdAt   DateTime     @default(now())
+  reviewedAt  DateTime?
+  status      AiTaskStatus @default(PENDING)
+
+  createdBy User @relation(fields: [createdById], references: [id], onDelete: Cascade)
+
+  @@index([createdById])
+  @@index([status])
+  @@index([role])
+}
+
+enum AiTaskStatus {
+  PENDING // AI has responded, human not yet processed
+  ACCEPTED // human used it (fully or partially)
+  REJECTED // human decided not to use
 }
