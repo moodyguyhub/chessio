@@ -3,6 +3,8 @@ import { auth } from "@/lib/auth";
 import { z } from "zod";
 import { logHintRequested } from "@/lib/telemetry";
 
+export const runtime = "nodejs";
+
 const hintRequestSchema = z.object({
   fen: z.string().describe("Current board position in FEN notation"),
   lessonSlug: z.string().optional().describe("Current lesson slug for context"),
