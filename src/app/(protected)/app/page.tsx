@@ -155,10 +155,10 @@ export default async function DashboardPage() {
           <div className="flex items-center gap-4">
             {/* XP Display */}
             <div className="hidden sm:flex items-center gap-2 text-sm">
-              <span className="px-2.5 py-1 bg-teal-900/20 text-teal-200 rounded-full font-medium text-xs tracking-tight">{levelProgress.label}</span>
+              <span className="px-2.5 py-1 bg-amber-900/20 text-amber-200 rounded-full font-medium text-xs tracking-tight">{levelProgress.label}</span>
               <div className="w-24 h-2 bg-white/10 rounded-full overflow-hidden">
                 <div 
-                  className="h-full bg-teal-500 transition-all duration-500"
+                  className="h-full bg-amber-500 transition-all duration-500"
                   style={{ width: `${levelProgress.progressPercent}%` }}
                 />
               </div>
@@ -202,7 +202,7 @@ export default async function DashboardPage() {
                   <p className="text-slate-400 mt-1">
                     {getLastActiveDescription(engagementStats.daysSinceLastVisit)}
                     {" · "}
-                    <span className="text-teal-400 font-medium">{levelProgress.label}</span>
+                    <span className="text-amber-400 font-medium">{levelProgress.label}</span>
                   </p>
                 </>
               ) : (
@@ -275,7 +275,7 @@ export default async function DashboardPage() {
         {/* Mobile XP & Session Display */}
         <div className="sm:hidden mb-6 p-4 bg-slate-900/50 border border-white/5 rounded-2xl">
           <div className="flex items-center justify-between mb-2">
-            <span className="px-2.5 py-1 bg-teal-900/20 text-teal-200 rounded-full font-medium text-xs">{levelProgress.label}</span>
+            <span className="px-2.5 py-1 bg-amber-900/20 text-amber-200 rounded-full font-medium text-xs">{levelProgress.label}</span>
             <div className="flex items-center gap-3">
               {engagementStats.sessionCount > 0 && (
                 <span className="text-xs text-slate-500">{engagementStats.sessionCount} sessions</span>
@@ -285,33 +285,33 @@ export default async function DashboardPage() {
           </div>
           <div className="w-full h-2 bg-white/10 rounded-full overflow-hidden">
             <div 
-              className="h-full bg-teal-500 transition-all duration-500"
+              className="h-full bg-amber-500 transition-all duration-500"
               style={{ width: `${levelProgress.progressPercent}%` }}
             />
           </div>
           {nextLevel ? (
             <p className="text-xs text-slate-500 mt-1.5">{levelProgress.xpToNextLevel} XP to {nextLevel.label}</p>
           ) : (
-            <p className="text-xs text-teal-400 mt-1.5">Max level reached! 🏆</p>
+            <p className="text-xs text-amber-400 mt-1.5">Max level reached! 🏆</p>
           )}
         </div>
 
         {/* Level 0 Card - Always Visible */}
         <div className="bg-slate-900/50 border border-white/5 rounded-2xl overflow-hidden">
           {/* Card Header */}
-          <div className="p-6 bg-gradient-to-r from-teal-600 to-teal-700">
+          <div className="p-6 bg-gradient-to-r from-amber-600 to-amber-700">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-teal-100 text-sm font-medium">Level 0</p>
+                <p className="text-amber-100 text-sm font-medium">Level 0</p>
                 <h2 className="text-2xl font-bold text-white tracking-tight mt-1">Learn the Pieces</h2>
               </div>
               <div className="text-right">
-                <p className="text-teal-100 text-sm">Progress</p>
+                <p className="text-amber-100 text-sm">Progress</p>
                 <p className="text-2xl font-bold text-white">{level0ProgressPercent}%</p>
               </div>
             </div>
             {/* Progress bar */}
-            <div className="mt-4 w-full h-2 bg-teal-400/30 rounded-full overflow-hidden">
+            <div className="mt-4 w-full h-2 bg-amber-400/30 rounded-full overflow-hidden">
               <div 
                 className="h-full bg-white transition-all duration-500"
                 style={{ width: `${level0ProgressPercent}%` }}
@@ -333,9 +333,9 @@ export default async function DashboardPage() {
                     key={lesson.slug}
                     className={`flex items-center gap-3 p-4 rounded-xl border transition-all ${
                       isCompleted
-                        ? "bg-teal-900/20 border-teal-500/20"
+                        ? "bg-amber-900/20 border-amber-500/20"
                         : isAvailable
-                        ? "bg-slate-800/50 border-white/5 hover:border-teal-500/20 hover:scale-[1.01]"
+                        ? "bg-slate-800/50 border-white/5 hover:border-amber-500/20 hover:scale-[1.01]"
                         : "bg-slate-800/30 border-white/5 opacity-60"
                     }`}
                   >
@@ -343,9 +343,9 @@ export default async function DashboardPage() {
                     <div
                       className={`w-10 h-10 shrink-0 rounded-full flex items-center justify-center text-lg ${
                         isCompleted
-                          ? "bg-teal-500 text-white"
+                          ? "bg-amber-500 text-white"
                           : isAvailable
-                          ? "bg-teal-900/30 text-teal-400"
+                          ? "bg-amber-900/30 text-amber-400"
                           : "bg-slate-700 text-slate-500"
                       }`}
                     >
@@ -360,7 +360,7 @@ export default async function DashboardPage() {
                         {lesson.title}
                       </h4>
                       <p className={`text-sm ${
-                        isLocked ? "text-slate-600" : "text-teal-400"
+                        isLocked ? "text-slate-600" : "text-amber-400"
                       }`}>
                         +{lesson.xpReward} XP
                       </p>
@@ -370,14 +370,14 @@ export default async function DashboardPage() {
                     {isCompleted ? (
                       <Link
                         href={`/lessons/${lesson.slug}`}
-                        className="shrink-0 px-3 py-2 text-sm font-medium text-teal-400 hover:text-teal-300 transition-colors"
+                        className="shrink-0 px-3 py-2 text-sm font-medium text-amber-400 hover:text-amber-300 transition-colors"
                       >
                         Replay
                       </Link>
                     ) : isAvailable ? (
                       <Link
                         href={`/lessons/${lesson.slug}`}
-                        className="shrink-0 px-4 py-2 text-sm font-medium bg-teal-500 text-white rounded-lg hover:bg-teal-600 transition-all hover:scale-[1.02]"
+                        className="shrink-0 px-4 py-2 text-sm font-medium bg-amber-500 text-white rounded-lg hover:bg-amber-600 transition-all hover:scale-[1.02]"
                       >
                         Start
                       </Link>
