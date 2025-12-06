@@ -11,7 +11,16 @@
     "db:migrate": "prisma migrate dev",
     "db:push": "prisma db push",
     "db:seed": "tsx prisma/seed.ts",
-    "db:studio": "prisma studio"
+    "db:studio": "prisma studio",
+    "test": "npm run test:sanity && npm run test:unit && npm run test:integration",
+    "test:sanity": "tsx tests/sanity-check.ts",
+    "test:unit": "jest --testPathPatterns=__tests__/unit --maxWorkers=50%",
+    "test:integration": "jest --testPathPatterns=__tests__/integration --maxWorkers=50%",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "test:all": "npm run test:sanity && npm run test:unit && npm run test:integration && npm run test:e2e"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"
@@ -37,15 +46,25 @@
     "zod": "^4.1.13"
   },
   "devDependencies": {
+    "@playwright/test": "^1.57.0",
     "@tailwindcss/postcss": "^4",
+    "@testing-library/dom": "^10.4.1",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^14.6.1",
     "@types/bcryptjs": "^2.4.6",
     "@types/canvas-confetti": "^1.9.0",
+    "@types/jest": "^30.0.0",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.0.7",
+    "jest": "^30.2.0",
+    "jest-environment-jsdom": "^30.2.0",
+    "next-router-mock": "^1.0.4",
     "tailwindcss": "^4",
+    "ts-node": "^10.9.2",
     "tsx": "^4.21.0",
     "typescript": "^5"
   }
