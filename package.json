@@ -35,6 +35,7 @@
     "bcryptjs": "^3.0.3",
     "canvas-confetti": "^1.9.4",
     "chess.js": "^1.4.0",
+    "date-fns": "^4.1.0",
     "next": "16.0.7",
     "next-auth": "^5.0.0-beta.30",
     "openai": "^6.10.0",
