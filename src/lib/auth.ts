@@ -55,17 +55,18 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     async signIn({ user, account }) {
       // Auto-grant admin role to GitHub users
       if (account?.provider === "github" && user.email) {
-        const dbUser = await db.user.findUnique({
+        // Use upsert to ensure user gets ADMIN role on first sign-in
+        await db.user.upsert({
           where: { email: user.email },
+          update: { role: "ADMIN" },
+          create: {
+            email: user.email,
+            name: user.name || user.email,
+            image: user.image,
+            role: "ADMIN",
+            xp: 0,
+          },
         });
-        
-        // Set ADMIN role for all GitHub users (development mode)
-        if (dbUser) {
-          await db.user.update({
-            where: { id: dbUser.id },
-            data: { role: "ADMIN" },
-          });
-        }
       }
       return true;
     },
