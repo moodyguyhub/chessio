@@ -181,9 +181,9 @@ function TaskPlayer({ task, taskIndex, totalTasks, onComplete, isLast, playSound
   const hintMessage = getTaskMessage(task, "hint");
 
   return (
-    <div className="flex flex-col md:flex-row gap-6">
+    <div className="flex flex-col md:flex-row gap-6 md:gap-8">
       {/* Task Panel - Left on desktop, bottom on mobile */}
-      <div className="md:w-1/2 order-2 md:order-1">
+      <div className="md:w-2/5 order-2 md:order-1">
         <Card className="h-full">
           <CardContent className="pt-6 space-y-4">
             {/* Progress */}
@@ -252,8 +252,8 @@ function TaskPlayer({ task, taskIndex, totalTasks, onComplete, isLast, playSound
       </div>
 
       {/* Board - Right on desktop, top on mobile */}
-      <div className="md:w-1/2 flex justify-center order-1 md:order-2">
-        <div className="w-full max-w-[min(400px,100%)]">
+      <div className="md:w-3/5 flex justify-center order-1 md:order-2">
+        <div className="w-full max-w-[min(500px,100%)]">
           <Chessboard
             fen={fen}
             onSquareClick={handleBoardClick}

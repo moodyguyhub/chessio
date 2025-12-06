@@ -159,7 +159,7 @@ export default async function LessonPage({ params }: LessonPageProps) {
       </header>
 
       {/* Main Content */}
-      <main className="flex-1 container mx-auto px-4 py-6 pb-safe max-w-5xl">
+      <main className="flex-1 container mx-auto px-4 py-6 pb-safe max-w-7xl">
         <LessonPlayer lesson={lesson} initialXpStats={xpStats} />
       </main>
     </div>
