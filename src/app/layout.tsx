@@ -25,6 +25,10 @@ export const metadata: Metadata = {
     maximumScale: 5,
     userScalable: true,
   },
+  icons: {
+    icon: '/icon.tsx',
+    apple: '/apple-icon.tsx',
+  },
 };
 
 export default function RootLayout({
