@@ -40,7 +40,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-neutral-950">
+    <div className="min-h-screen bg-chessio-bg-dark">
       {/* Header */}
       <header className="container mx-auto px-4 py-6">
         <nav className="flex items-center justify-between">
@@ -56,7 +56,7 @@ export default function LandingPage() {
             </Link>
             <Link
               href="/register"
-              className="rounded-full bg-amber-300 px-4 py-2 text-sm font-medium text-neutral-950 shadow-md hover:bg-amber-200 hover:shadow-lg transition"
+              className="rounded-full bg-chessio-primary px-4 py-2 text-sm font-semibold text-slate-900 shadow-md hover:bg-chessio-primary-dark hover:shadow-lg transition"
             >
               Start Learning
             </Link>

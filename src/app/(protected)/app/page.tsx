@@ -155,14 +155,14 @@ export default async function DashboardPage() {
           <div className="flex items-center gap-4">
             {/* XP Display */}
             <div className="hidden sm:flex items-center gap-2 text-sm">
-              <span className="px-2.5 py-1 bg-orange-950/40 text-orange-300 rounded-full font-medium text-xs tracking-tight">{levelProgress.label}</span>
+              <span className="px-2.5 py-1 bg-chessio-primary/20 text-chessio-primary rounded-full font-medium text-xs tracking-tight">{levelProgress.label}</span>
               <div className="w-24 h-2 bg-white/10 rounded-full overflow-hidden">
                 <div 
-                  className="h-full bg-orange-700 transition-all duration-500"
+                  className="h-full bg-chessio-primary transition-all duration-500"
                   style={{ width: `${levelProgress.progressPercent}%` }}
                 />
               </div>
-              <span className="text-slate-400 text-xs">
+              <span className="text-chessio-muted-dark text-xs">
                 {nextLevel ? (
                   <span title={`${levelProgress.xpToNextLevel} XP to reach ${nextLevel.label}`}>
                     {levelProgress.xpIntoLevel}/{nextLevel.cumulativeXpRequired - LEVELS[levelProgress.level].cumulativeXpRequired} XP
