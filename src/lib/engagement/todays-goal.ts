@@ -26,6 +26,7 @@ export interface TodaysGoal {
     targetSlug?: string;
     label: string;
     href: string;
+    hint?: string; // Brief subtitle under the CTA button
   };
   progress?: {
     completed: number;
@@ -84,6 +85,7 @@ export function getTodaysGoalForUser(progress: UserProgressContext): TodaysGoal 
         targetSlug: nextLevel0.slug,
         label: `Continue: ${nextLevel0.title}`,
         href: `/lessons/${nextLevel0.slug}`,
+        hint: "Next up: 3 quick tasks to learn this piece.",
       },
       progress: {
         completed: level0Completed,
@@ -105,6 +107,7 @@ export function getTodaysGoalForUser(progress: UserProgressContext): TodaysGoal 
         targetSlug: nextLevel1.slug,
         label: `Continue: ${nextLevel1.title}`,
         href: `/lessons/${nextLevel1.slug}`,
+        hint: "A short lesson on real chess strategy.",
       },
       progress: {
         completed: level1Completed,
@@ -126,6 +129,7 @@ export function getTodaysGoalForUser(progress: UserProgressContext): TodaysGoal 
         targetSlug: nextPuzzle.slug,
         label: `Try: ${nextPuzzle.title}`,
         href: `/lessons/${nextPuzzle.slug}`,
+        hint: "Apply what you've learned in quick puzzles.",
       },
       progress: {
         completed: puzzlesCompleted,

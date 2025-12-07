@@ -162,8 +162,14 @@ export default async function DashboardPage() {
                   style={{ width: `${levelProgress.progressPercent}%` }}
                 />
               </div>
-              <span className="text-slate-400">
-                {nextLevel ? `${levelProgress.xpIntoLevel}/${nextLevel.cumulativeXpRequired - LEVELS[levelProgress.level].cumulativeXpRequired} XP` : `${userXp} XP`}
+              <span className="text-slate-400 text-xs">
+                {nextLevel ? (
+                  <span title={`${levelProgress.xpToNextLevel} XP to reach ${nextLevel.label}`}>
+                    {levelProgress.xpIntoLevel}/{nextLevel.cumulativeXpRequired - LEVELS[levelProgress.level].cumulativeXpRequired} XP
+                  </span>
+                ) : (
+                  `${userXp} XP`
+                )}
               </span>
             </div>
 
@@ -260,12 +266,19 @@ export default async function DashboardPage() {
                 </div>
               )}
             </div>
-            <Link
-              href={todaysGoal.action.href}
-              className="shrink-0 px-5 py-2.5 bg-orange-700 hover:bg-orange-800 text-white font-medium rounded-lg transition-all hover:scale-[1.02] text-sm tracking-tight"
-            >
-              {todaysGoal.action.label}
-            </Link>
+            <div className="shrink-0">
+              <Link
+                href={todaysGoal.action.href}
+                className="block px-5 py-2.5 bg-orange-700 hover:bg-orange-800 text-white font-medium rounded-lg transition-all hover:scale-[1.02] text-sm tracking-tight"
+              >
+                {todaysGoal.action.label}
+              </Link>
+              {todaysGoal.action.hint && (
+                <p className="text-xs text-slate-500 mt-2 text-right">
+                  {todaysGoal.action.hint}
+                </p>
+              )}
+            </div>
           </div>
         </div>
 
@@ -306,6 +319,7 @@ export default async function DashboardPage() {
               <div>
                 <p className="text-amber-100 text-sm font-medium">Level 0</p>
                 <h2 className="text-2xl font-bold text-white tracking-tight mt-1">Learn the Pieces</h2>
+                <p className="text-amber-100/80 text-xs mt-1">Start here if you're new or rusty. {level0Lessons.length} snack-sized lessons.</p>
               </div>
               <div className="text-right">
                 <p className="text-amber-100 text-sm">Progress</p>
