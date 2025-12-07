@@ -104,6 +104,16 @@ export default function SchoolDashboard({ levels, unlockedLevels }: SchoolDashbo
         </p>
       </div>
 
+      {/* Placement Test CTA */}
+      <div className="flex justify-center">
+        <Link href="/school/placement">
+          <Button className="gap-2 bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600">
+            <Trophy className="h-4 w-4" />
+            Take Placement Test
+          </Button>
+        </Link>
+      </div>
+
       {/* Notebook Link */}
       <div className="flex justify-center">
         <Link href="/school/notebook">
