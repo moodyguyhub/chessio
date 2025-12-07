@@ -10,6 +10,7 @@ import { Card, CardContent } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { ProgressHeader } from "@/components/ui/ProgressHeader";
 import { ChessioLogo } from "@/components/brand/ChessioLogo";
+import { FeedbackButton } from "@/components/ui/FeedbackButton";
 
 export const runtime = "nodejs";
 
@@ -162,6 +163,9 @@ export default async function LessonPage({ params }: LessonPageProps) {
       <main className="flex-1 container mx-auto px-4 py-6 pb-safe max-w-7xl">
         <LessonPlayer lesson={lesson} initialXpStats={xpStats} />
       </main>
+
+      {/* Feedback Button - Bottom Right */}
+      <FeedbackButton lessonSlug={slug} />
     </div>
   );
 }
