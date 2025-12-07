@@ -23,6 +23,7 @@ import {
 } from "@/lib/lessons/engine";
 import { completeLessonAction, type CompleteLessonActionResult } from "@/app/lessons/[slug]/actions";
 import { useChessAudio } from "@/hooks/useChessAudio";
+import { useSoundscape } from "@/lib/sound/SoundProvider";
 import type { NextStep } from "@/lib/lessons/next-step";
 
 // ============================================
@@ -273,6 +274,7 @@ function TaskPlayer({ task, taskIndex, totalTasks, onComplete, isLast, playSound
 export function LessonPlayer({ lesson, initialXpStats }: LessonPlayerProps) {
   const router = useRouter();
   const { play } = useChessAudio();
+  const { play: playSound } = useSoundscape();
 
   // Lesson state - task index and completion
   const [currentTaskIndex, setCurrentTaskIndex] = useState(0);
@@ -305,6 +307,15 @@ export function LessonPlayer({ lesson, initialXpStats }: LessonPlayerProps) {
       // Play the "quiet triumph" chime
       play("success");
       
+      // Play level-up sound and coach voice (if not already completed)
+      if (!alreadyCompleted) {
+        playSound("level_up");
+        // Coach voice plays after level_up
+        setTimeout(() => {
+          playSound("coach_promotion");
+        }, 800);
+      }
+      
       // Fire confetti celebration
       confetti({
         particleCount: 100,
@@ -319,7 +330,7 @@ export function LessonPlayer({ lesson, initialXpStats }: LessonPlayerProps) {
     } else {
       setShowSuccess(false);
     }
-  }, [isLessonComplete, play]);
+  }, [isLessonComplete, play, playSound, alreadyCompleted]);
 
   // Show Bishop modal when bishopAchieved is true (after XP breakdown)
   useEffect(() => {
@@ -481,26 +492,56 @@ export function LessonPlayer({ lesson, initialXpStats }: LessonPlayerProps) {
                         <div className="text-sm text-amber-400 font-medium">
                           {nextStep.message}
                         </div>
-                        <Button variant="primary" size="lg" onClick={handleBackToDashboard} className="w-full">
+                        <Button 
+                          variant="primary" 
+                          size="lg" 
+                          onClick={() => {
+                            playSound("ui_click");
+                            handleBackToDashboard();
+                          }} 
+                          className="w-full"
+                        >
                           Back to Dashboard
                         </Button>
                       </div>
                     )}
 
                     {/* Primary CTA for next lesson/level */}
-                    {nextStep.type !== "all-complete" && (
-                      <Button variant="primary" size="lg" onClick={handleNextStep} className="w-full">
-                        {nextStep.cta}
+                    {nextStep.type !== "all-complete" && nextStep.href && (
+                      <Button 
+                        variant="primary" 
+                        size="lg" 
+                        onClick={() => {
+                          playSound("ui_click");
+                          handleNextStep();
+                        }} 
+                        className="w-full"
+                      >
+                        {nextStep.cta || "Continue"}
                       </Button>
                     )}
 
                     {/* Secondary actions */}
                     {nextStep.type !== "all-complete" && (
                       <>
-                        <Button variant="secondary" onClick={handleReplay} className="w-full">
+                        <Button 
+                          variant="secondary" 
+                          onClick={() => {
+                            playSound("ui_click");
+                            handleReplay();
+                          }} 
+                          className="w-full"
+                        >
                           Replay Lesson
                         </Button>
-                        <Button variant="ghost" onClick={handleBackToDashboard} className="w-full">
+                        <Button 
+                          variant="ghost" 
+                          onClick={() => {
+                            playSound("ui_click");
+                            handleBackToDashboard();
+                          }} 
+                          className="w-full"
+                        >
                           Back to Dashboard
                         </Button>
                       </>
@@ -508,7 +549,15 @@ export function LessonPlayer({ lesson, initialXpStats }: LessonPlayerProps) {
                   </>
                 ) : (
                   // Fallback while loading or if no nextStep
-                  <Button variant="primary" size="lg" onClick={handleBackToDashboard} className="w-full">
+                  <Button 
+                    variant="primary" 
+                    size="lg" 
+                    onClick={() => {
+                      playSound("ui_click");
+                      handleBackToDashboard();
+                    }} 
+                    className="w-full"
+                  >
                     Back to Dashboard
                   </Button>
                 )}
