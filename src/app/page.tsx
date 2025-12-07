@@ -59,13 +59,13 @@ export default async function LandingPage() {
           <div className="flex items-center gap-4">
             <Link
               href="/login"
-              className="text-sm font-medium text-neutral-300 hover:text-neutral-50 transition-colors"
+              className="text-sm font-medium text-neutral-50 hover:text-amber-200 transition-colors"
             >
               Log in
             </Link>
             <Link
               href="/register"
-              className="rounded-full bg-chessio-primary px-4 py-2 text-sm font-semibold text-slate-900 shadow-md hover:bg-chessio-primary-dark hover:shadow-lg transition"
+              className="rounded-full bg-amber-400 px-5 py-2.5 text-sm font-semibold text-slate-950 shadow-md hover:bg-amber-300 hover:shadow-lg transition-all"
             >
               Start Learning
             </Link>
