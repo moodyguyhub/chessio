@@ -508,18 +508,20 @@ export function LessonPlayer({ lesson, initialXpStats }: LessonPlayerProps) {
 
                     {/* Primary CTA for next lesson/level */}
                     {nextStep.type !== "all-complete" && nextStep.href && (
-                      <Button 
-                        variant="primary" 
-                        size="lg" 
+                      <button
                         onClick={() => {
                           playSound("ui_click");
                           handleNextStep();
-                        }} 
-                        className="w-full !bg-yellow-400 !text-slate-950 font-bold shadow-lg hover:!shadow-xl hover:!bg-yellow-300 border-2 !border-yellow-500"
-                        style={{ backgroundColor: '#facc15', color: '#0f172a' }}
+                        }}
+                        className="w-full h-12 px-6 text-base font-bold rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-950 focus:ring-yellow-500/50 disabled:opacity-50 disabled:pointer-events-none tracking-tight shadow-lg hover:shadow-xl hover:scale-[1.02]"
+                        style={{ 
+                          backgroundColor: '#facc15',
+                          color: '#0f172a',
+                          border: '2px solid rgba(250, 204, 21, 0.5)'
+                        }}
                       >
                         {nextStep.cta || "Continue"}
-                      </Button>
+                      </button>
                     )}
 
                     {/* Secondary actions */}
