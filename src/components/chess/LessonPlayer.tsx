@@ -515,7 +515,7 @@ export function LessonPlayer({ lesson, initialXpStats }: LessonPlayerProps) {
                           playSound("ui_click");
                           handleNextStep();
                         }} 
-                        className="w-full"
+                        className="w-full bg-chessio-primary text-slate-950 font-bold shadow-lg hover:shadow-xl hover:bg-yellow-400 border-2 border-yellow-500/30"
                       >
                         {nextStep.cta || "Continue"}
                       </Button>
