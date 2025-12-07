@@ -5,26 +5,37 @@ import { MODEL_REASONING, MODEL_CHEAP } from "@/lib/ai-config";
 export const runtime = "nodejs";
 
 export default async function AdminDashboard() {
-  // Fetch real counts from database
-  const [pageCount, keywordCount, articleCount, promptCount] = await Promise.all([
-    db.seoPage.count(),
-    db.seoKeyword.count(),
-    db.articleIdea.count(),
-    db.aiPromptTemplate.count(),
-  ]);
+  // Fetch counts with safe fallbacks to avoid DB schema/runtime issues in prod
+  let pageCount = 0;
+  let keywordCount = 0;
+  let articleCount = 0;
+  let promptCount = 0;
+  let totalTasks = 0;
+  let acceptedTasks = 0;
 
-  // AI Health: Last 7 days
-  const since = subDays(new Date(), 7);
-  const aiTasks = await db.aiTask.findMany({
-    where: { createdAt: { gte: since } },
-    select: { 
-      status: true,
-      // Note: model field doesn't exist yet in schema, will track manually
-    },
-  });
+  try {
+    const counts = await Promise.all([
+      db.seoPage.count(),
+      db.seoKeyword.count(),
+      db.articleIdea.count(),
+      db.aiPromptTemplate.count(),
+    ]);
+    [pageCount, keywordCount, articleCount, promptCount] = counts;
+  } catch (err) {
+    console.error("AdminDashboard counts fallback", err);
+  }
 
-  const totalTasks = aiTasks.length;
-  const acceptedTasks = aiTasks.filter(t => t.status === "ACCEPTED").length;
+  try {
+    const since = subDays(new Date(), 7);
+    const aiTasks = await db.aiTask.findMany({
+      where: { createdAt: { gte: since } },
+      select: { status: true },
+    });
+    totalTasks = aiTasks.length;
+    acceptedTasks = aiTasks.filter(t => t.status === "ACCEPTED").length;
+  } catch (err) {
+    console.error("AdminDashboard aiTasks fallback", err);
+  }
   const acceptanceRate = totalTasks > 0 ? Math.round((acceptedTasks / totalTasks) * 100) : 0;
   
   // For now, estimate model mix (will be accurate once we log model in DB)
