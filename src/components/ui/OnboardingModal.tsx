@@ -47,7 +47,7 @@ export function OnboardingModal({ forceOpen = false, onClose }: OnboardingModalP
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
-      <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-xl max-w-md w-full p-6 animate-in fade-in zoom-in-95 duration-200">
+      <div className="bg-chessio-card-dark border border-chessio-border-dark rounded-2xl shadow-xl max-w-md w-full p-6 animate-in fade-in zoom-in-95 duration-200">
         {/* Header */}
         <div className="text-center mb-6">
           <div className="text-5xl mb-3">♟️</div>
@@ -82,11 +82,11 @@ export function OnboardingModal({ forceOpen = false, onClose }: OnboardingModalP
           </div>
 
           <div className="flex items-start gap-3">
-            <div className="w-8 h-8 rounded-full bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center flex-shrink-0">
-              <span className="text-amber-600 dark:text-amber-400 font-bold text-sm">3</span>
+            <div className="w-8 h-8 rounded-full bg-chessio-primary/20 flex items-center justify-center flex-shrink-0">
+              <span className="text-chessio-primary font-bold text-sm">3</span>
             </div>
             <div>
-              <p className="font-medium text-slate-900 dark:text-white">Level up & unlock more</p>
+              <p className="font-medium text-chessio-text-dark">Level up & unlock more</p>
               <p className="text-sm text-slate-500 dark:text-slate-400">Progress through levels to unlock puzzles and advanced content</p>
             </div>
           </div>

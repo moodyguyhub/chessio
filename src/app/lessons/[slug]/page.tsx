@@ -77,9 +77,9 @@ export default async function LessonPage({ params }: LessonPageProps) {
   // Show locked message if trying to access a locked lesson
   if (isLocked && previousLesson) {
     return (
-      <div className="min-h-dvh flex flex-col bg-slate-950">
+      <div className="min-h-dvh flex flex-col bg-chessio-bg-dark">
         {/* Header */}
-        <header className="glass-panel border-b border-white/10">
+        <header className="glass-panel border-b border-chessio-border-dark">
           <div className="container mx-auto px-4 py-4 flex items-center justify-between">
             <Link 
               href="/app" 
@@ -130,9 +130,9 @@ export default async function LessonPage({ params }: LessonPageProps) {
   }
 
   return (
-    <div className="min-h-dvh flex flex-col bg-slate-950">
+    <div className="min-h-dvh flex flex-col bg-chessio-bg-dark">
       {/* Header */}
-      <header className="glass-panel border-b border-white/10">
+      <header className="glass-panel border-b border-chessio-border-dark">
         <div className="container mx-auto px-4 py-3">
           <div className="flex items-center justify-between mb-2">
             <Link 

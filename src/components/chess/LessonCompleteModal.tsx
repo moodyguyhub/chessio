@@ -88,15 +88,15 @@ export function LessonCompleteModal({
 
       {/* Modal */}
       <div
-        className={`relative bg-neutral-900 rounded-2xl shadow-2xl max-w-md w-full p-8 text-center transform transition-all duration-300 ${
+        className={`relative bg-chessio-card-dark border border-chessio-border-dark rounded-2xl shadow-2xl max-w-md w-full p-8 text-center transform transition-all duration-300 ${
           show ? "scale-100 opacity-100" : "scale-95 opacity-0"
         }`}
       >
         {/* Success Icon */}
         <div className="mb-6">
-          <div className="w-20 h-20 mx-auto bg-amber-300/20 rounded-full flex items-center justify-center">
+          <div className="w-20 h-20 mx-auto bg-chessio-primary/20 rounded-full flex items-center justify-center">
             <svg
-              className="w-10 h-10 text-amber-300"
+              className="w-10 h-10 text-chessio-primary"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -116,9 +116,9 @@ export function LessonCompleteModal({
         <p className="text-neutral-400 mb-6">{subline}</p>
 
         {/* XP Badge */}
-        <div className="inline-flex items-center gap-2 px-4 py-2 bg-amber-300/20 rounded-full mb-8">
-          <span className="text-amber-300 font-bold text-lg">+{animatedXp}</span>
-          <span className="text-amber-300 font-medium">XP</span>
+        <div className="inline-flex items-center gap-2 px-4 py-2 bg-chessio-primary/20 rounded-full mb-8">
+          <span className="text-chessio-primary font-bold text-lg">+{animatedXp}</span>
+          <span className="text-chessio-primary font-medium">XP</span>
         </div>
 
         {/* Actions */}
@@ -126,14 +126,14 @@ export function LessonCompleteModal({
           {nextLessonSlug ? (
             <Link
               href={`/app/lessons/${nextLessonSlug}`}
-              className="block w-full py-3 px-4 rounded-lg bg-orange-700 text-white font-semibold hover:bg-orange-800 transition-colors"
+              className="block w-full py-3 px-4 rounded-lg bg-chessio-primary text-slate-900 font-semibold hover:bg-chessio-primary-dark transition-colors"
             >
               Next Lesson: {nextLessonTitle}
             </Link>
           ) : (
             <Link
               href="/app"
-              className="block w-full py-3 px-4 rounded-lg bg-orange-700 text-white font-semibold hover:bg-orange-800 transition-colors"
+              className="block w-full py-3 px-4 rounded-lg bg-chessio-primary text-slate-900 font-semibold hover:bg-chessio-primary-dark transition-colors"
             >
               Continue
             </Link>
@@ -141,7 +141,7 @@ export function LessonCompleteModal({
           
           <Link
             href="/app"
-            className="block w-full py-3 px-4 rounded-lg border border-neutral-700 text-neutral-300 font-medium hover:bg-neutral-800 transition-colors"
+            className="block w-full py-3 px-4 rounded-lg border border-chessio-border-dark text-chessio-text-dark font-medium hover:bg-chessio-surface-dark transition-colors"
           >
             Back to Dashboard
           </Link>

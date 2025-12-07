@@ -208,9 +208,9 @@ function TaskPlayer({ task, taskIndex, totalTasks, onComplete, isLast, playSound
             </div>
 
             {/* Task Prompt */}
-            <div className="bg-slate-800/30 border border-white/5 rounded-lg p-4">
-              <p className="text-sm text-slate-400 mb-1">Your task</p>
-              <p className="font-medium text-white tracking-tight">
+            <div className="bg-chessio-surface-dark border border-chessio-border-dark rounded-lg p-4">
+              <p className="text-sm text-chessio-muted-dark mb-1">Your task</p>
+              <p className="font-medium text-chessio-text-dark tracking-tight">
                 {task.prompt}
               </p>
             </div>
@@ -218,7 +218,7 @@ function TaskPlayer({ task, taskIndex, totalTasks, onComplete, isLast, playSound
             {/* Feedback Area - Fixed height to prevent layout jump */}
             <div className="min-h-[48px] flex items-center">
               {feedback === "correct" && (
-                <p className="text-sm text-amber-400 flex items-center gap-2 font-medium">
+                <p className="text-sm text-chessio-primary flex items-center gap-2 font-medium">
                   <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
@@ -226,7 +226,7 @@ function TaskPlayer({ task, taskIndex, totalTasks, onComplete, isLast, playSound
                 </p>
               )}
               {feedback === "error" && (
-                <p className="text-sm text-amber-400 flex items-center gap-2 font-medium">
+                <p className="text-sm text-chessio-primary flex items-center gap-2 font-medium">
                   <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                   </svg>
@@ -236,9 +236,9 @@ function TaskPlayer({ task, taskIndex, totalTasks, onComplete, isLast, playSound
             </div>
 
             {/* Hint Section */}
-            <div className="pt-2 border-t border-white/5">
+            <div className="pt-2 border-t border-chessio-border-dark">
               {showHint ? (
-                <p className="text-sm text-slate-400 italic">
+                <p className="text-sm text-chessio-muted-dark italic">
                   💡 {hintMessage}
                 </p>
               ) : (

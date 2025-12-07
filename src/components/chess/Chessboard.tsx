@@ -129,7 +129,7 @@ export function Chessboard({
       {/* Board */}
       <div 
         className={`
-          grid grid-cols-8 rounded-lg overflow-hidden bg-neutral-950
+          grid grid-cols-8 rounded-lg overflow-hidden bg-chessio-bg-dark
           ${state.isError ? "animate-shake" : ""}
         `}
       >
@@ -144,7 +144,7 @@ export function Chessboard({
               className={`
                 aspect-square flex items-center justify-center relative
                 transition-all duration-150
-                ${isLight ? "bg-neutral-50" : "bg-neutral-950"}
+                ${isLight ? "bg-amber-50" : "bg-amber-900"}
                 ${highlightClass}
                 ${isDisabled ? "cursor-not-allowed" : "cursor-pointer"}
               `}

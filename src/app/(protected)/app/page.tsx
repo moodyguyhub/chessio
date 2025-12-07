@@ -144,9 +144,9 @@ export default async function DashboardPage() {
   const level2ProgressPercent = level2TotalLessons > 0 ? Math.round((level2CompletedCount / level2TotalLessons) * 100) : 0;
 
   return (
-    <div className="min-h-screen bg-slate-950">
+    <div className="min-h-screen bg-chessio-bg-dark">
       {/* Header - Sticky Glassmorphism */}
-      <header className="sticky top-0 z-50 glass-panel border-b border-white/10">
+      <header className="sticky top-0 z-50 glass-panel border-b border-chessio-border-dark">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <Link href="/app" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
             <ChessioLogo variant="horizontal" className="h-8" />
@@ -236,12 +236,12 @@ export default async function DashboardPage() {
         </div>
 
         {/* Today's Goal Card (Sprint 03) - Premium Hero */}
-        <div className="mb-8 bg-slate-900/50 border border-white/5 border-t-4 border-t-amber-500/80 rounded-2xl p-6">
+        <div className="mb-8 bg-chessio-surface-dark border border-chessio-border-dark border-t-4 border-t-chessio-primary rounded-2xl p-6">
           <div className="flex items-start justify-between gap-4">
             <div className="flex-1">
               <div className="flex items-center gap-2 mb-2">
-                <span className="text-amber-500">🎯</span>
-                <h2 className="text-xs font-semibold text-amber-500/80 uppercase tracking-wide">
+                <span className="text-chessio-primary">🎯</span>
+                <h2 className="text-xs font-semibold text-chessio-primary uppercase tracking-wide">
                   Today&apos;s Goal
                 </h2>
               </div>
@@ -286,7 +286,7 @@ export default async function DashboardPage() {
         <OnboardingModal />
 
         {/* Mobile XP & Session Display */}
-        <div className="sm:hidden mb-6 p-4 bg-slate-900/50 border border-white/5 rounded-2xl">
+        <div className="sm:hidden mb-6 p-4 bg-chessio-surface-dark border border-chessio-border-dark rounded-2xl">
           <div className="flex items-center justify-between mb-2">
             <span className="px-2.5 py-1 bg-orange-950/40 text-orange-300 rounded-full font-medium text-xs">{levelProgress.label}</span>
             <div className="flex items-center gap-3">
@@ -312,9 +312,9 @@ export default async function DashboardPage() {
         </div>
 
         {/* Level 0 Card - Always Visible */}
-        <div className="bg-slate-900/50 border border-white/5 rounded-2xl overflow-hidden">
+        <div className="bg-chessio-surface-dark border border-chessio-border-dark rounded-2xl overflow-hidden">
           {/* Card Header */}
-          <div className="p-6 bg-gradient-to-r from-amber-600 to-amber-700">
+          <div className="p-6 bg-gradient-to-r from-chessio-primary-dark to-chessio-primary">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-amber-100 text-sm font-medium">Level 0</p>
@@ -411,7 +411,7 @@ export default async function DashboardPage() {
 
         {/* Level 1 Card - Blinders: Only show if user has XP > 0 */}
         {userXp > 0 && (
-        <div className={`mt-8 bg-slate-900/50 border border-white/5 rounded-2xl overflow-hidden ${!level0Complete ? "opacity-75" : ""}`}>
+        <div className={`mt-8 bg-chessio-surface-dark border border-chessio-border-dark rounded-2xl overflow-hidden ${!level0Complete ? "opacity-75" : ""}`}>
           {/* Card Header */}
           <div className="p-6 bg-gradient-to-r from-blue-500 to-blue-600">
             <div className="flex items-center justify-between">
@@ -510,7 +510,7 @@ export default async function DashboardPage() {
 
         {/* Puzzles Card - Blinders: Only show if Level 0 complete */}
         {level0Complete && (
-        <div className={`mt-8 bg-slate-900/50 border border-white/5 rounded-2xl overflow-hidden ${!level1Complete ? "opacity-75" : ""}`}>
+        <div className={`mt-8 bg-chessio-surface-dark border border-chessio-border-dark rounded-2xl overflow-hidden ${!level1Complete ? "opacity-75" : ""}`}>
           {/* Card Header */}
           <div className="p-6 bg-gradient-to-r from-purple-500 to-purple-600">
             <div className="flex items-center justify-between">
@@ -609,7 +609,7 @@ export default async function DashboardPage() {
 
         {/* Level 2 Card - Blinders: Only show if Level 1 complete */}
         {level1Complete && (
-        <div className={`mt-8 bg-slate-900/50 border border-white/5 rounded-2xl overflow-hidden ${!puzzlesComplete ? "opacity-75" : ""}`}>
+        <div className={`mt-8 bg-chessio-surface-dark border border-chessio-border-dark rounded-2xl overflow-hidden ${!puzzlesComplete ? "opacity-75" : ""}`}>
           {/* Card Header */}
           <div className="p-6 bg-gradient-to-r from-orange-700 to-orange-800">
             <div className="flex items-center justify-between">

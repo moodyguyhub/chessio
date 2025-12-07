@@ -32,8 +32,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`${inter.variable} ${nunito.variable} font-sans antialiased`}>
+    <html lang="en" className="dark">
+      <body className={`${inter.variable} ${nunito.variable} font-sans antialiased bg-chessio-bg-dark text-chessio-text-dark`}>
         {children}
         <SpeedInsights />
         <Analytics />

@@ -7,18 +7,34 @@ const config: Config = {
     extend: {
       colors: {
         chessio: {
+          // light mode (can mostly stay as is)
           bg: "#f8fafc",
-          "bg-dark": "#020617",
           card: "#ffffff",
-          "card-dark": "#0f172a",
-          primary: "#4f46e5",
-          "primary-dark": "#6366f1",
           text: "#0f172a",
-          "text-dark": "#e5e7eb",
+
+          // 🌙 dark mode – updated to match hero
+          // page background = classy warm black
+          "bg-dark": "#050814",
+
+          // main surfaces/panels (dashboard cards, lesson shells)
+          "surface-dark": "#090f1f",
+
+          // slightly brighter cards (modals, floating panels)
+          "card-dark": "#111827",
+
+          // primary brand = golden yellow (like hero CTA)
+          primary: "#facc15",
+          "primary-dark": "#eab308",
+
+          // text on dark – a bit warmer & brighter
+          "text-dark": "#f9fafb",
+
           muted: "#6b7280",
           "muted-dark": "#9ca3af",
+
           border: "#e2e8f0",
-          "border-dark": "#1e293b",
+          "border-dark": "#1f2933",
+
           success: "#22c55e",
           danger: "#dc2626",
           warning: "#f97316",
