@@ -50,14 +50,18 @@ model ArticleIdea {
 }
 
 model Feedback {
-  id        String   @id @default(cuid())
-  userId    String
-  category  String   @default("general")
-  text      String   @db.Text
-  createdAt DateTime @default(now())
-  User      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id          String   @id @default(cuid())
+  userId      String
+  text        String   @db.Text
+  category    String   @default("general") // "bug", "suggestion", "praise", "general"
+  levelAtTime Int      @default(0) // User's level when feedback was given
+  lessonSlug  String? // Optional: lesson/puzzle context
+  createdAt   DateTime @default(now())
+
+  User User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
+  @@index([createdAt])
 }
 
 model Lesson {
