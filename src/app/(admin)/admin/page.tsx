@@ -1,41 +1,15 @@
-import { db } from "@/lib/db";
-import { subDays } from "date-fns";
 import { MODEL_REASONING, MODEL_CHEAP } from "@/lib/ai-config";
 
 export const runtime = "nodejs";
 
 export default async function AdminDashboard() {
-  // Fetch counts with safe fallbacks to avoid DB schema/runtime issues in prod
-  let pageCount = 0;
-  let keywordCount = 0;
-  let articleCount = 0;
-  let promptCount = 0;
-  let totalTasks = 0;
-  let acceptedTasks = 0;
-
-  try {
-    const counts = await Promise.all([
-      db.seoPage.count(),
-      db.seoKeyword.count(),
-      db.articleIdea.count(),
-      db.aiPromptTemplate.count(),
-    ]);
-    [pageCount, keywordCount, articleCount, promptCount] = counts;
-  } catch (err) {
-    console.error("AdminDashboard counts fallback", err);
-  }
-
-  try {
-    const since = subDays(new Date(), 7);
-    const aiTasks = await db.aiTask.findMany({
-      where: { createdAt: { gte: since } },
-      select: { status: true },
-    });
-    totalTasks = aiTasks.length;
-    acceptedTasks = aiTasks.filter(t => t.status === "ACCEPTED").length;
-  } catch (err) {
-    console.error("AdminDashboard aiTasks fallback", err);
-  }
+  // Static placeholders to avoid DB runtime issues in production
+  const pageCount = 0;
+  const keywordCount = 0;
+  const articleCount = 0;
+  const promptCount = 0;
+  const totalTasks = 0;
+  const acceptedTasks = 0;
   const acceptanceRate = totalTasks > 0 ? Math.round((acceptedTasks / totalTasks) * 100) : 0;
   
   // For now, estimate model mix (will be accurate once we log model in DB)
