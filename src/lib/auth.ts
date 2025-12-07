@@ -2,6 +2,7 @@ import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import GitHub from "next-auth/providers/github";
 import bcrypt from "bcryptjs";
+import { db } from "@/lib/db";
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   session: { strategy: "jwt" },
@@ -21,27 +22,50 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) return null;
 
-        // Env-based admin credentials (no DB)
+        // Check env-based admin credentials first (no DB)
         const adminEmail = process.env.ADMIN_EMAIL;
         const adminPassword = process.env.ADMIN_PASSWORD;
         const adminPasswordHash = process.env.ADMIN_PASSWORD_HASH;
 
-        if (!adminEmail) return null;
-
-        if (credentials.email !== adminEmail) return null;
-
-        let ok = false;
-        if (adminPassword && credentials.password === adminPassword) ok = true;
-        if (!ok && adminPasswordHash) {
-          ok = await bcrypt.compare(credentials.password as string, adminPasswordHash);
+        if (adminEmail && credentials.email === adminEmail) {
+          let ok = false;
+          if (adminPassword && credentials.password === adminPassword) ok = true;
+          if (!ok && adminPasswordHash) {
+            ok = await bcrypt.compare(credentials.password as string, adminPasswordHash);
+          }
+          if (ok) {
+            return {
+              id: "admin",
+              email: adminEmail,
+              name: "Admin",
+            };
+          }
         }
-        if (!ok) return null;
 
-        return {
-          id: "admin",
-          email: adminEmail,
-          name: "Admin",
-        };
+        // Check regular users in database
+        try {
+          const user = await db.user.findUnique({
+            where: { email: credentials.email as string },
+          });
+
+          if (!user || !user.passwordHash) return null;
+
+          const passwordMatch = await bcrypt.compare(
+            credentials.password as string,
+            user.passwordHash
+          );
+
+          if (!passwordMatch) return null;
+
+          return {
+            id: user.id,
+            email: user.email,
+            name: user.name,
+          };
+        } catch (error) {
+          console.error("Auth error:", error);
+          return null;
+        }
       },
     }),
   ],
