@@ -1,0 +1,102 @@
+{
+  "title": "The Gatekeeper",
+  "description": "5 positions. 5 minutes. Prove you are ready.",
+  "passing_score": 4,
+  "puzzles": [
+    {
+      "id": "placement_1_mechanics",
+      "category": "Mechanics",
+      "title": "Safety First",
+      "question": "Your Queen is under attack. Move her to a safe square where she is NOT captured.",
+      "fen": "r1bqkb1r/pppp1ppp/2n2n2/4p3/2B1P3/5N2/PPPP1PPP/RNBQ1K1R b kq - 5 4",
+      "coach_hint": "Look at the enemy Knight and Bishop. Do not walk into fire.",
+      "correct_uci": "d8e7",
+      "fail_states": [
+        {
+          "wrong_uci": "d8e8",
+          "message": "Too passive. You block your own King."
+        },
+        {
+          "wrong_uci": "d8f6",
+          "message": "Careful! The enemy Knight on c3 can jump to d5 later. Not the safest."
+        }
+      ]
+    },
+    {
+      "id": "placement_2_tactics_fork",
+      "category": "Tactics",
+      "title": "The Fork",
+      "question": "White to move. Find the move that attacks two pieces at once.",
+      "fen": "r1bqk2r/pppp1ppp/2n5/2b1n3/2B1N3/8/PPPP1PPP/RNBQK2R w KQkq - 0 6",
+      "coach_hint": "Look for a check that also grabs a Bishop.",
+      "correct_uci": "c4f7",
+      "fail_states": [
+        {
+          "wrong_uci": "e4c5",
+          "message": "You captured the Bishop, but you missed the check! Look for something stronger."
+        },
+        {
+          "wrong_uci": "d2d4",
+          "message": "Good principle, but there is a tactic available right now."
+        }
+      ]
+    },
+    {
+      "id": "placement_3_blunder_check",
+      "category": "Safe Capture",
+      "title": "Greed vs. Logic",
+      "question": "Black has a hanging Bishop on g4. Should White take it? Find the best move.",
+      "fen": "r2q1rk1/ppp2ppp/2n5/3p4/3P2b1/2P2N2/P1P2PPP/R1BQ1RK1 w - - 0 1",
+      "coach_hint": "If you take the Bishop, is your Queen safe?",
+      "correct_uci": "h2h3",
+      "fail_states": [
+        {
+          "wrong_uci": "d1d3",
+          "message": "A solid move, but you can challenge him more directly."
+        },
+        {
+          "wrong_uci": "f3g5",
+          "message": "You are moving the Knight away from defense. Dangerous."
+        }
+      ]
+    },
+    {
+      "id": "placement_4_mate",
+      "category": "Checkmate",
+      "title": "The Finisher",
+      "question": "White to move. Deliver Checkmate in 1 move.",
+      "fen": "6k1/5ppp/8/8/8/8/2r5/3R2K1 w - - 0 1",
+      "coach_hint": "The enemy King is trapped behind his own pawns. Use the Rook.",
+      "correct_uci": "d1d8",
+      "fail_states": [
+        {
+          "wrong_uci": "d1a1",
+          "message": "You moved the Rook, but you did not attack the King."
+        },
+        {
+          "wrong_uci": "g1f1",
+          "message": "The King is safe. You need to be attacking, not hiding."
+        }
+      ]
+    },
+    {
+      "id": "placement_5_endgame",
+      "category": "Endgame",
+      "title": "The Race",
+      "question": "White to move. Can the pawn run to promotion, or must you bring the King?",
+      "fen": "8/8/8/P7/5k2/8/8/6K1 w - - 0 1",
+      "coach_hint": "Count the squares. If he cannot catch you, run!",
+      "correct_uci": "a5a6",
+      "fail_states": [
+        {
+          "wrong_uci": "g1f2",
+          "message": "Too slow! The pawn is fast enough to run alone. Do not waste time."
+        },
+        {
+          "wrong_uci": "g1f1",
+          "message": "Why move the King? The pawn is the hero here."
+        }
+      ]
+    }
+  ]
+}

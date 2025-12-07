@@ -74,12 +74,14 @@ export async function getChessioProfile(userId: string): Promise<ChessioProfile>
   }
 
   // Check placement test status (v1: stub as "not_taken", can expand later)
-  const placementStatus: PlacementStatus = "not_taken";
+  // Note: For v1, placement is stored in localStorage and checked client-side
+  // Server-side always returns "not_taken" but gating logic supports "passed"
+  const placementStatus: PlacementStatus = "not_taken" as PlacementStatus;
 
-  // Determine School access (for v1, only Pre-School completion unlocks School)
-  // In future: placementStatus === "passed" will also unlock
+  // Determine School access
+  // Unlocks if Pre-School completed OR placement passed
   const schoolAccess: SchoolAccess = 
-    preSchoolStatus === "completed"
+    preSchoolStatus === "completed" || (placementStatus as PlacementStatus) === "passed"
       ? "unlocked"
       : "locked";
 
