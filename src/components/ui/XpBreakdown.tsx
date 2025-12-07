@@ -155,7 +155,7 @@ export function XpBreakdown({
         </div>
         <div className="h-2 bg-chessio-surface dark:bg-chessio-surface-dark rounded-full overflow-hidden">
           <div
-            className="h-full bg-gradient-to-r from-emerald-500 to-emerald-400 transition-all duration-700 ease-out"
+            className="h-full bg-amber-300 dark:bg-amber-300 transition-all duration-700 ease-out"
             style={{
               width: `${levelProgress.progressPercent}%`,
             }}
