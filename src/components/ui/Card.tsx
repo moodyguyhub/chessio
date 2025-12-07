@@ -21,6 +21,12 @@ export const CardTitle = ({ className = "", children, ...props }: React.HTMLAttr
   </h3>
 );
 
+export const CardDescription = ({ className = "", children, ...props }: React.HTMLAttributes<HTMLParagraphElement>) => (
+  <p className={`text-sm text-slate-400 ${className}`} {...props}>
+    {children}
+  </p>
+);
+
 export const CardContent = ({ className = "", children, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
   <div className={`p-6 pt-0 ${className}`} {...props}>
     {children}

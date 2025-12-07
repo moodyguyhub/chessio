@@ -1,0 +1,96 @@
+{
+  "id": "level-2-lesson-1-fork",
+  "level": 2,
+  "order": 1,
+  "slug": "forks-two-targets",
+  "title": "Forks (Two Targets)",
+  "XP": 30,
+  "coachIntro": "One move, two problems. That is a fork.",
+  "summary": "Learn to attack two pieces at once with Knights, pawns, Queens, and when to choose a fork over a simple capture.",
+  "secretCardId": "card_4",
+  "tasks": [
+    {
+      "id": "task1_knight_fork_king_queen",
+      "fen": "4k3/8/8/3q4/8/8/8/1N6 w - - 0 1",
+      "prompt": "Your Knight can attack the King and Queen at the same time. Find the fork move.",
+      "type": "move",
+      "correctMoves": ["b1c3", "b1d2"],
+      "successMessage": "Excellent. One jump, two problems. Always ask: 'Can my Knight fork the King and a heavy piece?'",
+      "failPatternIds": ["missed_fork"],
+      "failureHints": [
+        {
+          "move": "b1a3",
+          "failPatternId": "missed_fork"
+        }
+      ]
+    },
+    {
+      "id": "task2_knight_fork_king_rook",
+      "fen": "4k3/8/8/8/8/r7/8/3N4 w - - 0 1",
+      "prompt": "Your Knight can attack the King and Rook together. Jump to the square that hits both.",
+      "type": "move",
+      "correctMoves": ["d1c3", "d1e3"],
+      "successMessage": "Good. A Knight fork on King and Rook is a small tactical jackpot.",
+      "failPatternIds": ["missed_fork"],
+      "failureHints": [
+        {
+          "move": "d1f2",
+          "failPatternId": "missed_fork"
+        },
+        {
+          "move": "d1b2",
+          "failPatternId": "missed_fork"
+        }
+      ]
+    },
+    {
+      "id": "task3_pawn_fork_two_pieces",
+      "fen": "8/8/8/3n1b2/8/4P3/8/4K3 w - - 0 1",
+      "prompt": "Push your pawn so that it attacks two enemy pieces at once.",
+      "type": "move",
+      "correctMoves": ["e3e4"],
+      "successMessage": "Beautiful. The smallest soldier can still demand respect when he attacks two officers.",
+      "failPatternIds": ["greedy_grab"],
+      "failureHints": [
+        {
+          "move": "e1d2",
+          "failPatternId": "missed_fork"
+        }
+      ]
+    },
+    {
+      "id": "task4_queen_fork_king_piece",
+      "fen": "4k3/8/8/8/3r4/8/8/Q7 w - - 0 1",
+      "prompt": "Your Queen can give check and attack a loose piece at the same time. Find the fork.",
+      "type": "move",
+      "correctMoves": ["a1e1"],
+      "successMessage": "Good. The Queen is strongest when she attacks in more than one direction.",
+      "failPatternIds": ["missed_fork"],
+      "failureHints": [
+        {
+          "move": "a1a8",
+          "failPatternId": "missed_fork"
+        },
+        {
+          "move": "a1e5",
+          "failPatternId": "missed_fork"
+        }
+      ]
+    },
+    {
+      "id": "task5_fork_vs_simple_capture",
+      "fen": "3k4/8/3b4/8/8/8/8/3N4 w - - 0 1",
+      "prompt": "You can win something now… or much more next move. Find the move that creates the strongest fork.",
+      "type": "move",
+      "correctMoves": ["d1f2", "d1c3"],
+      "successMessage": "Correct. Do not grab the first apple you see when there is an entire orchard waiting.",
+      "failPatternIds": ["greedy_grab"],
+      "failureHints": [
+        {
+          "move": "d1b2",
+          "failPatternId": "greedy_grab"
+        }
+      ]
+    }
+  ]
+}

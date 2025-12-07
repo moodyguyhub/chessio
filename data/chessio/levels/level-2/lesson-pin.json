@@ -1,0 +1,104 @@
+{
+  "id": "level-2-lesson-2-pin",
+  "level": 2,
+  "order": 2,
+  "slug": "pins-the-nail",
+  "title": "Pins (Nailed to the King)",
+  "XP": 30,
+  "coachIntro": "A pinned piece is a prisoner. Treat it like one.",
+  "summary": "Learn how to pin enemy pieces to their King or Queen, exploit pinned pieces, and break free when you are pinned.",
+  "secretCardId": "card_5",
+  "tasks": [
+    {
+      "id": "task1_absolute_pin_to_king",
+      "fen": "4k3/8/8/4n3/8/8/8/4R3 w - - 0 1",
+      "prompt": "Use your piece to pin his piece to the King so that it cannot move.",
+      "type": "move",
+      "correctMoves": ["e1e5"],
+      "successMessage": "Good. That piece is nailed to the King. If it moves, the King dies.",
+      "failPatternIds": ["missed_pin"],
+      "failureHints": [
+        {
+          "move": "e1a1",
+          "failPatternId": "missed_pin"
+        },
+        {
+          "move": "e1h1",
+          "failPatternId": "missed_pin"
+        }
+      ]
+    },
+    {
+      "id": "task2_relative_pin_to_queen",
+      "fen": "3qk3/8/8/3n4/8/8/8/3B4 w - - 0 1",
+      "prompt": "Pin his piece to the Queen. If the piece moves, the Queen falls.",
+      "type": "move",
+      "correctMoves": ["d1h5"],
+      "successMessage": "Correct. The piece is tied to its Queen. Any move would be a confession of guilt.",
+      "failPatternIds": ["missed_pin"],
+      "failureHints": [
+        {
+          "move": "d1e2",
+          "failPatternId": "missed_pin"
+        },
+        {
+          "move": "d1c2",
+          "failPatternId": "missed_pin"
+        }
+      ]
+    },
+    {
+      "id": "task3_exploit_pinned_piece",
+      "fen": "4k3/8/8/4n3/4P3/8/8/4R3 w - - 0 1",
+      "prompt": "His piece is already pinned. Your job now is to increase the pressure and win it.",
+      "type": "move",
+      "correctMoves": ["e4e5"],
+      "successMessage": "Excellent. A pin is not just a pretty picture. You must attack the prisoner until it breaks.",
+      "failPatternIds": ["release_pressure"],
+      "failureHints": [
+        {
+          "move": "e1e2",
+          "failPatternId": "release_pressure"
+        },
+        {
+          "move": "e1a1",
+          "failPatternId": "release_pressure"
+        }
+      ]
+    },
+    {
+      "id": "task4_break_pin_by_attack",
+      "fen": "4k3/8/8/8/8/3n4/3B4/3RK3 b - - 0 1",
+      "prompt": "Your piece is pinned. Do not move the pinned piece. Attack the piece that is pinning you.",
+      "type": "move",
+      "correctMoves": ["d3b2", "d3f2"],
+      "successMessage": "Good. You did not panic. You attacked the sniper instead of running with the hostage.",
+      "failPatternIds": ["move_pinned_piece"],
+      "failureHints": [
+        {
+          "move": "d3c1",
+          "failPatternId": "move_pinned_piece"
+        },
+        {
+          "move": "d3e1",
+          "failPatternId": "move_pinned_piece"
+        }
+      ]
+    },
+    {
+      "id": "task5_break_pin_by_king_move",
+      "fen": "4k3/8/8/8/8/3n4/8/3RK3 w - - 0 1",
+      "prompt": "Step your King out of the line so that your piece is no longer pinned.",
+      "type": "move",
+      "correctMoves": ["e1f1", "e1f2", "e1e2"],
+      "successMessage": "Exactly. Once the King steps aside, the pin disappears like smoke.",
+      "failPatternIds": ["move_pinned_piece"],
+      "failureHints": [
+        {
+          "move": "d1d3",
+          "failPatternId": "move_pinned_piece"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,96 @@
+{
+  "id": "level-1-lesson-1-check",
+  "level": 1,
+  "order": 1,
+  "slug": "check-the-warning",
+  "title": "Check (The Warning)",
+  "XP": 20,
+  "coachIntro": "The King is under attack! He must run, block, or fight. He cannot ignore this.",
+  "summary": "Learn the three defenses against check: Capture, Protect, Run (CPR), and when each one is best.",
+  "tasks": [
+    {
+      "id": "task1_run_from_rook",
+      "fen": "8/8/8/8/8/4r3/8/4K3 w - - 0 1",
+      "prompt": "Your King is in check from a Rook. You cannot block safely. Move the King to a safe square.",
+      "type": "move",
+      "correctMoves": ["e1f1", "e1d1", "e1d2", "e1f2"],
+      "successMessage": "Good. First, you must learn to survive. Run to safety.",
+      "failPatternIds": ["cowards_exit"],
+      "failureHints": [
+        {
+          "move": "e1e2",
+          "failPatternId": "cowards_exit"
+        }
+      ]
+    },
+    {
+      "id": "task2_block_with_pawn",
+      "fen": "3q4/8/8/8/8/8/5P2/5K2 w - - 0 1",
+      "prompt": "You are in check from the Queen along the file. A pawn can step in front of the attack. Block the check with the cheapest piece.",
+      "type": "move",
+      "correctMoves": ["f2f3"],
+      "successMessage": "Excellent. A simple pawn is enough to stop a royal attack.",
+      "failPatternIds": ["over_protector"],
+      "failureHints": [
+        {
+          "move": "f1e1",
+          "failPatternId": "cowards_exit"
+        }
+      ]
+    },
+    {
+      "id": "task3_capture_the_attacker",
+      "fen": "8/8/8/4n3/8/5N2/8/6K1 w - - 0 1",
+      "prompt": "The attacker is close and unprotected. Use CPR: this time, capture the attacker.",
+      "type": "move",
+      "correctMoves": ["f3e5"],
+      "successMessage": "Good. When the attacker is loose and undefended, you cut off the head.",
+      "failPatternIds": ["cowards_exit"],
+      "failureHints": [
+        {
+          "move": "g1f1",
+          "failPatternId": "cowards_exit"
+        },
+        {
+          "move": "g1h1",
+          "failPatternId": "cowards_exit"
+        }
+      ]
+    },
+    {
+      "id": "task4_choose_best_defense",
+      "fen": "8/8/8/4n3/8/3B1N2/8/5K2 w - - 0 1",
+      "prompt": "You are in check and you have three options: capture, block, or run away. Which defense is the strongest?",
+      "type": "move",
+      "correctMoves": ["f3e5", "d3e4"],
+      "successMessage": "Exactly. Capture is best when it is safe—no more attacker, no more problem.",
+      "failPatternIds": ["cowards_exit", "over_protector"],
+      "failureHints": [
+        {
+          "move": "f1e1",
+          "failPatternId": "cowards_exit"
+        },
+        {
+          "move": "f1g1",
+          "failPatternId": "cowards_exit"
+        }
+      ]
+    },
+    {
+      "id": "task5_double_check",
+      "fen": "8/8/8/3b4/8/8/4n3/4K3 w - - 0 1",
+      "prompt": "Double check! Two pieces are giving check at the same time. Remember: you cannot block both, and you cannot capture them both. There is only one defense.",
+      "type": "move",
+      "correctMoves": ["e1f1", "e1d1"],
+      "successMessage": "Yes. In a double check, the King must move. There is no other cure.",
+      "failPatternIds": ["cowards_exit"],
+      "failureHints": [
+        {
+          "move": "e1f2",
+          "failPatternId": "cowards_exit"
+        }
+      ]
+    }
+  ],
+  "secretCardId": "card_cpr"
+}

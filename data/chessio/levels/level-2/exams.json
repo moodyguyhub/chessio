@@ -1,0 +1,138 @@
+[
+  {
+    "id": "exam1_knight_fork_warmup",
+    "level": 2,
+    "topic": "fork",
+    "fen": "4k3/8/8/2q5/8/8/8/2N5 w - - 0 1",
+    "prompt": "Your Knight can attack both the King and the Queen. Find the fork.",
+    "correctMoves": ["c1d3", "c1e2"],
+    "coachOnSuccess": "Good start. The Knight fork on King and Queen is the most basic tactical weapon in chess.",
+    "failPatternIds": ["missed_fork"],
+    "failureHints": [
+      {
+        "move": "c1a2",
+        "failPatternId": "missed_fork"
+      },
+      {
+        "move": "c1b3",
+        "failPatternId": "missed_fork"
+      }
+    ]
+  },
+  {
+    "id": "exam2_pawn_fork",
+    "level": 2,
+    "topic": "fork",
+    "fen": "8/8/8/2n1b3/8/3P4/8/4K3 w - - 0 1",
+    "prompt": "A pawn can attack two pieces at once. Push it forward to create the fork.",
+    "correctMoves": ["d3d4"],
+    "coachOnSuccess": "Excellent. Never underestimate the small pieces. They carry big threats.",
+    "failPatternIds": ["greedy_grab", "missed_fork"],
+    "failureHints": [
+      {
+        "move": "e1d2",
+        "failPatternId": "missed_fork"
+      }
+    ]
+  },
+  {
+    "id": "exam3_absolute_pin",
+    "level": 2,
+    "topic": "pin",
+    "fen": "4k3/8/8/4b3/8/8/8/4B3 w - - 0 1",
+    "prompt": "Pin the enemy Bishop to the King so it cannot move without exposing check.",
+    "correctMoves": ["e1e5"],
+    "coachOnSuccess": "Perfect. An absolute pin is a tactical prison. The piece cannot escape.",
+    "failPatternIds": ["missed_pin"],
+    "failureHints": [
+      {
+        "move": "e1a5",
+        "failPatternId": "missed_pin"
+      },
+      {
+        "move": "e1d2",
+        "failPatternId": "missed_pin"
+      }
+    ]
+  },
+  {
+    "id": "exam4_exploit_pin",
+    "level": 2,
+    "topic": "pin",
+    "fen": "4k3/8/8/4b3/4P3/8/8/4B3 w - - 0 1",
+    "prompt": "The Bishop is already pinned to the King. Attack it again to win it.",
+    "correctMoves": ["e4e5"],
+    "coachOnSuccess": "Well done. A pinned piece is helpless. Pile on the pressure until it collapses.",
+    "failPatternIds": ["release_pressure", "move_pinned_piece"],
+    "failureHints": [
+      {
+        "move": "e1f2",
+        "failPatternId": "release_pressure"
+      },
+      {
+        "move": "e1d2",
+        "failPatternId": "release_pressure"
+      }
+    ]
+  },
+  {
+    "id": "exam5_rook_skewer_king_queen",
+    "level": 2,
+    "topic": "skewer",
+    "fen": "4k1q1/8/8/8/8/8/8/4R3 w - - 0 1",
+    "prompt": "Check the King and line him up with the Queen behind. When he moves, the Queen falls.",
+    "correctMoves": ["e1e8"],
+    "coachOnSuccess": "Classic. First the King runs, then the Queen dies. This is the geometry of winning.",
+    "failPatternIds": ["missed_skewer"],
+    "failureHints": [
+      {
+        "move": "e1e2",
+        "failPatternId": "missed_skewer"
+      },
+      {
+        "move": "e1a1",
+        "failPatternId": "missed_skewer"
+      }
+    ]
+  },
+  {
+    "id": "exam6_bishop_skewer_king_rook",
+    "level": 2,
+    "topic": "skewer",
+    "fen": "7k/6r1/8/8/8/8/8/B7 w - - 0 1",
+    "prompt": "Attack the King on the diagonal with the Rook sitting behind. The line is burning.",
+    "correctMoves": ["a1e5"],
+    "coachOnSuccess": "Beautiful. Diagonal skewers are harder to see but just as deadly.",
+    "failPatternIds": ["endless_chase", "missed_skewer"],
+    "failureHints": [
+      {
+        "move": "a1b2",
+        "failPatternId": "missed_skewer"
+      },
+      {
+        "move": "a1d4",
+        "failPatternId": "endless_chase"
+      }
+    ]
+  },
+  {
+    "id": "exam7_defense_vs_fork",
+    "level": 2,
+    "topic": "defense",
+    "fen": "8/8/8/4N3/3k4/8/3Q4/3K4 b - - 0 1",
+    "prompt": "The Knight wants to fork your King and Queen. Step your King to a safe square that avoids the fork.",
+    "correctMoves": ["d4c5", "d4c3", "d4e3"],
+    "coachOnSuccess": "Calm and correct. You saw the threat and stepped away from danger instead of walking into it.",
+    "failPatternIds": ["missed_fork"],
+    "failureHints": [
+      {
+        "move": "d4d3",
+        "failPatternId": "missed_fork"
+      },
+      {
+        "move": "d4e4",
+        "failPatternId": "missed_fork"
+      }
+    ]
+  }
+]

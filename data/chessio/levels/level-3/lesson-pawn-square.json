@@ -1,0 +1,124 @@
+{
+  "id": "level-3-lesson-1-pawn-square",
+  "level": 3,
+  "order": 1,
+  "slug": "pawn-square-the-race",
+  "title": "The Square of the Pawn (The Race)",
+  "XP": 35,
+  "coachIntro": "Can your King catch a passed pawn? There is a simple rule: the square of the pawn.",
+  "summary": "Learn when your King can catch an enemy pawn using the Rule of the Square, and when you must race with your own pawn instead.",
+  "secretCardId": "card_7",
+  "tasks": [
+    {
+      "id": "task1_enter_the_box",
+      "fen": "8/8/8/3p4/4K3/8/8/8 w - - 0 1",
+      "prompt": "Black's pawn is running to promotion. Step your King into the square (the box from pawn to d1) to catch it.",
+      "type": "move",
+      "correctMoves": ["e4d4", "e4d5", "e4e5"],
+      "successMessage": "Step inside the arena and the pawn is yours. If the King enters the box, the pawn dies.",
+      "failPatternIds": ["outside_the_square"],
+      "failureHints": [
+        {
+          "move": "e4f4",
+          "failPatternId": "outside_the_square"
+        },
+        {
+          "move": "e4f5",
+          "failPatternId": "outside_the_square"
+        }
+      ]
+    },
+    {
+      "id": "task2_too_far_must_run",
+      "fen": "8/8/8/8/p7/8/P7/4K3 w - - 0 1",
+      "prompt": "Black's pawn is too far. Your King cannot catch it. What must you do?",
+      "type": "move",
+      "correctMoves": ["a2a3", "a2a4"],
+      "successMessage": "If you cannot catch his pawn, you must win with your own. Both pawns race to promotion.",
+      "failPatternIds": ["slow_king"],
+      "failureHints": [
+        {
+          "move": "e1d2",
+          "failPatternId": "slow_king"
+        },
+        {
+          "move": "e1d1",
+          "failPatternId": "slow_king"
+        },
+        {
+          "move": "e1f1",
+          "failPatternId": "slow_king"
+        }
+      ]
+    },
+    {
+      "id": "task3_one_tempo_matters",
+      "fen": "8/8/8/8/4p3/8/8/2K5 w - - 0 1",
+      "prompt": "Black's pawn is on e4. Only ONE King move enters the square in time. Find it.",
+      "type": "move",
+      "correctMoves": ["c1d2"],
+      "successMessage": "Exactly. Every tempo counts. One square too slow and the pawn promotes.",
+      "failPatternIds": ["outside_the_square"],
+      "failureHints": [
+        {
+          "move": "c1d1",
+          "failPatternId": "outside_the_square"
+        },
+        {
+          "move": "c1b2",
+          "failPatternId": "outside_the_square"
+        },
+        {
+          "move": "c1c2",
+          "failPatternId": "outside_the_square"
+        }
+      ]
+    },
+    {
+      "id": "task4_defend_or_run",
+      "fen": "8/1p6/8/8/8/8/1P6/4K3 w - - 0 1",
+      "prompt": "Black's pawn is farther advanced than yours. You have ONE chance to stop it.",
+      "type": "move",
+      "correctMoves": ["e1d2"],
+      "successMessage": "You have only one chance to jump onto the train. Now you can catch his pawn and promote yours.",
+      "failPatternIds": ["outside_the_square", "slow_king"],
+      "failureHints": [
+        {
+          "move": "b2b3",
+          "failPatternId": "slow_king"
+        },
+        {
+          "move": "b2b4",
+          "failPatternId": "slow_king"
+        },
+        {
+          "move": "e1f2",
+          "failPatternId": "outside_the_square"
+        }
+      ]
+    },
+    {
+      "id": "task5_two_pawns_racing",
+      "fen": "8/1p6/8/8/8/8/6P1/5K2 w - - 0 1",
+      "prompt": "Two pawns racing. Should you run with your pawn or catch his with your King?",
+      "type": "move",
+      "correctMoves": ["f1e2"],
+      "successMessage": "Endgames are about accuracy, not hope. You evaluated the square correctly and chose to catch, not race.",
+      "failPatternIds": ["slow_king"],
+      "failureHints": [
+        {
+          "move": "g2g3",
+          "failPatternId": "slow_king"
+        },
+        {
+          "move": "g2g4",
+          "failPatternId": "slow_king"
+        },
+        {
+          "move": "f1g1",
+          "failPatternId": "outside_the_square"
+        }
+      ]
+    }
+  ]
+}

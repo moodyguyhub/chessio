@@ -20,7 +20,8 @@
     "test:e2e:ui": "playwright test --ui",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
-    "test:all": "npm run test:sanity && npm run test:unit && npm run test:integration && npm run test:e2e"
+    "test:all": "npm run test:sanity && npm run test:unit && npm run test:integration && npm run test:e2e",
+    "test:school-data": "tsx scripts/test-school-data.ts"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"
@@ -36,6 +37,7 @@
     "canvas-confetti": "^1.9.4",
     "chess.js": "^1.4.0",
     "date-fns": "^4.1.0",
+    "lucide-react": "^0.556.0",
     "next": "16.0.7",
     "next-auth": "^5.0.0-beta.30",
     "openai": "^6.10.0",

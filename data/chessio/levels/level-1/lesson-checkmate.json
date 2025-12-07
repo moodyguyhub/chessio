@@ -1,0 +1,96 @@
+{
+  "id": "level-1-lesson-2-checkmate",
+  "level": 1,
+  "order": 2,
+  "slug": "checkmate-the-execution",
+  "title": "Checkmate (The Execution)",
+  "XP": 25,
+  "coachIntro": "The door is closed. The light fades. There is no escape. This is how you win.",
+  "summary": "Learn the basic checkmating patterns: back rank, helper mate, ladder mate, and how to avoid stalemating your opponent.",
+  "tasks": [
+    {
+      "id": "task1_back_rank_mate",
+      "fen": "6k1/5ppp/8/8/8/8/5PPP/R6K w - - 0 1",
+      "prompt": "The enemy King is trapped behind his pawns on the back rank. Deliver the classic back rank mate with your Rook.",
+      "type": "move",
+      "correctMoves": ["a1a8"],
+      "successMessage": "Good. His own soldiers became his prison walls.",
+      "failPatternIds": ["endless_chase"],
+      "failureHints": [
+        {
+          "move": "a1a7",
+          "failPatternId": "endless_chase"
+        }
+      ]
+    },
+    {
+      "id": "task2_helper_mate_kiss_of_death",
+      "fen": "6k1/8/5BPK/8/8/8/5Q2/8 w - - 0 1",
+      "prompt": "The Queen stands ready, protected by the Bishop. Play the 'Kiss of Death'—checkmate with Queen supported by your helper piece.",
+      "type": "move",
+      "correctMoves": ["f2f7"],
+      "successMessage": "Beautiful. The Queen gives the kiss, the Bishop holds her hand.",
+      "failPatternIds": ["endless_chase", "suffocator"],
+      "failureHints": [
+        {
+          "move": "f2a7",
+          "failPatternId": "endless_chase"
+        },
+        {
+          "move": "f2f8",
+          "failPatternId": "suffocator"
+        }
+      ]
+    },
+    {
+      "id": "task3_ladder_mate",
+      "fen": "4k3/8/8/8/8/8/R7/R6K w - - 0 1",
+      "prompt": "Your two Rooks can build a ladder and push the King to the edge. Play the move that delivers checkmate.",
+      "type": "move",
+      "correctMoves": ["a2a8"],
+      "successMessage": "Yes. One Rook cuts off the rank, the other gives the final shove.",
+      "failPatternIds": ["endless_chase"],
+      "failureHints": [
+        {
+          "move": "a2a7",
+          "failPatternId": "endless_chase"
+        }
+      ]
+    },
+    {
+      "id": "task4_find_mate_not_just_check",
+      "fen": "6k1/5p1p/6p1/8/8/8/6Q1/7K w - - 0 1",
+      "prompt": "You can give many checks here, but only one is checkmate. Find the move that ends the game immediately.",
+      "type": "move",
+      "correctMoves": ["g2g7"],
+      "successMessage": "Excellent. Do not play hope checks—play the move that kills.",
+      "failPatternIds": ["endless_chase"],
+      "failureHints": [
+        {
+          "move": "g2g8",
+          "failPatternId": "endless_chase"
+        },
+        {
+          "move": "g2a8",
+          "failPatternId": "endless_chase"
+        }
+      ]
+    },
+    {
+      "id": "task5_avoid_stalemate_and_mate",
+      "fen": "7k/8/6QK/8/8/8/8/8 w - - 0 1",
+      "prompt": "You are completely winning. One move is stalemate, the other is checkmate. Do not show mercy—finish correctly.",
+      "type": "move",
+      "correctMoves": ["g6g7"],
+      "successMessage": "Good. Mercy is kind in life, but fatal in chess.",
+      "failPatternIds": ["suffocator"],
+      "failureHints": [
+        {
+          "move": "g6g8",
+          "failPatternId": "suffocator"
+        }
+      ]
+    }
+  ],
+  "secretCardId": "card_back_rank"
+}

@@ -1,0 +1,164 @@
+{
+  "id": "level-3-lesson-2-opposition",
+  "level": 3,
+  "order": 2,
+  "slug": "opposition-the-staring-contest",
+  "title": "The Opposition (The Staring Contest)",
+  "XP": 40,
+  "coachIntro": "Two Kings facing each other with one square between. The side NOT to move has the advantage.",
+  "summary": "Learn to take and keep the Opposition to win space and help your pawns promote. Master the art of shouldering the enemy King away.",
+  "secretCardId": "card_8",
+  "tasks": [
+    {
+      "id": "task1_take_opposition",
+      "fen": "8/8/8/8/4k3/8/8/4K3 w - - 0 1",
+      "prompt": "Move your King directly in front of Black's King with one square between you. Take the opposition.",
+      "type": "move",
+      "correctMoves": ["e1e2", "e1e3"],
+      "successMessage": "Look him in the eye. Make him move aside. You have the opposition when HE must move.",
+      "failPatternIds": ["wrong_opposition"],
+      "failureHints": [
+        {
+          "move": "e1d1",
+          "failPatternId": "wrong_opposition"
+        },
+        {
+          "move": "e1f1",
+          "failPatternId": "wrong_opposition"
+        },
+        {
+          "move": "e1d2",
+          "failPatternId": "wrong_opposition"
+        },
+        {
+          "move": "e1f2",
+          "failPatternId": "wrong_opposition"
+        }
+      ]
+    },
+    {
+      "id": "task2_do_not_give_back",
+      "fen": "8/8/8/3k4/8/3K4/8/8 w - - 0 1",
+      "prompt": "You already have the opposition. Keep it! Only ONE move maintains the advantage.",
+      "type": "move",
+      "correctMoves": ["d3d2", "d3d4"],
+      "successMessage": "Good. You kept the opposition by staying on the same file. Never give it back carelessly.",
+      "failPatternIds": ["gave_up_opposition"],
+      "failureHints": [
+        {
+          "move": "d3c3",
+          "failPatternId": "gave_up_opposition"
+        },
+        {
+          "move": "d3e3",
+          "failPatternId": "gave_up_opposition"
+        },
+        {
+          "move": "d3c2",
+          "failPatternId": "gave_up_opposition"
+        },
+        {
+          "move": "d3e2",
+          "failPatternId": "gave_up_opposition"
+        },
+        {
+          "move": "d3c4",
+          "failPatternId": "gave_up_opposition"
+        },
+        {
+          "move": "d3e4",
+          "failPatternId": "gave_up_opposition"
+        }
+      ]
+    },
+    {
+      "id": "task3_step_forward_with_support",
+      "fen": "8/8/8/4k3/8/4P3/4K3/8 w - - 0 1",
+      "prompt": "Your pawn is ready to advance. First, take the opposition to gain space for your pawn.",
+      "type": "move",
+      "correctMoves": ["e2e3"],
+      "successMessage": "First you win the argument with the King, then your pawn walks through. Opposition + pawn support = victory.",
+      "failPatternIds": ["wrong_opposition", "premature_pawn_push"],
+      "failureHints": [
+        {
+          "move": "e3e4",
+          "failPatternId": "premature_pawn_push"
+        },
+        {
+          "move": "e2d2",
+          "failPatternId": "wrong_opposition"
+        },
+        {
+          "move": "e2f2",
+          "failPatternId": "wrong_opposition"
+        },
+        {
+          "move": "e2d3",
+          "failPatternId": "wrong_opposition"
+        },
+        {
+          "move": "e2f3",
+          "failPatternId": "wrong_opposition"
+        }
+      ]
+    },
+    {
+      "id": "task4_shouldering",
+      "fen": "8/8/3k4/3P4/3K4/8/8/8 w - - 0 1",
+      "prompt": "Black's King wants to attack your pawn from the side. Use your shoulders to push him away.",
+      "type": "move",
+      "correctMoves": ["d4c5", "d4e5"],
+      "successMessage": "Do not step aside like a gentleman. Use your shoulders to push his King away from the battle.",
+      "failPatternIds": ["polite_king"],
+      "failureHints": [
+        {
+          "move": "d4c4",
+          "failPatternId": "polite_king"
+        },
+        {
+          "move": "d4e4",
+          "failPatternId": "polite_king"
+        },
+        {
+          "move": "d4d3",
+          "failPatternId": "polite_king"
+        },
+        {
+          "move": "d5d6",
+          "failPatternId": "premature_pawn_push"
+        }
+      ]
+    },
+    {
+      "id": "task5_opposition_to_win",
+      "fen": "8/8/4k3/4P3/8/4K3/8/8 w - - 0 1",
+      "prompt": "This is a classic King and Pawn endgame. Only the correct King move wins. Find it.",
+      "type": "move",
+      "correctMoves": ["e3d4", "e3f4"],
+      "successMessage": "One wrong step, and the draw escapes you forever. You took the opposition and the win is now forced.",
+      "failPatternIds": ["wrong_opposition", "premature_pawn_push"],
+      "failureHints": [
+        {
+          "move": "e5e6",
+          "failPatternId": "premature_pawn_push"
+        },
+        {
+          "move": "e3d3",
+          "failPatternId": "wrong_opposition"
+        },
+        {
+          "move": "e3f3",
+          "failPatternId": "wrong_opposition"
+        },
+        {
+          "move": "e3e2",
+          "failPatternId": "wrong_opposition"
+        },
+        {
+          "move": "e3e4",
+          "failPatternId": "wrong_opposition"
+        }
+      ]
+    }
+  ]
+}

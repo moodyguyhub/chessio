@@ -1,0 +1,202 @@
+[
+  {
+    "id": "exam1_pawn_race_save_or_run",
+    "level": 3,
+    "topic": "pawn-square",
+    "fen": "8/8/8/8/p7/8/P7/3K4 w - - 0 1",
+    "prompt": "Black's pawn is racing down the a-file. Can you catch it, or must you race with your own pawn?",
+    "correctMoves": ["a2a3", "a2a4"],
+    "coachOnSuccess": "Correct. Your King is too far from the square. In a pawn race, you must push your own pawn, not chase his.",
+    "failPatternIds": ["slow_king", "outside_the_square"],
+    "failureHints": [
+      {
+        "move": "d1c2",
+        "failPatternId": "slow_king"
+      },
+      {
+        "move": "d1c1",
+        "failPatternId": "outside_the_square"
+      },
+      {
+        "move": "d1d2",
+        "failPatternId": "slow_king"
+      }
+    ]
+  },
+  {
+    "id": "exam2_exact_tempo_square",
+    "level": 3,
+    "topic": "pawn-square",
+    "fen": "8/8/8/8/3p4/8/8/1K6 w - - 0 1",
+    "prompt": "Black's pawn is on d4. Only ONE King move enters the square in time. Which one?",
+    "correctMoves": ["b1c2"],
+    "coachOnSuccess": "Exactly right. Every tempo counts. One square too slow and the pawn queens.",
+    "failPatternIds": ["outside_the_square"],
+    "failureHints": [
+      {
+        "move": "b1a2",
+        "failPatternId": "outside_the_square"
+      },
+      {
+        "move": "b1b2",
+        "failPatternId": "outside_the_square"
+      },
+      {
+        "move": "b1c1",
+        "failPatternId": "outside_the_square"
+      },
+      {
+        "move": "b1a1",
+        "failPatternId": "outside_the_square"
+      }
+    ]
+  },
+  {
+    "id": "exam3_take_opposition",
+    "level": 3,
+    "topic": "opposition",
+    "fen": "8/8/8/8/3k4/8/8/3K4 w - - 0 1",
+    "prompt": "Take the opposition by moving your King directly in front of Black's King with one square between.",
+    "correctMoves": ["d1d2", "d1d3"],
+    "coachOnSuccess": "Good. You took the opposition. Now Black must move aside and you gain space.",
+    "failPatternIds": ["wrong_opposition"],
+    "failureHints": [
+      {
+        "move": "d1c1",
+        "failPatternId": "wrong_opposition"
+      },
+      {
+        "move": "d1e1",
+        "failPatternId": "wrong_opposition"
+      },
+      {
+        "move": "d1c2",
+        "failPatternId": "wrong_opposition"
+      },
+      {
+        "move": "d1e2",
+        "failPatternId": "wrong_opposition"
+      }
+    ]
+  },
+  {
+    "id": "exam4_maintain_opposition",
+    "level": 3,
+    "topic": "opposition",
+    "fen": "8/8/8/4k3/8/4K3/8/8 w - - 0 1",
+    "prompt": "You have the opposition. Do not give it back! Only ONE move keeps the advantage.",
+    "correctMoves": ["e3e2", "e3e4"],
+    "coachOnSuccess": "Excellent. You maintained the opposition by staying on the same file. One careless King move would have lost your advantage.",
+    "failPatternIds": ["gave_up_opposition"],
+    "failureHints": [
+      {
+        "move": "e3d3",
+        "failPatternId": "gave_up_opposition"
+      },
+      {
+        "move": "e3f3",
+        "failPatternId": "gave_up_opposition"
+      },
+      {
+        "move": "e3d2",
+        "failPatternId": "gave_up_opposition"
+      },
+      {
+        "move": "e3f2",
+        "failPatternId": "gave_up_opposition"
+      },
+      {
+        "move": "e3d4",
+        "failPatternId": "gave_up_opposition"
+      },
+      {
+        "move": "e3f4",
+        "failPatternId": "gave_up_opposition"
+      }
+    ]
+  },
+  {
+    "id": "exam5_winning_kp_vs_k",
+    "level": 3,
+    "topic": "king-and-pawn",
+    "fen": "8/8/8/3k4/8/3P4/3K4/8 w - - 0 1",
+    "prompt": "Classic King and Pawn vs King. What is White's winning first move?",
+    "correctMoves": ["d2e3", "d2c3"],
+    "coachOnSuccess": "Perfect technique. You took the opposition and prepared to escort the pawn to promotion. This is how masters convert one pawn up.",
+    "failPatternIds": ["premature_pawn_push", "wrong_opposition"],
+    "failureHints": [
+      {
+        "move": "d3d4",
+        "failPatternId": "premature_pawn_push"
+      },
+      {
+        "move": "d2d1",
+        "failPatternId": "wrong_opposition"
+      },
+      {
+        "move": "d2e2",
+        "failPatternId": "wrong_opposition"
+      },
+      {
+        "move": "d2c2",
+        "failPatternId": "wrong_opposition"
+      }
+    ]
+  },
+  {
+    "id": "exam6_rook_pawn_trap",
+    "level": 3,
+    "topic": "king-and-pawn",
+    "fen": "8/8/8/8/8/7k/7P/6K1 w - - 0 1",
+    "prompt": "This is a rook pawn (h-file). How do you secure the win?",
+    "correctMoves": ["g1h1"],
+    "coachOnSuccess": "Brilliant. With a rook pawn, you must reach the promotion square FIRST. The wrong corner is a graveyard for your advantage.",
+    "failPatternIds": ["premature_pawn_push", "polite_king"],
+    "failureHints": [
+      {
+        "move": "h2h3",
+        "failPatternId": "premature_pawn_push"
+      },
+      {
+        "move": "h2h4",
+        "failPatternId": "premature_pawn_push"
+      },
+      {
+        "move": "g1f1",
+        "failPatternId": "polite_king"
+      },
+      {
+        "move": "g1f2",
+        "failPatternId": "polite_king"
+      }
+    ]
+  },
+  {
+    "id": "exam7_avoid_stalemate_won_endgame",
+    "level": 3,
+    "topic": "king-and-pawn",
+    "fen": "8/8/8/8/8/5k2/5P2/5K2 w - - 0 1",
+    "prompt": "You are winning, but Black's King has limited moves. How do you avoid stalemate and convert the win?",
+    "correctMoves": ["f1e1", "f1g1"],
+    "coachOnSuccess": "Beautiful endgame technique. You gave Black's King breathing room, avoiding the stalemate trap. Never rush in a won position.",
+    "failPatternIds": ["suffocator"],
+    "failureHints": [
+      {
+        "move": "f2f3",
+        "failPatternId": "suffocator"
+      },
+      {
+        "move": "f2f4",
+        "failPatternId": "suffocator"
+      },
+      {
+        "move": "f1e2",
+        "failPatternId": "suffocator"
+      },
+      {
+        "move": "f1g2",
+        "failPatternId": "suffocator"
+      }
+    ]
+  }
+]

@@ -1,0 +1,124 @@
+{
+  "id": "level-3-lesson-3-king-and-pawn",
+  "level": 3,
+  "order": 3,
+  "slug": "king-and-pawn-the-escort",
+  "title": "King and Pawn vs King (The Escort)",
+  "XP": 40,
+  "coachIntro": "When you are one pawn up, you must know how to win. Your King is not a spectator—he is a bodyguard.",
+  "summary": "Master the technique of converting King and Pawn vs King endgames. Learn when to push the pawn, when to walk with your King, and how to avoid stalemate traps.",
+  "secretCardId": "card_9",
+  "tasks": [
+    {
+      "id": "task1_king_in_front",
+      "fen": "8/8/4k3/8/4P3/8/4K3/8 w - - 0 1",
+      "prompt": "Your King should escort the pawn from in front, not from behind. Move your King forward.",
+      "type": "move",
+      "correctMoves": ["e2e3", "e2d3", "e2f3"],
+      "successMessage": "Good. The King must lead the pawn like a bodyguard clearing the path. Pushing the pawn too early throws away the win.",
+      "failPatternIds": ["premature_pawn_push"],
+      "failureHints": [
+        {
+          "move": "e4e5",
+          "failPatternId": "premature_pawn_push"
+        }
+      ]
+    },
+    {
+      "id": "task2_pawn_too_far",
+      "fen": "8/8/8/4k3/8/4P3/8/4K3 w - - 0 1",
+      "prompt": "Your pawn has run ahead of its King. Bring the King closer to support promotion.",
+      "type": "move",
+      "correctMoves": ["e1e2", "e1d2", "e1f2"],
+      "successMessage": "The pawn must not run away from his King. Together they are strong; alone, the pawn is just a target.",
+      "failPatternIds": ["premature_pawn_push"],
+      "failureHints": [
+        {
+          "move": "e3e4",
+          "failPatternId": "premature_pawn_push"
+        }
+      ]
+    },
+    {
+      "id": "task3_avoid_stalemate",
+      "fen": "8/8/8/8/8/5k2/5P2/5K2 w - - 0 1",
+      "prompt": "You are winning, but be careful! Black's King has only one legal move. How do you avoid stalemate?",
+      "type": "move",
+      "correctMoves": ["f1e1", "f1g1"],
+      "successMessage": "Beautiful technique. You gave Black's King breathing room, avoiding the stalemate trap. Never rush in a won endgame.",
+      "failPatternIds": ["suffocator"],
+      "failureHints": [
+        {
+          "move": "f2f3",
+          "failPatternId": "suffocator"
+        },
+        {
+          "move": "f2f4",
+          "failPatternId": "suffocator"
+        }
+      ]
+    },
+    {
+      "id": "task4_edge_pawn_corner",
+      "fen": "8/8/7k/8/8/8/7P/6K1 w - - 0 1",
+      "prompt": "This is a rook pawn (h-file). You can ONLY win if your King reaches the correct corner first.",
+      "type": "move",
+      "correctMoves": ["g1h1"],
+      "successMessage": "Sometimes, the wrong corner is a graveyard for your extra pawn. With a rook pawn, you must reach the promotion square BEFORE pushing.",
+      "failPatternIds": ["premature_pawn_push"],
+      "failureHints": [
+        {
+          "move": "h2h3",
+          "failPatternId": "premature_pawn_push"
+        },
+        {
+          "move": "h2h4",
+          "failPatternId": "premature_pawn_push"
+        },
+        {
+          "move": "g1f1",
+          "failPatternId": "polite_king"
+        },
+        {
+          "move": "g1f2",
+          "failPatternId": "polite_king"
+        }
+      ]
+    },
+    {
+      "id": "task5_convert_advantage",
+      "fen": "8/8/8/3k4/8/3P4/3K4/8 w - - 0 1",
+      "prompt": "This is a classic King and Pawn endgame. What is White's first move to secure the win?",
+      "type": "move",
+      "correctMoves": ["d2e3", "d2c3"],
+      "successMessage": "Endgame technique turns a small edge into a full point. You took the opposition and prepared to escort the pawn home.",
+      "failPatternIds": ["premature_pawn_push", "wrong_opposition"],
+      "failureHints": [
+        {
+          "move": "d3d4",
+          "failPatternId": "premature_pawn_push"
+        },
+        {
+          "move": "d2d1",
+          "failPatternId": "wrong_opposition"
+        },
+        {
+          "move": "d2e2",
+          "failPatternId": "wrong_opposition"
+        },
+        {
+          "move": "d2c2",
+          "failPatternId": "wrong_opposition"
+        },
+        {
+          "move": "d2e1",
+          "failPatternId": "wrong_opposition"
+        },
+        {
+          "move": "d2c1",
+          "failPatternId": "wrong_opposition"
+        }
+      ]
+    }
+  ]
+}

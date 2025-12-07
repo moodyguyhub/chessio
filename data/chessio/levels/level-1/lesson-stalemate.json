@@ -1,0 +1,82 @@
+{
+  "id": "level-1-lesson-3-stalemate",
+  "level": 1,
+  "order": 3,
+  "slug": "stalemate-the-accident",
+  "title": "Stalemate (The Accident)",
+  "XP": 20,
+  "coachIntro": "You have cornered the enemy, but if you forget to leave him one square to breathe, you do not win. This is stalemate.",
+  "summary": "Learn how to avoid stalemating a lost King, and how to use stalemate as a last resort when you are losing.",
+  "tasks": [
+    {
+      "id": "task1_simple_stalemate_blunder",
+      "fen": "6k1/8/5QK1/8/8/8/8/8 w - - 0 1",
+      "prompt": "You are completely winning with Queen and King against a lonely King. One careless move is stalemate. Choose the move that keeps winning.",
+      "type": "move",
+      "correctMoves": ["f6f7"],
+      "successMessage": "Good. You left him one square—to step into his grave next move.",
+      "failPatternIds": ["suffocator"],
+      "failureHints": [
+        {
+          "move": "f6f8",
+          "failPatternId": "suffocator"
+        }
+      ]
+    },
+    {
+      "id": "task2_convert_to_mate",
+      "fen": "7k/6Q1/6K1/8/8/8/8/8 w - - 0 1",
+      "prompt": "White to move. One move is stalemate, another is checkmate. Find the checkmate.",
+      "type": "move",
+      "correctMoves": ["g7h7"],
+      "successMessage": "Yes. Do not settle for half a point when you can take the whole point.",
+      "failPatternIds": ["suffocator"],
+      "failureHints": [
+        {
+          "move": "g7g8",
+          "failPatternId": "suffocator"
+        }
+      ]
+    },
+    {
+      "id": "task3_defensive_stalemate_resource",
+      "fen": "5Q2/8/8/8/8/8/6q1/6K1 b - - 0 1",
+      "prompt": "You are losing badly. There is no way to win—but there is a stalemate trick. Find the move that makes it impossible for your opponent to move without checking you.",
+      "type": "move",
+      "correctMoves": ["g2g1"],
+      "successMessage": "Well done. If you cannot win, you must make sure you do not lose.",
+      "failPatternIds": [],
+      "failureHints": []
+    },
+    {
+      "id": "task4_only_move_avoids_stalemate",
+      "fen": "7k/6Q1/8/8/8/8/8/6K1 w - - 0 1",
+      "prompt": "You are winning, but almost all moves stalemate the enemy King. Find the only move that keeps winning.",
+      "type": "move",
+      "correctMoves": ["g1f2", "g1h2"],
+      "successMessage": "Excellent. Sometimes the quiet move is the only way not to throw everything away.",
+      "failPatternIds": ["suffocator"],
+      "failureHints": [
+        {
+          "move": "g7g8",
+          "failPatternId": "suffocator"
+        },
+        {
+          "move": "g7h7",
+          "failPatternId": "suffocator"
+        }
+      ]
+    },
+    {
+      "id": "task5_classic_corner_stalemate_pattern",
+      "fen": "Q6k/7P/6K1/8/8/8/7q/8 b - - 0 1",
+      "prompt": "You are down material and your King is trapped in the corner. One sacrifice will force stalemate. Find it.",
+      "type": "move",
+      "correctMoves": ["h2h7"],
+      "successMessage": "Bravo. You turned a loss into a draw. In the tournament, this saves money.",
+      "failPatternIds": [],
+      "failureHints": []
+    }
+  ],
+  "secretCardId": "card_stalemate"
+}

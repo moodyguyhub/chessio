@@ -1,0 +1,114 @@
+[
+  {
+    "id": "cowards_exit",
+    "level": 1,
+    "name": "The Coward's Exit",
+    "description": "Player runs with the King when a simple capture or block exists.",
+    "coachMessage": "Why do you run? You have a sword—use it!"
+  },
+  {
+    "id": "over_protector",
+    "level": 1,
+    "name": "The Over-Protector",
+    "description": "Player uses a very valuable piece to block a check when a pawn or minor piece can do the job.",
+    "coachMessage": "Do not use a golden shield to stop a wooden arrow."
+  },
+  {
+    "id": "endless_chase",
+    "level": 1,
+    "name": "The Endless Chase",
+    "description": "Player gives repeated, unnecessary checks instead of finishing with a simple checkmate.",
+    "coachMessage": "Checks alone do not kill. When you can mate, you must end the game."
+  },
+  {
+    "id": "suffocator",
+    "level": 1,
+    "name": "The Suffocator",
+    "description": "Player stalemates the opponent when a clean checkmate is available.",
+    "coachMessage": "You forgot to leave him one last breath before you strike. Now nobody wins."
+  },
+  {
+    "id": "missed_fork",
+    "level": 2,
+    "name": "The Missed Fork",
+    "description": "Player attacks only one piece when they could attack two simultaneously.",
+    "coachMessage": "You attacked only one piece when you could attack two. Always look for the move that hurts in two places."
+  },
+  {
+    "id": "greedy_grab",
+    "level": 2,
+    "name": "The Greedy Grab",
+    "description": "Player captures material immediately instead of setting up a bigger tactical blow.",
+    "coachMessage": "You grabbed material now and missed the move that would win even more. Do not eat the first pawn if there is a fork available."
+  },
+  {
+    "id": "missed_pin",
+    "level": 2,
+    "name": "The Missed Pin",
+    "description": "Player makes a normal developing move instead of pinning an enemy piece.",
+    "coachMessage": "You played a normal move and ignored the chance to freeze his piece in place. When you can pin, you must at least consider it."
+  },
+  {
+    "id": "move_pinned_piece",
+    "level": 2,
+    "name": "The Moving Prisoner",
+    "description": "Player moves a pinned piece, exposing their King or losing material.",
+    "coachMessage": "That piece is nailed to the King. If it moves, disaster follows."
+  },
+  {
+    "id": "release_pressure",
+    "level": 2,
+    "name": "The Released Pressure",
+    "description": "Player has an opponent's piece pinned but plays a passive move instead of exploiting it.",
+    "coachMessage": "You had him tied up, and then you let him breathe again. When a piece is pinned, increase the pressure, do not relax."
+  },
+  {
+    "id": "missed_skewer",
+    "level": 2,
+    "name": "The Missed Skewer",
+    "description": "Player gives check without lining up a valuable piece behind the King.",
+    "coachMessage": "You gave a check, but you did not aim through him. In a skewer, you must line up the King and the treasure behind him."
+  },
+  {
+    "id": "outside_the_square",
+    "level": 3,
+    "name": "Outside the Square",
+    "description": "Player's King stayed outside the pawn's square and cannot catch it.",
+    "coachMessage": "Too slow! You stayed outside the pawn's box. You cannot catch him now."
+  },
+  {
+    "id": "slow_king",
+    "level": 3,
+    "name": "The Slow King",
+    "description": "Player walks with the King when they should be racing with their own pawn.",
+    "coachMessage": "In pawn races, every tempo counts. If you walk while he runs, you lose."
+  },
+  {
+    "id": "wrong_opposition",
+    "level": 3,
+    "name": "The Wrong Opposition",
+    "description": "Player steps to the side instead of taking direct opposition.",
+    "coachMessage": "This is not a dance—it is a fight for the central square. Step in front, not to the side."
+  },
+  {
+    "id": "gave_up_opposition",
+    "level": 3,
+    "name": "Gave Up Opposition",
+    "description": "Player had the opposition and lost it with a careless King move.",
+    "coachMessage": "You had the advantage and gave it back with one careless King move."
+  },
+  {
+    "id": "premature_pawn_push",
+    "level": 3,
+    "name": "The Premature Push",
+    "description": "Player pushes the pawn before the King is properly positioned to support it.",
+    "coachMessage": "Do not send the pawn forward without his King. Alone, he is just a target."
+  },
+  {
+    "id": "polite_king",
+    "level": 3,
+    "name": "The Polite King",
+    "description": "Player steps aside instead of shouldering the enemy King away from the battle.",
+    "coachMessage": "Do not step aside like a gentleman. Use your shoulders to push his King away from the battle."
+  }
+]

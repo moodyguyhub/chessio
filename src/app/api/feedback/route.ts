@@ -1,16 +1,49 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
+import { logFeedback } from "@/lib/feedback/log";
+import { FeedbackPayload } from "@/lib/feedback/types";
 
 export const runtime = "nodejs";
 
 // Keep bounty small (~1 lesson) to avoid XP farming
 const FEEDBACK_BOUNTY_XP = 15;
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   try {
     const session = await auth();
     
+    // Check if this is new feedback system (has 'source' field) or old system
+    const body = await req.json();
+    
+    // NEW FEEDBACK SYSTEM (Phase F1)
+    if ('source' in body) {
+      const feedbackPayload = body as FeedbackPayload;
+      
+      // Validate required fields
+      if (!feedbackPayload.level || !feedbackPayload.source) {
+        return NextResponse.json(
+          { error: "Missing required fields: level and source" },
+          { status: 400 }
+        );
+      }
+
+      // Get userId from session if available
+      const userId = session?.user?.id;
+
+      // Get sessionId from cookie if available
+      const sessionId = req.cookies.get("chessio_session")?.value;
+
+      // Log feedback (console + webhook)
+      const entry = await logFeedback(feedbackPayload, {
+        userId,
+        sessionId,
+      });
+
+      return NextResponse.json({ ok: true, entry });
+    }
+    
+    // OLD FEEDBACK SYSTEM (with XP bounty) - keep for backwards compatibility
     if (!session?.user?.id) {
       return NextResponse.json(
         { error: "Please sign in to submit feedback" },
@@ -18,9 +51,9 @@ export async function POST(req: Request) {
       );
     }
 
-    const userId = session.user.id; // Store for TypeScript narrowing
+    const userId = session.user.id;
 
-    const { text, category = "general", lessonSlug } = await req.json();
+    const { text, category = "general", lessonSlug } = body;
 
     if (!text || typeof text !== "string" || text.trim().length < 10) {
       return NextResponse.json(

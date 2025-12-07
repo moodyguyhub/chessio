@@ -1,7 +1,7 @@
 import React from "react";
 
 interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
-  variant?: "default" | "success" | "warning";
+  variant?: "default" | "success" | "warning" | "secondary";
 }
 
 export const Badge = ({ className = "", variant = "default", ...props }: BadgeProps) => {
@@ -9,6 +9,7 @@ export const Badge = ({ className = "", variant = "default", ...props }: BadgePr
     default: "bg-chessio-primary/10 text-chessio-primary dark:bg-chessio-primary-dark/20 dark:text-chessio-primary-dark",
     success: "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400",
     warning: "bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400",
+    secondary: "bg-slate-700 text-slate-200 dark:bg-slate-800 dark:text-slate-300",
   };
 
   return (

@@ -1,0 +1,125 @@
+[
+  {
+    "id": "exam1_cpr_best_defense",
+    "level": 1,
+    "topic": "check",
+    "fen": "8/8/8/4n3/8/3B1N2/8/5K2 w - - 0 1",
+    "prompt": "You are in check. You can capture, block, or run. Choose the best defense.",
+    "correctMoves": ["f3e5", "d3e4"],
+    "coachOnSuccess": "Good. When you can safely remove the attacker, that is usually best.",
+    "failPatternIds": ["cowards_exit"],
+    "failureHints": [
+      {
+        "move": "f1e1",
+        "failPatternId": "cowards_exit"
+      },
+      {
+        "move": "f1g1",
+        "failPatternId": "cowards_exit"
+      }
+    ]
+  },
+  {
+    "id": "exam2_double_check",
+    "level": 1,
+    "topic": "check",
+    "fen": "8/8/8/3b4/8/8/4n3/4K3 w - - 0 1",
+    "prompt": "Double check! Two pieces are attacking your King at once. Remember: you cannot block them both and you cannot capture them both. Find the only defense.",
+    "correctMoves": ["e1f1", "e1d1"],
+    "coachOnSuccess": "Exactly. In a double check, the King must move.",
+    "failPatternIds": ["cowards_exit"],
+    "failureHints": [
+      {
+        "move": "e1f2",
+        "failPatternId": "cowards_exit"
+      }
+    ]
+  },
+  {
+    "id": "exam3_back_rank_mate",
+    "level": 1,
+    "topic": "checkmate",
+    "fen": "6k1/5ppp/8/8/8/8/5PPP/R6K w - - 0 1",
+    "prompt": "The King is trapped behind his pawns on the back rank. Deliver checkmate in one move.",
+    "correctMoves": ["a1a8"],
+    "coachOnSuccess": "His own soldiers became his prison walls.",
+    "failPatternIds": ["endless_chase"],
+    "failureHints": [
+      {
+        "move": "a1a7",
+        "failPatternId": "endless_chase"
+      },
+      {
+        "move": "a1b1",
+        "failPatternId": "endless_chase"
+      }
+    ]
+  },
+  {
+    "id": "exam4_helper_mate",
+    "level": 1,
+    "topic": "checkmate",
+    "fen": "6k1/8/5BPK/8/8/8/5Q2/8 w - - 0 1",
+    "prompt": "Your Queen and Bishop work together. Place the Queen next to the King so that she is protected and it is checkmate.",
+    "correctMoves": ["f2f7"],
+    "coachOnSuccess": "Beautiful. The Queen gives the kiss, the Bishop holds her hand.",
+    "failPatternIds": ["endless_chase"],
+    "failureHints": [
+      {
+        "move": "f2a7",
+        "failPatternId": "endless_chase"
+      },
+      {
+        "move": "f2h4",
+        "failPatternId": "endless_chase"
+      }
+    ]
+  },
+  {
+    "id": "exam5_mate_not_check",
+    "level": 1,
+    "topic": "checkmate",
+    "fen": "6k1/5p1p/6p1/8/8/8/6Q1/7K w - - 0 1",
+    "prompt": "You can give many checks here, but only one move is checkmate. Find it.",
+    "correctMoves": ["g2g7"],
+    "coachOnSuccess": "Excellent. Do not play hope checks—play the move that kills.",
+    "failPatternIds": ["endless_chase"],
+    "failureHints": [
+      {
+        "move": "g2g8",
+        "failPatternId": "endless_chase"
+      },
+      {
+        "move": "g2a8",
+        "failPatternId": "endless_chase"
+      }
+    ]
+  },
+  {
+    "id": "exam6_avoid_stalemate_mate_in_one",
+    "level": 1,
+    "topic": "stalemate",
+    "fen": "7k/8/6QK/8/8/8/8/8 w - - 0 1",
+    "prompt": "You are completely winning. One move is stalemate, one move is checkmate. Find the move that wins the game.",
+    "correctMoves": ["g6g7"],
+    "coachOnSuccess": "Good. Mercy is kind in life, but fatal in chess.",
+    "failPatternIds": ["suffocator"],
+    "failureHints": [
+      {
+        "move": "g6g8",
+        "failPatternId": "suffocator"
+      }
+    ]
+  },
+  {
+    "id": "exam7_defensive_stalemate_resource",
+    "level": 1,
+    "topic": "stalemate",
+    "fen": "5Q2/8/8/8/8/8/6q1/6K1 b - - 0 1",
+    "prompt": "You are losing badly. There is no way to win—but there is a stalemate trick. Find the move that forces stalemate.",
+    "correctMoves": ["g2g1"],
+    "coachOnSuccess": "Well done. If you cannot win, you must make sure you do not lose.",
+    "failPatternIds": [],
+    "failureHints": []
+  }
+]

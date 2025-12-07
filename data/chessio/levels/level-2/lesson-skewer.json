@@ -1,0 +1,100 @@
+{
+  "id": "level-2-lesson-3-skewer",
+  "level": 2,
+  "order": 3,
+  "slug": "skewers-the-burning-line",
+  "title": "Skewers (The Burning Line)",
+  "XP": 30,
+  "coachIntro": "First the King runs, then the piece behind him dies.",
+  "summary": "Learn how to attack the King with a valuable piece behind him, and how to avoid being skewered yourself.",
+  "secretCardId": "card_6",
+  "tasks": [
+    {
+      "id": "task1_rook_skewer_king_queen",
+      "fen": "4k1q1/8/8/8/8/8/8/R7 w - - 0 1",
+      "prompt": "Line up the King and Queen on one line and check him. When he runs, take the Queen.",
+      "type": "move",
+      "correctMoves": ["a1e1"],
+      "successMessage": "Good. This is the reverse of a pin: first the King runs, then the treasure falls.",
+      "failPatternIds": ["missed_skewer"],
+      "failureHints": [
+        {
+          "move": "a1a8",
+          "failPatternId": "missed_skewer"
+        }
+      ]
+    },
+    {
+      "id": "task2_bishop_skewer_diagonal",
+      "fen": "7k/6r1/8/8/8/8/8/B7 w - - 0 1",
+      "prompt": "Use your Bishop to attack the King so that a more valuable piece sits behind him on the diagonal.",
+      "type": "move",
+      "correctMoves": ["a1e5"],
+      "successMessage": "Excellent. The diagonal is on fire; he can only save one piece.",
+      "failPatternIds": ["missed_skewer"],
+      "failureHints": [
+        {
+          "move": "a1b2",
+          "failPatternId": "missed_skewer"
+        },
+        {
+          "move": "a1c3",
+          "failPatternId": "missed_skewer"
+        }
+      ]
+    },
+    {
+      "id": "task3_skewer_win_rook",
+      "fen": "4k2r/8/8/8/8/8/8/4R3 w - - 0 1",
+      "prompt": "Find the check that forces his King to move and leaves his Rook hanging behind.",
+      "type": "move",
+      "correctMoves": ["e1e8"],
+      "successMessage": "Very good. In endgames, a single skewer on a Rook can decide the game.",
+      "failPatternIds": ["endless_chase"],
+      "failureHints": [
+        {
+          "move": "e1e2",
+          "failPatternId": "missed_skewer"
+        }
+      ]
+    },
+    {
+      "id": "task4_defend_against_skewer",
+      "fen": "8/8/8/8/8/8/4KQ2/4r3 w - - 0 1",
+      "prompt": "He wants to put your King and Queen on one burning line. Find the move that avoids the skewer.",
+      "type": "move",
+      "correctMoves": ["e2d3", "e2e3", "e2f3", "f2f3", "f2f4", "f2f5", "f2f6", "f2f7", "f2f8"],
+      "successMessage": "Good. You stepped out of the fire instead of standing on the line.",
+      "failPatternIds": ["missed_skewer"],
+      "failureHints": [
+        {
+          "move": "e2d1",
+          "failPatternId": "missed_skewer"
+        },
+        {
+          "move": "e2d2",
+          "failPatternId": "missed_skewer"
+        }
+      ]
+    },
+    {
+      "id": "task5_skewer_endgame",
+      "fen": "4k2p/8/8/8/8/8/8/4R3 w - - 0 1",
+      "prompt": "Use your Rook to line up his King and pawn so that when the King moves, the pawn falls.",
+      "type": "move",
+      "correctMoves": ["e1e8"],
+      "successMessage": "Endgames belong to the player who knows how to use skewers. Well done.",
+      "failPatternIds": ["endless_chase"],
+      "failureHints": [
+        {
+          "move": "e1e4",
+          "failPatternId": "endless_chase"
+        },
+        {
+          "move": "e1h1",
+          "failPatternId": "missed_skewer"
+        }
+      ]
+    }
+  ]
+}
