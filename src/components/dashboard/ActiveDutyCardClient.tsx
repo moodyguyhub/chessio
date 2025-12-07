@@ -2,14 +2,17 @@
  * ActiveDutyCardClient - Client-side wrapper for navigation
  * 
  * Handles client-side routing and localStorage placement check
+ * Adds cinematic entrance animations (Phase 2.2)
  */
 
 "use client";
 
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
+import { motion, useReducedMotion } from "framer-motion";
 import { ActiveDutyCard, type ActiveDutyCardProps } from "./ActiveDutyCard";
 import { getPlacementResult } from "@/lib/placement/storage";
+import { fadeInUpGentle } from "@/lib/motion";
 
 type ClientProps = Omit<ActiveDutyCardProps, 'actions'> & {
   actions: {
@@ -28,6 +31,7 @@ export function ActiveDutyCardClient({
   className,
 }: ClientProps) {
   const router = useRouter();
+  const shouldReduceMotion = useReducedMotion();
   const [clientStatus, setClientStatus] = useState(serverStatus);
   const [clientActions, setClientActions] = useState(serverActions);
 
@@ -58,19 +62,25 @@ export function ActiveDutyCardClient({
   }, [serverStatus]);
 
   return (
-    <ActiveDutyCard
-      status={clientStatus}
-      userProfile={userProfile}
-      currentMission={currentMission}
-      actions={{
-        onPrimary: () => router.push(clientActions.onPrimaryHref),
-        onSecondary: clientActions.onSecondaryHref 
-          ? () => router.push(clientActions.onSecondaryHref!)
-          : undefined,
-        primaryLabel: clientActions.primaryLabel,
-        secondaryLabel: clientActions.secondaryLabel,
-      }}
-      className={className}
-    />
+    <motion.div
+      initial="hidden"
+      animate="visible"
+      variants={shouldReduceMotion ? undefined : fadeInUpGentle}
+    >
+      <ActiveDutyCard
+        status={clientStatus}
+        userProfile={userProfile}
+        currentMission={currentMission}
+        actions={{
+          onPrimary: () => router.push(clientActions.onPrimaryHref),
+          onSecondary: clientActions.onSecondaryHref 
+            ? () => router.push(clientActions.onSecondaryHref!)
+            : undefined,
+          primaryLabel: clientActions.primaryLabel,
+          secondaryLabel: clientActions.secondaryLabel,
+        }}
+        className={className}
+      />
+    </motion.div>
   );
 }

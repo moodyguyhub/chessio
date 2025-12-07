@@ -1,9 +1,11 @@
 'use client';
 
 import { useState } from 'react';
+import { motion, useReducedMotion } from 'framer-motion';
 import { Button } from '@/components/ui/Button';
 import { Alert } from '@/components/ui/Alert';
 import { FeedbackDifficulty } from '@/lib/feedback/types';
+import { collapseIn } from '@/lib/motion';
 
 interface LessonFeedbackProps {
   level: number;
@@ -16,6 +18,7 @@ export function LessonFeedback({ level, lessonSlug }: LessonFeedbackProps) {
   const [difficulty, setDifficulty] = useState<FeedbackDifficulty | undefined>();
   const [text, setText] = useState('');
   const [status, setStatus] = useState<SubmitStatus>('idle');
+  const shouldReduceMotion = useReducedMotion();
 
   const getDeviceType = (): 'mobile' | 'desktop' | 'unknown' => {
     if (typeof window === 'undefined') return 'unknown';
@@ -57,16 +60,26 @@ export function LessonFeedback({ level, lessonSlug }: LessonFeedbackProps) {
 
   if (status === 'submitted') {
     return (
-      <div className="mt-6 p-4 rounded-lg border border-emerald-500/30 bg-emerald-500/5">
+      <motion.div
+        className="mt-6 p-4 rounded-lg border border-emerald-500/30 bg-emerald-500/5"
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.3 }}
+      >
         <p className="text-sm text-emerald-400 italic">
           &ldquo;Your honesty trains the school, too. Thank you.&rdquo;
         </p>
-      </div>
+      </motion.div>
     );
   }
 
   return (
-    <div className="mt-6 p-4 rounded-lg border border-slate-700/50 bg-slate-800/30">
+    <motion.div
+      className="mt-6 p-4 rounded-lg border border-slate-700/50 bg-slate-800/30"
+      variants={shouldReduceMotion ? undefined : collapseIn}
+      initial="hidden"
+      animate="visible"
+    >
       <h3 className="text-sm font-semibold mb-3">How did this lesson feel?</h3>
       
       <div className="flex gap-2 mb-3">
@@ -120,6 +133,6 @@ export function LessonFeedback({ level, lessonSlug }: LessonFeedbackProps) {
       >
         {status === 'submitting' ? 'Submitting...' : 'Submit'}
       </Button>
-    </div>
+    </motion.div>
   );
 }

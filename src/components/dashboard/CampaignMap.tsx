@@ -5,16 +5,19 @@
  * Shows the full curriculum ladder with tiers and levels.
  * 
  * Design Principle: "Know your place on the ladder"
+ * Phase 2.2: Enhanced pulse animation and tier hover states
  */
 
 "use client";
 
 import { useEffect, useState } from "react";
+import { motion, useReducedMotion } from "framer-motion";
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/Accordion";
 import { CheckCircle2, PlayCircle, Lock, Circle } from "lucide-react";
 import type { SchoolMapData } from "@/lib/dashboard/school-map";
 import { getCompletedLessons, getPassedLevelExams, isLevelMastered } from "@/lib/school/progress";
 import { getPlacementResult } from "@/lib/placement/storage";
+import { pulseGlow } from "@/lib/motion";
 
 export interface CampaignMapProps {
   userProgress: SchoolMapData;
@@ -307,6 +310,8 @@ interface LevelRowProps {
 }
 
 function LevelRow({ levelId, title, subtitle, status }: LevelRowProps) {
+  const shouldReduceMotion = useReducedMotion();
+  
   const statusConfig = {
     mastered: {
       icon: <CheckCircle2 className="h-4 w-4 text-emerald-400" />,
@@ -348,6 +353,8 @@ function LevelRow({ levelId, title, subtitle, status }: LevelRowProps) {
           : "bg-chessio-surface-dark/30 " + config.borderClass
       } ${
         status === "locked" ? "opacity-70 cursor-default" : ""
+      } ${
+        status === "available" ? "motion-safe:hover:bg-chessio-card/40 motion-safe:hover:scale-[1.01] cursor-pointer" : ""
       }`}
       data-testid={`level-row-${levelId}`}
     >
@@ -364,10 +371,18 @@ function LevelRow({ levelId, title, subtitle, status }: LevelRowProps) {
         <div className="text-xs text-muted-foreground truncate">{subtitle}</div>
       </div>
 
-      {/* Right: Status chip with optional pulse dot */}
+      {/* Right: Status chip with enhanced pulse dot */}
       <div className="flex items-center gap-2">
-        {config.showPulse && (
-          <span className="inline-flex h-2 w-2 rounded-full bg-chessio-primary animate-pulse" />
+        {config.showPulse && !shouldReduceMotion && (
+          <motion.span
+            className="inline-flex h-2 w-2 rounded-full bg-chessio-primary"
+            variants={pulseGlow}
+            initial="initial"
+            animate="animate"
+          />
+        )}
+        {config.showPulse && shouldReduceMotion && (
+          <span className="inline-flex h-2 w-2 rounded-full bg-chessio-primary" />
         )}
         {config.icon}
         <span className={`inline-flex items-center px-2 py-1 rounded-md text-xs font-medium border ${config.chipBg}`}>

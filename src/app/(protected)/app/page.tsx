@@ -15,6 +15,7 @@ import { Sparkles, ArrowRight, Users } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import { PreSchoolFeedbackStrip } from "@/components/feedback/PreSchoolFeedbackStrip";
+import { TodaysGoalCard, AcademyGateCard } from "@/components/preschool/AnimatedCards";
 
 export default async function DashboardPage() {
   const session = await auth();
@@ -304,8 +305,8 @@ export default async function DashboardPage() {
           </div>
         </div>
 
-        {/* Today's Goal Card (Sprint 03) - Premium Hero */}
-        <div className="mb-8 bg-chessio-surface-dark border border-chessio-border-dark border-t-4 border-t-chessio-primary rounded-2xl p-6">
+        {/* Today's Goal Card (Sprint 03) - Premium Hero with breathing animation */}
+        <TodaysGoalCard>
           <div className="flex items-start justify-between gap-4">
             <div className="flex-1">
               <div className="flex items-center gap-2 mb-2">
@@ -349,7 +350,7 @@ export default async function DashboardPage() {
               )}
             </div>
           </div>
-        </div>
+        </TodaysGoalCard>
 
         {/* First-time Onboarding Modal */}
         <OnboardingModal />
@@ -775,45 +776,43 @@ export default async function DashboardPage() {
         </div>
         )}
 
-        {/* Academy Gate Card - Bottom Section */}
-        <div className="mt-12 mb-6 max-w-2xl mx-auto">
-          <div className="rounded-2xl border-2 border-blue-500/30 bg-gradient-to-br from-slate-900 to-blue-950/20 p-6 shadow-lg">
-            <div className="flex items-start gap-4">
-              <div className="rounded-full bg-blue-500/10 p-3">
-                <Sparkles className="h-6 w-6 text-blue-400" />
-              </div>
-              <div className="flex-1">
-                <h3 className="text-xl font-bold text-white mb-2">
-                  The Academy Gate
-                </h3>
-                <p className="text-sm text-slate-300 mb-4">
-                  Complete the basic mechanics here to unlock the Chess School curriculum.
-                  {level0Complete && level1Complete ? (
-                    <span className="block mt-2 text-emerald-400 font-medium">
-                      ✓ Pre-School complete! The Academy awaits.
-                    </span>
-                  ) : (
-                    <span className="block mt-2 text-blue-300">
-                      {level0CompletedCount + level1CompletedCount} of {level0TotalLessons + level1TotalLessons} lessons complete
-                    </span>
-                  )}
-                </p>
+        {/* Academy Gate Card - Bottom Section with unlock animation */}
+        <AcademyGateCard isUnlocked={level0Complete && level1Complete}>
+          <div className="flex items-start gap-4">
+            <div className="rounded-full bg-blue-500/10 p-3">
+              <Sparkles className="h-6 w-6 text-blue-400" />
+            </div>
+            <div className="flex-1">
+              <h3 className="text-xl font-bold text-white mb-2">
+                The Academy Gate
+              </h3>
+              <p className="text-sm text-slate-300 mb-4">
+                Complete the basic mechanics here to unlock the Chess School curriculum.
                 {level0Complete && level1Complete ? (
-                  <Link href="/school">
-                    <Button size="sm" className="inline-flex items-center gap-2">
-                      Go to School
-                      <ArrowRight className="h-4 w-4" />
-                    </Button>
-                  </Link>
+                  <span className="block mt-2 text-emerald-400 font-medium">
+                    ✓ Pre-School complete! The Academy awaits.
+                  </span>
                 ) : (
-                  <Badge variant="secondary" className="text-xs">
-                    Unlocked after completing Pre-School
-                  </Badge>
+                  <span className="block mt-2 text-blue-300">
+                    {level0CompletedCount + level1CompletedCount} of {level0TotalLessons + level1TotalLessons} lessons complete
+                  </span>
                 )}
-              </div>
+              </p>
+              {level0Complete && level1Complete ? (
+                <Link href="/school">
+                  <Button size="sm" className="inline-flex items-center gap-2">
+                    Go to School
+                    <ArrowRight className="h-4 w-4" />
+                  </Button>
+                </Link>
+              ) : (
+                <Badge variant="secondary" className="text-xs">
+                  Unlocked after completing Pre-School
+                </Badge>
+              )}
             </div>
           </div>
-        </div>
+        </AcademyGateCard>
 
         {/* Pre-School Feedback Strip - De-emphasized at bottom */}
         <div className="mt-8">

@@ -7,10 +7,12 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
 import { Alert, AlertDescription } from '@/components/ui/Alert';
-import { ArrowLeft, Trophy } from 'lucide-react';
+import { ArrowLeft, Trophy, Volume2 } from 'lucide-react';
 import Link from 'next/link';
 import { markLevelExamPassed } from '@/lib/school/progress';
 import { ExamFeedback } from '@/components/feedback/ExamFeedback';
+import { useVoice } from '@/hooks/useVoice';
+import { logVoiceEvent } from '@/lib/voice';
 
 interface ExamRunnerProps {
   level: number;
@@ -160,6 +162,10 @@ export default function ExamRunner({ level, levelTitle, puzzles, failPatterns }:
   );
 }
 
+// Voice constants for exam verdicts
+const EXAM_PASS_VOICE = "Good. The board agrees with you. You are ready to advance. Remember what you saw here: patterns, not moves.";
+const EXAM_FAIL_VOICE = "The board is honest. You missed patterns that you must see quickly. Review the study units, then try again.";
+
 interface ExamCompleteProps {
   level: number;
   levelTitle: string;
@@ -169,6 +175,20 @@ interface ExamCompleteProps {
 
 function ExamComplete({ level, levelTitle, correctCount, totalCount }: ExamCompleteProps) {
   const isPerfect = correctCount === totalCount;
+  const { canUseVoice, isSpeaking, play, stop } = useVoice();
+
+  // Select voice text based on pass/fail (passing is not getting a perfect score, just completing)
+  const verdictVoiceText = isPerfect ? EXAM_PASS_VOICE : EXAM_FAIL_VOICE;
+
+  const handleVoiceToggle = () => {
+    if (isSpeaking) {
+      stop();
+      logVoiceEvent('exam_verdict', { action: 'stop', level, isPerfect, correctCount, totalCount });
+    } else {
+      play(verdictVoiceText, { rate: 0.95, pitch: 0.95 });
+      logVoiceEvent('exam_verdict', { action: 'play', level, isPerfect, correctCount, totalCount });
+    }
+  };
 
   return (
     <div className="space-y-8 max-w-2xl mx-auto">
@@ -190,7 +210,21 @@ function ExamComplete({ level, levelTitle, correctCount, totalCount }: ExamCompl
       {/* Coach message */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-lg">The Coach says...</CardTitle>
+          <div className="flex items-start justify-between gap-3">
+            <CardTitle className="text-lg">The Coach says...</CardTitle>
+            {canUseVoice && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleVoiceToggle}
+                aria-label={isSpeaking ? "Stop voice coach" : "Play voice coach"}
+                className="h-8 w-8 shrink-0 p-0"
+                data-testid="exam-voice-toggle"
+              >
+                <Volume2 className={isSpeaking ? "h-5 w-5 text-emerald-400" : "h-5 w-5 text-neutral-400"} />
+              </Button>
+            )}
+          </div>
         </CardHeader>
         <CardContent>
           <p className="italic text-slate-400">

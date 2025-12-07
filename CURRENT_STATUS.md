@@ -1,7 +1,9 @@
 # Chessio - Current Status & Quick Start
 
-**Last Updated:** December 7, 2025  
-**Current Phase:** Production v1 with Ink & Ivory Theme
+**Last Updated:** December 7, 2025 (Phase 2.1 Deployed)  
+**Current Phase:** Phase 2.1 - Academy Polish (Production)  
+**Live Site:** https://chessio.io  
+**Latest Deployment:** b142288 (56 files, 5,576 insertions)
 
 ---
 
@@ -21,9 +23,11 @@ npm run dev          # Open http://localhost:3000
 ```
 
 ### Verify Setup
-- Landing page at `/` should show golden "Start Learning" button
-- Dashboard at `/app` requires login (test user from seed or register)
-- All 6 Level 0 lessons should be visible and playable
+- Landing page at `/` shows "Stop Playing Random Moves" hero with Path to Mastery ladder
+- Dashboard at `/dashboard` shows ActiveDutyCard (focal point) + CampaignMap (context)
+- Pre-School at `/app` has 6 lessons with warmer amber gradient background
+- School at `/school` shows "Tier 1 — The Foundation" with Levels 1-3
+- Placement test at `/school/placement` has 5 tactical positions
 
 ---
 

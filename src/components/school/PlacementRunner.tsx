@@ -9,6 +9,9 @@ import { Badge } from '@/components/ui/Badge';
 import { Alert, AlertDescription } from '@/components/ui/Alert';
 import { savePlacementResult } from '@/lib/placement/storage';
 import { trackPlacementCompleted } from '@/lib/placement/telemetry';
+import { useVoice } from '@/hooks/useVoice';
+import { logVoiceEvent } from '@/lib/voice';
+import { Volume2 } from 'lucide-react';
 import Link from 'next/link';
 
 interface PlacementRunnerProps {
@@ -160,12 +163,42 @@ export function PlacementRunner({ puzzles, passingScore, onComplete }: Placement
   );
 }
 
+// Voice Coach verdicts for Placement Test
+const PLACEMENT_PASS_VOICE = `
+Good. You know how the pieces fight.
+Pre-School would bore you.
+Welcome to the Academy. Now the real work begins.
+`.trim();
+
+const PLACEMENT_FAIL_VOICE = `
+Stop.
+You have potential, but your foundation is cracked.
+If we throw you into the advanced class now, you will just memorize moves without understanding.
+Go to Pre-School. Build your hands. Then come back and conquer.
+`.trim();
+
 interface ResultScreenProps {
   result: PlacementResult;
 }
 
 export function PlacementResultScreen({ result }: ResultScreenProps) {
   const passed = result.status === "passed";
+  const { canUseVoice, isSpeaking, play, stop } = useVoice();
+  
+  const verdictVoiceText = passed ? PLACEMENT_PASS_VOICE : PLACEMENT_FAIL_VOICE;
+
+  const handleVoiceToggle = () => {
+    if (isSpeaking) {
+      stop();
+    } else {
+      play(verdictVoiceText, {
+        rate: 0.95,
+        pitch: 0.95,
+        lang: 'en-US',
+      });
+      logVoiceEvent('placement_verdict', { result: passed ? 'pass' : 'fail' });
+    }
+  };
 
   return (
     <div className="max-w-2xl mx-auto space-y-6">
@@ -180,9 +213,24 @@ export function PlacementResultScreen({ result }: ResultScreenProps) {
             {passed ? "✓" : "○"}
           </div>
           <div className="space-y-2">
-            <h2 className="text-2xl font-bold text-neutral-50">
-              {passed ? "You passed." : "Not yet."}
-            </h2>
+            <div className="flex items-center justify-center gap-2">
+              <h2 className="text-2xl font-bold text-neutral-50">
+                {passed ? "You passed." : "Not yet."}
+              </h2>
+              {canUseVoice && (
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  className="h-8 w-8 p-0"
+                  onClick={handleVoiceToggle}
+                  aria-label={isSpeaking ? "Stop coach voice" : "Hear the coach verdict"}
+                  data-testid="placement-voice-toggle"
+                >
+                  <Volume2 className={`h-4 w-4 ${isSpeaking ? 'text-emerald-400' : 'text-neutral-400'}`} />
+                </Button>
+              )}
+            </div>
             <p className="text-sm text-neutral-400">
               You solved {result.score} of {result.total}
             </p>

@@ -1,23 +1,31 @@
-# Chessio - Current State & Parking Instructions
+# Chessio - Current State & Recent Updates
 
-**Status:** Locked and Scheduled ✅  
-**Next Action Window:** January 2, 2025 (invite sends)  
-**Launch Date:** January 6, 2025  
+**Status:** Phase 2.1 - Academy Polish Deployed ✅  
+**Live Production:** https://chessio.io  
+**Last Deployment:** December 7, 2025 (commit b142288)  
+**Next Milestone:** Season 01 Launch (January 6, 2025)  
 
 ---
 
 ## What's Complete
 
-### ✅ Product (v1.4-alpha)
+### ✅ Product (Phase 2.1 - Academy Polish)
 - Next.js 16.0.7 + React 19.2.0 + Prisma 7
-- Ink & Ivory design system (neutral + amber)
-- Spotify-style logo system
-- Complete SVG chess piece library
-- XP & gamification (Novice → Pawn → Knight → Bishop)
-- Testing infrastructure (21/29 tests passing - 19 unit + 2 integration)
-- **Nova AI Integration** - OpenAI GPT-4o-mini for SEO, content, and general assistance
-- **Atlas Admin Panel** - Internal control room for SEO, content pipeline, and AI operations
-- Deployed to staging + production
+- **Academy-Focused UI** (Phase 2.1 - December 7, 2025):
+  - Landing Page 2.0: "Stop Playing Random Moves" hero + Path to Mastery ladder
+  - ActiveDutyCard: Mission-focused dashboard with "CURRENT MISSION" eyebrow labels
+  - CampaignMap: Visual curriculum hierarchy with tier-specific colors (amber/blue/gray)
+  - School: "Tier 1 — The Foundation" grouping for Levels 1-3
+  - Pre-School: Warmer gradient background + Academy Gate card
+- **Chess Academy System**:
+  - Placement Test: 5-position evaluation to determine starting point
+  - Pre-School: 6 sandbox lessons for beginners
+  - School Levels 1-3: The King's Fate, The Tactical Eye, The Mating Net
+  - Level exams with mastery gates
+- **AI Integration**: OpenAI GPT-4o-mini for in-lesson Coach + SEO
+- **Atlas Admin Panel**: Internal control room for SEO, content, AI operations
+- **Testing**: 43 unit tests passing + E2E infrastructure
+- **Production**: Deployed to https://chessio.io (custom domain configured)
 
 ### ✅ Season 01 Program Design
 - **SEASON_01_PLAN.md:** 4-week structure (Jan 6 - Feb 2)

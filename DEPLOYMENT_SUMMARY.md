@@ -1,32 +1,98 @@
-# Deployment Summary - December 6, 2024
+# Deployment Summary - December 7, 2025 (Phase 2.1)
 
-## ✅ Test Results
+## 🎯 Phase 2.1: Academy Polish - DEPLOYED ✅
 
-### Passed Tests (21/29)
-- **Sanity Checks**: 12/12 ✅
-  - Environment configuration
-  - File structure
-  - Brand system colors
-  - TypeScript/Jest/Playwright configs
-
-- **Unit Tests**: 19/19 ✅
-  - XP system calculations
-  - Chess move validation
-  - Lesson progress tracking
-  - Gamification logic
-
-- **Integration Tests**: 2/10 ⚠️
-  - 8 tests need component updates for new Chessboard implementation
-  - Tests are outdated, not blocking for deployment
-  - Scheduled for Sprint 05 (after Season 01 feedback)
-
-**Overall**: Core functionality verified. Integration test failures are expected and documented.
+**Deployment Date:** December 7, 2025  
+**Commit:** b142288  
+**Production URL:** https://chessio.io  
+**Build Time:** 44 seconds  
+**Status:** Live and operational
 
 ---
 
-## 🚀 Deployments
+## 📦 What Was Deployed
 
-### Git Commits Pushed
+### New Features (Phase 2.1)
+1. **Landing Page 2.0**
+   - Hero: "Stop Playing Random Moves" with Academy manifesto
+   - Vertical "Path to Mastery" ladder (Sandbox → Academy → Club)
+   - Ascent visual placeholder with ladder motif
+   - Mission-focused CTAs
+
+2. **ActiveDutyCard Polish**
+   - Unified "CURRENT MISSION" eyebrow labels
+   - Stronger typography (text-2xl md:text-3xl font-bold)
+   - Gradient background with radial overlay
+   - Mission-style button labels ("Start Evaluation", "Enter Pre-School", "Begin Level 1", "Resume Mission")
+
+3. **CampaignMap Visual Cohesion**
+   - Tier-specific border colors (amber=Pre-School, blue=Foundation, gray=locked)
+   - Pulsing blue dot on in-progress level
+   - Enhanced status chips with icons
+   - Auto-expansion of current tier
+
+4. **School Tier Grouping**
+   - "Tier 1 — The Foundation" header wrapper
+   - Subtitle: "Learn the truth of the board: checks, tactics, endgames"
+   - Structure for future Tier 2/3 expansion
+
+5. **Pre-School Polish**
+   - Warmer gradient: from-slate-950 via-slate-900 to-amber-950/10
+   - Academy Gate card at bottom (shows progress + "Go to School" button)
+   - De-emphasized mood strip (moved to bottom)
+
+### Files Changed
+- **56 files modified**
+- **5,576 insertions, 273 deletions**
+- New components: ActiveDutyCard, CampaignMap, Accordion
+- New lib files: duty-state.ts, school-map.ts
+- Updated tests: 43/43 unit tests passing
+
+---
+
+## ✅ Test Results (Pre-Deployment)
+
+### Unit Tests: 43/43 ✅
+- **ActiveDutyCard**: 15 tests (all 5 states + tier badges)
+- **XP System**: 19 tests (calculations, level progression)
+- **Chess Logic**: 9 tests (move validation, game rules)
+
+### Build Verification
+```bash
+npm run build
+# ✓ Compiled successfully in 8.7s
+# All TypeScript checks passed
+```
+
+### Integration Tests
+- Chessboard: 5/5 passing
+- Lesson Player: 13/13 passing
+- Dashboard gating scenarios verified
+
+---
+
+## 🌐 Domain Configuration
+
+### Custom Domain: chessio.io ✅
+- **Primary**: https://chessio.io
+- **WWW**: https://www.chessio.io
+- **Vercel**: https://chessio-nine.vercel.app
+
+### DNS Configuration
+- A Record: 76.76.21.21 (apex)
+- CNAME: cname.vercel-dns.com (www)
+- Status: Valid Configuration (all domains)
+
+### Environment Variables Updated
+```
+NEXTAUTH_URL=https://chessio.io
+```
+
+---
+
+## 📊 Previous Deployments
+
+### December 6, 2024 - Nova AI + Atlas Admin
 1. **1674de4** - feat(admin): Add Nova AI integration + Atlas admin panel
    - OpenAI GPT-4o-mini integration
    - 5 new database models

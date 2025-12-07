@@ -1,10 +1,12 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
+import { motion, useReducedMotion, AnimatePresence } from 'framer-motion';
 import { MessageCircle, X, Send } from 'lucide-react';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Alert } from '@/components/ui/Alert';
+import { slideUp, gentleNudge } from '@/lib/motion';
 
 interface Message {
   id: string;
@@ -19,12 +21,27 @@ export function CoachChatWidget() {
   const [isThinking, setIsThinking] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [hasGreeted, setHasGreeted] = useState(false);
+  const [showNudge, setShowNudge] = useState(false);
+  const shouldReduceMotion = useReducedMotion();
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // Scroll to bottom when messages change
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, isThinking]);
+
+  // Gentle nudge after 30 seconds on page (once)
+  useEffect(() => {
+    if (!isOpen && !shouldReduceMotion) {
+      const timer = setTimeout(() => {
+        setShowNudge(true);
+        // Reset after animation completes
+        setTimeout(() => setShowNudge(false), 600);
+      }, 30000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [isOpen, shouldReduceMotion]);
 
   // Send greeting message when chat first opens
   useEffect(() => {
@@ -100,11 +117,16 @@ export function CoachChatWidget() {
   return (
     <div className="fixed bottom-6 right-6 z-50">
       {!isOpen ? (
-        // Floating button
-        <button
+        // Floating button with gentle nudge animation
+        <motion.button
           onClick={() => setIsOpen(true)}
           className="group relative bg-emerald-600 hover:bg-emerald-700 text-white rounded-full p-4 shadow-lg transition-all hover:scale-110"
           aria-label="Ask the Coach"
+          variants={shouldReduceMotion ? undefined : gentleNudge}
+          initial="initial"
+          animate={showNudge ? "nudge" : "initial"}
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.95 }}
         >
           <MessageCircle className="h-6 w-6" />
           
@@ -112,10 +134,16 @@ export function CoachChatWidget() {
           <div className="absolute bottom-full right-0 mb-2 px-3 py-2 bg-slate-900 text-white text-sm rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
             Ask the Coach
           </div>
-        </button>
+        </motion.button>
       ) : (
-        // Chat panel
-        <Card className="w-[360px] max-w-[calc(100vw-3rem)] h-[500px] max-h-[calc(100vh-8rem)] flex flex-col shadow-2xl">
+        // Chat panel with slide-up animation
+        <motion.div
+          variants={shouldReduceMotion ? undefined : slideUp}
+          initial="hidden"
+          animate="visible"
+          exit="hidden"
+        >
+          <Card className="w-[360px] max-w-[calc(100vw-3rem)] h-[500px] max-h-[calc(100vh-8rem)] flex flex-col shadow-2xl">
           {/* Header */}
           <div className="flex items-center justify-between p-4 border-b border-slate-700">
             <div className="flex items-center gap-2">
@@ -143,9 +171,12 @@ export function CoachChatWidget() {
             )}
 
             {messages.map((msg) => (
-              <div
+              <motion.div
                 key={msg.id}
                 className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3 }}
               >
                 <div
                   className={`max-w-[80%] px-3 py-2 rounded-lg text-sm ${
@@ -156,7 +187,7 @@ export function CoachChatWidget() {
                 >
                   {msg.content}
                 </div>
-              </div>
+              </motion.div>
             ))}
 
             {isThinking && (
@@ -203,6 +234,7 @@ export function CoachChatWidget() {
             </p>
           </div>
         </Card>
+        </motion.div>
       )}
     </div>
   );

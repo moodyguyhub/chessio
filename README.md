@@ -1,22 +1,29 @@
 # ♟️ Chessio
 
-**"Duolingo for Chess"** - An interactive chess learning platform where users master chess through bite-sized lessons, earn XP, and level up their skills.
+**"Duolingo for Chess"** - A structured, 15-level chess academy that takes you from absolute beginner to advanced club player. One path. No noise.
 
-> **Current Phase:** Production v1 with Ink & Ivory Theme  
-> **Status:** 6 Level 0 lessons live, ready for expansion
+> **Current Phase:** Phase 2.1 - Academy Polish (Live in Production)  
+> **Status:** Pre-School + 3 School Levels + Placement Test + Academy Dashboard  
+> **Live Site:** https://chessio.io
 
 ---
 
 ## ✨ Features
 
-- 🎯 **Interactive Lessons** - 6 beginner lessons teaching board basics and piece movement
-- 📈 **XP & Leveling** - Gamified progression system with golden visual rewards
-- 🎨 **Elegant Design** - Warm dark theme with golden accents ("Ink & Ivory")
-- 💡 **Contextual Hints** - Static hints per task (AI integration ready for Phase 2)
-- 🔐 **Authentication** - GitHub OAuth for admin + credential-based user accounts
-- 📊 **Progress Tracking** - Resume lessons, track completion, unlock next content
+### Academy Experience (Phase 2.1)
+- 🎯 **Mission-Focused Dashboard** - ActiveDutyCard shows your current mission with Russian School voice
+- 🗺️ **Campaign Map** - Visual curriculum hierarchy with 4 tiers (Pre-School, Foundation, Candidate, Mastery)
+- 📊 **Tier-Based Progression** - Color-coded levels with mastered/in-progress/locked states
+- 🎓 **Placement Test** - 5-position evaluation to unlock Academy or mandate Pre-School
+- 📈 **XP & Leveling** - Gamified progression system with level-based advancement
+
+### Learning System
+- 📚 **Pre-School** - Sandbox environment for absolute beginners (6 lessons)
+- 🏛️ **School Levels 1-3** - Structured curriculum (checks, tactics, endgames)
+- 💡 **AI Coach** - Ask questions during lessons (OpenAI GPT-4o-mini integration)
 - 🎵 **Sound Effects** - Move, capture, success, and error audio feedback
-- 🎯 **Daily Goals** - Contextual "Today's Goal" based on user progress
+- 🔐 **Authentication** - Secure credential-based accounts with session management
+- 📊 **Progress Tracking** - Resume lessons, track mastery, unlock next content
 
 ---
 

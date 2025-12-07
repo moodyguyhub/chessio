@@ -5,10 +5,16 @@
  * 
  * This card eliminates decision fatigue by presenting exactly one action
  * the user must take. It anchors the Dashboard as a war room, not a waiting room.
+ * 
+ * Phase 2.2: Enhanced with depth gradient and tracking for cinematic feel
  */
+
+"use client";
 
 import { Card, CardContent } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
+import { motion, useReducedMotion } from "framer-motion";
+import { buttonHover, buttonTap } from "@/lib/motion";
 
 export type DutyStatus =
   | 'new_user'          // No progress
@@ -171,6 +177,7 @@ export function ActiveDutyCard({
 }: ActiveDutyCardProps) {
   const config = getStateConfig(status, currentMission);
   const tierBadge = getTierBadge(userProfile.tier);
+  const shouldReduceMotion = useReducedMotion();
 
   return (
     <Card
@@ -194,9 +201,18 @@ export function ActiveDutyCard({
       data-testid="active-duty-card"
       data-status={status}
     >
-      {/* Subtle overlay gradient for depth */}
+      {/* Enhanced overlay gradient for cinematic depth (Phase 2.2) */}
       <div 
-        className="pointer-events-none absolute inset-0 opacity-40 mix-blend-soft-light bg-[radial-gradient(circle_at_top,_#4f46e5_0,_transparent_50%)]"
+        className="pointer-events-none absolute inset-0 opacity-40 mix-blend-soft-light bg-[radial-gradient(circle_at_top,_#4f46e5_0,_transparent_60%)]"
+        aria-hidden="true"
+      />
+      
+      {/* Subtle noise texture for depth */}
+      <div
+        className="pointer-events-none absolute inset-0 opacity-[0.02] mix-blend-overlay"
+        style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
+        }}
         aria-hidden="true"
       />
       {/* Background decorative element - faint chess piece */}
@@ -219,7 +235,7 @@ export function ActiveDutyCard({
             {/* Row 1: Eyebrow + Tier Badge (mobile) */}
             <div className="flex items-center justify-between gap-4">
               <div
-                className={`text-[0.7rem] font-bold tracking-[0.2em] uppercase ${config.colorScheme.eyebrowText}`}
+                className={`text-[0.7rem] font-bold tracking-[0.2em] uppercase ${config.colorScheme.eyebrowText} transition-all duration-300 group-hover:tracking-[0.25em]`}
                 data-testid="duty-eyebrow"
               >
                 {config.eyebrow}
@@ -293,16 +309,21 @@ export function ActiveDutyCard({
               </span>
             </div>
 
-            {/* Primary CTA */}
-            <Button
-              onClick={actions.onPrimary}
-              variant="primary"
-              size="lg"
-              className="w-full h-11 lg:h-12 font-medium"
-              data-testid="duty-primary-cta"
+            {/* Primary CTA with micro-interactions */}
+            <motion.div
+              whileHover={shouldReduceMotion ? undefined : buttonHover}
+              whileTap={shouldReduceMotion ? undefined : buttonTap}
             >
-              {actions.primaryLabel}
-            </Button>
+              <Button
+                onClick={actions.onPrimary}
+                variant="primary"
+                size="lg"
+                className="w-full h-11 lg:h-12 font-medium"
+                data-testid="duty-primary-cta"
+              >
+                {actions.primaryLabel}
+              </Button>
+            </motion.div>
 
             {/* Secondary Action - mobile only */}
             {actions.secondaryLabel && (
