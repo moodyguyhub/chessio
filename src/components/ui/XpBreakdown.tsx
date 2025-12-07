@@ -108,13 +108,13 @@ export function XpBreakdown({
 
       {/* Level Up Celebration */}
       {leveledUp && newLevel !== undefined && (
-        <div className="bg-gradient-to-r from-orange-900/20 to-orange-800/20 rounded-lg p-3 border border-orange-700/30">
-          <div className="flex items-center justify-center gap-2 text-amber-600 dark:text-orange-400">
+        <div className="bg-amber-300/10 rounded-lg p-3 border border-amber-300/30">
+          <div className="flex items-center justify-center gap-2 text-amber-300">
             <span className="text-lg">🎖️</span>
             <span className="font-semibold">Level Up!</span>
             <span className="text-lg">🎖️</span>
           </div>
-          <p className="text-center text-sm text-amber-700 dark:text-amber-300 mt-1">
+          <p className="text-center text-sm text-amber-300/80 mt-1">
             You reached {levelProgress.label}!
           </p>
         </div>
