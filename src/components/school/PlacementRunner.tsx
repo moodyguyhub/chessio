@@ -13,6 +13,7 @@ import { useVoice } from '@/hooks/useVoice';
 import { logVoiceEvent } from '@/lib/voice';
 import { Volume2 } from 'lucide-react';
 import Link from 'next/link';
+import { useSoundscape } from '@/lib/sound/SoundProvider';
 
 interface PlacementRunnerProps {
   puzzles: PlacementPuzzle[];
@@ -30,6 +31,7 @@ export function PlacementRunner({ puzzles, passingScore, onComplete }: Placement
     type: 'idle',
     message: '',
   });
+  const { play } = useSoundscape();
 
   const currentPuzzle = puzzles[currentIndex];
   const isLastPuzzle = currentIndex === puzzles.length - 1;
@@ -47,6 +49,7 @@ export function PlacementRunner({ puzzles, passingScore, onComplete }: Placement
       const isCorrect = currentPuzzle.correctUci.toLowerCase() === moveUCI.toLowerCase();
 
       if (isCorrect) {
+        play("answer_correct");
         setCorrectCount(prev => prev + 1);
         setFeedback({ 
           type: 'success', 
@@ -63,6 +66,7 @@ export function PlacementRunner({ puzzles, passingScore, onComplete }: Placement
           }
         }, 1800);
       } else {
+        play("answer_wrong");
         // Check for specific fail state
         const failState = currentPuzzle.failStates.find(
           f => f.wrongUci.toLowerCase() === moveUCI.toLowerCase()
@@ -89,6 +93,15 @@ export function PlacementRunner({ puzzles, passingScore, onComplete }: Placement
     const score = correctCount;
     const total = puzzles.length;
     const status = score >= passingScore ? "passed" : "failed";
+    
+    // Play completion sounds
+    if (status === "passed") {
+      play("level_up");
+      // Coach voice plays after level_up
+      setTimeout(() => {
+        play("coach_foundation");
+      }, 800);
+    }
     
     const result: PlacementResult = {
       status,

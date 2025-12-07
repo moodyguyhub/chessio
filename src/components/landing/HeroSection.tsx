@@ -4,6 +4,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import { fadeInUpGentle, staggerContainer, buttonHover, buttonTap } from "@/lib/motion";
 import Link from "next/link";
 import Image from "next/image";
+import { useSoundscape } from "@/lib/sound/SoundProvider";
 
 interface HeroSectionProps {
   isLoggedIn: boolean;
@@ -11,6 +12,7 @@ interface HeroSectionProps {
 
 export function HeroSection({ isLoggedIn }: HeroSectionProps) {
   const shouldReduceMotion = useReducedMotion();
+  const { play } = useSoundscape();
 
   return (
     <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center max-w-6xl mx-auto">
@@ -37,6 +39,7 @@ export function HeroSection({ isLoggedIn }: HeroSectionProps) {
           >
             <Link
               href={isLoggedIn ? "/school/placement" : "/login?redirect=/school/placement"}
+              onClick={() => play("ui_click")}
               className="inline-flex items-center justify-center rounded-lg bg-chessio-primary px-8 py-3.5 text-base font-semibold text-white shadow-lg hover:bg-chessio-primary/90 hover:shadow-xl transition-all"
               data-testid="landing-cta-evaluation"
             >
@@ -45,6 +48,7 @@ export function HeroSection({ isLoggedIn }: HeroSectionProps) {
           </motion.div>
           <Link
             href={isLoggedIn ? "/app" : "/login?redirect=/app"}
+            onClick={() => play("ui_click")}
             className="inline-flex items-center justify-center text-sm text-neutral-400 hover:text-neutral-200 transition-colors underline-offset-4 hover:underline"
           >
             I don&apos;t know the rules yet →
@@ -61,10 +65,11 @@ export function HeroSection({ isLoggedIn }: HeroSectionProps) {
           shouldReduceMotion
             ? undefined
             : {
-                hidden: { opacity: 0, y: 16 },
+                hidden: { opacity: 0, y: 16, scale: 1.02 },
                 visible: {
                   opacity: 1,
                   y: 0,
+                  scale: 1,
                   transition: { duration: 0.6, delay: 0.15, ease: [0.22, 1, 0.36, 1] },
                 },
               }

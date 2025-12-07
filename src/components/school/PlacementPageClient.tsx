@@ -9,6 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import Link from 'next/link';
 import { ArrowLeft, Trophy } from 'lucide-react';
+import { useSoundscape } from '@/lib/sound/SoundProvider';
 
 interface PlacementPageClientProps {
   exam: {
@@ -22,6 +23,7 @@ interface PlacementPageClientProps {
 export function PlacementPageClient({ exam }: PlacementPageClientProps) {
   const [hasStarted, setHasStarted] = useState(false);
   const [result, setResult] = useState<PlacementResult | null>(null);
+  const { play } = useSoundscape();
 
   useEffect(() => {
     // Check if user has already completed the test
@@ -36,6 +38,7 @@ export function PlacementPageClient({ exam }: PlacementPageClientProps) {
   };
 
   const handleRetake = () => {
+    play("ui_click");
     if (typeof window !== "undefined") {
       window.localStorage.removeItem("chessio_placement_v1");
     }
@@ -146,6 +149,7 @@ export function PlacementPageClient({ exam }: PlacementPageClientProps) {
                 size="lg" 
                 className="w-full"
                 onClick={() => {
+                  play("ui_click");
                   trackPlacementStarted();
                   setHasStarted(true);
                 }}

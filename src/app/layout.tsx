@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Nunito } from "next/font/google";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/next";
+import { SoundProvider } from "@/lib/sound/SoundProvider";
 import "./globals.css";
 
 const inter = Inter({
@@ -34,7 +35,9 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <body className={`${inter.variable} ${nunito.variable} font-sans antialiased bg-chessio-bg-dark text-chessio-text-dark`}>
-        {children}
+        <SoundProvider>
+          {children}
+        </SoundProvider>
         <SpeedInsights />
         <Analytics />
       </body>

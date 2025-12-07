@@ -17,6 +17,7 @@ import { Button } from "@/components/ui/Button";
 import { motion, useReducedMotion } from "framer-motion";
 import { buttonHover, buttonTap } from "@/lib/motion";
 import Image from "next/image";
+import { useSoundscape } from "@/lib/sound/SoundProvider";
 
 export type DutyStatus =
   | 'new_user'          // No progress
@@ -180,29 +181,35 @@ export function ActiveDutyCard({
   const config = getStateConfig(status, currentMission);
   const tierBadge = getTierBadge(userProfile.tier);
   const shouldReduceMotion = useReducedMotion();
+  const { play } = useSoundscape();
 
   return (
-    <Card
-      className={[
-        // Base styling
-        "relative overflow-hidden rounded-2xl border-2",
-        "transition-all duration-300 ease-out",
-        
-        // Gradient background - subtle layered effect
-        "bg-gradient-to-br from-chessio-card to-chessio-card/80",
-        
-        // Color scheme border from state
-        config.colorScheme.border,
-        
-        // Hover effects - "heavy and physical"
-        "hover:border-primary/30",
-        "hover:shadow-[0_0_30px_-10px_rgba(79,70,229,0.3)]",
-        
-        className || "",
-      ].join(" ")}
-      data-testid="active-duty-card"
-      data-status={status}
+    <motion.div
+      initial={shouldReduceMotion ? undefined : { opacity: 0, y: 12 }}
+      animate={shouldReduceMotion ? undefined : { opacity: 1, y: 0 }}
+      transition={shouldReduceMotion ? undefined : { duration: 0.5, ease: "easeOut" }}
     >
+      <Card
+        className={[
+          // Base styling
+          "relative overflow-hidden rounded-2xl border-2",
+          "transition-all duration-300 ease-out",
+          
+          // Gradient background - subtle layered effect
+          "bg-gradient-to-br from-chessio-card to-chessio-card/80",
+          
+          // Color scheme border from state
+          config.colorScheme.border,
+          
+          // Hover effects - "heavy and physical"
+          "hover:border-primary/30",
+          "hover:shadow-[0_0_30px_-10px_rgba(79,70,229,0.3)]",
+          
+          className || "",
+        ].join(" ")}
+        data-testid="active-duty-card"
+        data-status={status}
+      >
       {/* Cathedral backdrop - desktop only, deeply subtle (Phase 2.3) */}
       <div className="hidden lg:block absolute inset-0 -z-10 pointer-events-none">
         <Image
@@ -303,7 +310,10 @@ export function ActiveDutyCard({
             {actions.secondaryLabel && (
               <div className="hidden lg:block">
                 <button
-                  onClick={actions.onSecondary}
+                  onClick={() => {
+                    play("ui_click");
+                    actions.onSecondary?.();
+                  }}
                   className="text-sm text-muted-foreground hover:text-foreground transition-colors underline-offset-4 hover:underline"
                   data-testid="duty-secondary-action"
                 >
@@ -331,7 +341,10 @@ export function ActiveDutyCard({
               whileTap={shouldReduceMotion ? undefined : buttonTap}
             >
               <Button
-                onClick={actions.onPrimary}
+                onClick={() => {
+                  play("ui_click");
+                  actions.onPrimary();
+                }}
                 variant="primary"
                 size="lg"
                 className="w-full h-11 lg:h-12 font-medium"
@@ -345,7 +358,10 @@ export function ActiveDutyCard({
             {actions.secondaryLabel && (
               <div className="lg:hidden text-center">
                 <button
-                  onClick={actions.onSecondary}
+                  onClick={() => {
+                    play("ui_click");
+                    actions.onSecondary?.();
+                  }}
                   className="text-sm text-muted-foreground hover:text-foreground transition-colors underline-offset-4 hover:underline"
                 >
                   {actions.secondaryLabel}
@@ -356,6 +372,7 @@ export function ActiveDutyCard({
         </div>
       </CardContent>
     </Card>
+    </motion.div>
   );
 }
 

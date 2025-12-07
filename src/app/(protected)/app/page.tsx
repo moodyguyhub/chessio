@@ -16,6 +16,7 @@ import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import { PreSchoolFeedbackStrip } from "@/components/feedback/PreSchoolFeedbackStrip";
 import { TodaysGoalCard, AcademyGateCard } from "@/components/preschool/AnimatedCards";
+import { SoundControls } from "@/components/ui/SoundControls";
 import Image from "next/image";
 
 export default async function DashboardPage() {
@@ -159,6 +160,9 @@ export default async function DashboardPage() {
           </Link>
           
           <div className="flex items-center gap-4">
+            {/* Sound Controls */}
+            <SoundControls />
+
             {/* Dashboard Link */}
             <Link
               href="/dashboard"
