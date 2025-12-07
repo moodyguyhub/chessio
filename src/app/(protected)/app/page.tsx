@@ -339,7 +339,7 @@ export default async function DashboardPage() {
             <div className="shrink-0">
               <Link
                 href={todaysGoal.action.href}
-                className="block px-5 py-2.5 bg-orange-700 hover:bg-orange-800 text-white font-medium rounded-lg transition-all hover:scale-[1.02] text-sm tracking-tight"
+                className="block px-5 py-2.5 bg-chessio-primary hover:bg-chessio-primary/90 text-slate-950 font-medium rounded-lg transition-all hover:scale-[1.02] text-sm tracking-tight"
               >
                 {todaysGoal.action.label}
               </Link>
@@ -419,9 +419,9 @@ export default async function DashboardPage() {
                     key={lesson.slug}
                     className={`flex items-center gap-3 p-4 rounded-xl border transition-all ${
                       isCompleted
-                        ? "bg-orange-950/40 border-orange-700/20"
+                        ? "bg-emerald-950/40 border-emerald-700/20"
                         : isAvailable
-                        ? "bg-slate-800/50 border-white/5 hover:border-orange-700/20 hover:scale-[1.01]"
+                        ? "bg-slate-800/50 border-white/5 hover:border-chessio-primary/20 hover:scale-[1.01]"
                         : "bg-slate-800/30 border-white/5 opacity-60"
                     }`}
                   >
@@ -429,9 +429,9 @@ export default async function DashboardPage() {
                     <div
                       className={`w-10 h-10 shrink-0 rounded-full flex items-center justify-center text-lg ${
                         isCompleted
-                          ? "bg-orange-700 text-white"
+                          ? "bg-emerald-600 text-white"
                           : isAvailable
-                          ? "bg-orange-950/40 text-orange-400"
+                          ? "bg-chessio-primary/20 text-chessio-primary"
                           : "bg-slate-700 text-slate-500"
                       }`}
                     >
@@ -561,9 +561,9 @@ export default async function DashboardPage() {
                     ) : isAvailable ? (
                       <Link
                         href={`/lessons/${lesson.slug}`}
-                        className="shrink-0 px-4 py-2 text-sm font-medium bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-all hover:scale-[1.02]"
+                        className="shrink-0 px-4 py-2 text-sm font-medium bg-chessio-primary text-slate-950 rounded-lg hover:bg-chessio-primary/90 transition-all hover:scale-[1.02]"
                       >
-                        Start
+                        Start Lesson
                       </Link>
                     ) : (
                       <span className="shrink-0 px-3 py-2 text-sm text-slate-500">
@@ -660,9 +660,9 @@ export default async function DashboardPage() {
                     ) : isAvailable ? (
                       <Link
                         href={`/lessons/${lesson.slug}`}
-                        className="shrink-0 px-4 py-2 text-sm font-medium bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-all hover:scale-[1.02]"
+                        className="shrink-0 px-4 py-2 text-sm font-medium bg-chessio-primary text-slate-950 rounded-lg hover:bg-chessio-primary/90 transition-all hover:scale-[1.02]"
                       >
-                        Start
+                        Start Lesson
                       </Link>
                     ) : (
                       <span className="shrink-0 px-3 py-2 text-sm text-slate-500">
@@ -715,9 +715,9 @@ export default async function DashboardPage() {
                     key={lesson.slug}
                     className={`flex items-center gap-3 p-4 rounded-xl border transition-all ${
                       isCompleted
-                        ? "bg-orange-950/40 border-orange-700/20"
+                        ? "bg-emerald-950/40 border-emerald-700/20"
                         : isAvailable
-                        ? "bg-slate-800/50 border-white/5 hover:border-orange-700/20 hover:scale-[1.01]"
+                        ? "bg-slate-800/50 border-white/5 hover:border-chessio-primary/20 hover:scale-[1.01]"
                         : "bg-slate-800/30 border-white/5 opacity-60"
                     }`}
                   >
@@ -725,9 +725,9 @@ export default async function DashboardPage() {
                     <div
                       className={`w-10 h-10 shrink-0 rounded-full flex items-center justify-center text-lg ${
                         isCompleted
-                          ? "bg-orange-700 text-white"
+                          ? "bg-emerald-600 text-white"
                           : isAvailable
-                          ? "bg-orange-950/40 text-orange-400"
+                          ? "bg-chessio-primary/20 text-chessio-primary"
                           : "bg-slate-700 text-slate-500"
                       }`}
                     >
@@ -742,7 +742,7 @@ export default async function DashboardPage() {
                         {lesson.title}
                       </h4>
                       <p className={`text-sm ${
-                        isLocked ? "text-slate-600" : "text-orange-400"
+                        isLocked ? "text-slate-600" : "text-chessio-primary"
                       }`}>
                         +{lesson.xpReward} XP
                       </p>
@@ -752,14 +752,14 @@ export default async function DashboardPage() {
                     {isCompleted ? (
                       <Link
                         href={`/lessons/${lesson.slug}`}
-                        className="shrink-0 px-3 py-2 text-sm font-medium text-orange-400 hover:text-amber-300 transition-colors"
+                        className="shrink-0 px-3 py-2 text-sm font-medium text-emerald-400 hover:text-emerald-300 transition-colors"
                       >
                         Replay
                       </Link>
                     ) : isAvailable ? (
                       <Link
                         href={`/lessons/${lesson.slug}`}
-                        className="shrink-0 px-4 py-2 text-sm font-medium bg-orange-700 text-white rounded-lg hover:bg-orange-800 transition-all hover:scale-[1.02]"
+                        className="shrink-0 px-4 py-2 text-sm font-medium bg-chessio-primary text-slate-950 rounded-lg hover:bg-chessio-primary/90 transition-all hover:scale-[1.02]"
                       >
                         Start
                       </Link>

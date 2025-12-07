@@ -253,7 +253,7 @@ export function ActiveDutyCard({
 
             {/* Row 2: Headline */}
             <h2
-              className="text-2xl md:text-3xl font-bold tracking-tight text-foreground"
+              className="text-2xl md:text-3xl font-bold tracking-tight text-neutral-50"
               data-testid="duty-headline"
             >
               {config.headline}

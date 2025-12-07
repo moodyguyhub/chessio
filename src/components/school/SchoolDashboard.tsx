@@ -107,7 +107,7 @@ export default function SchoolDashboard({ levels, unlockedLevels }: SchoolDashbo
       {/* Placement Test CTA */}
       <div className="flex justify-center">
         <Link href="/school/placement">
-          <Button className="gap-2 bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600">
+          <Button className="gap-2 bg-chessio-primary hover:bg-chessio-primary/90 text-slate-950 font-semibold shadow-lg">
             <Trophy className="h-4 w-4" />
             Take Placement Test
           </Button>
