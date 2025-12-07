@@ -322,16 +322,16 @@ export default async function DashboardPage() {
         {/* Today's Goal Card (Sprint 03) - Premium Hero with breathing animation */}
         <TodaysGoalCard>
           <div className="flex items-start justify-between gap-6">
-            {/* Study desk thumbnail - left side, subtle */}
-            <div className="hidden sm:block relative w-24 h-24 flex-shrink-0 rounded-xl overflow-hidden border border-chessio-border-dark/40">
+            {/* Study desk thumbnail - left side, more visible on desktop */}
+            <div className="hidden md:block relative w-32 h-32 flex-shrink-0 rounded-xl overflow-hidden border border-chessio-border-dark/60 shadow-lg">
               <Image
                 src="/academy/academy-study-desk.jpg"
                 alt="A quiet chessboard under a single lamp, notebook and mug beside it"
                 fill
-                className="object-cover opacity-60"
-                sizes="96px"
+                className="object-cover opacity-75"
+                sizes="128px"
               />
-              <div className="absolute inset-0 bg-gradient-to-br from-black/60 via-black/40 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-br from-black/50 via-black/30 to-transparent" />
             </div>
 
             <div className="flex-1">
