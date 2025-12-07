@@ -7,17 +7,17 @@ datasource db {
 }
 
 model Account {
-  id                String  @id
+  id                String  @id @default(cuid())
   userId            String
   type              String
   provider          String
   providerAccountId String
-  refresh_token     String?
-  access_token      String?
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
   expires_at        Int?
   token_type        String?
   scope             String?
-  id_token          String?
+  id_token          String? @db.Text
   session_state     String?
   User              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -25,35 +25,35 @@ model Account {
 }
 
 model AiPromptTemplate {
-  id        String   @id
+  id        String   @id @default(cuid())
   role      String
   name      String
-  content   String
+  content   String   @db.Text
   createdAt DateTime @default(now())
-  updatedAt DateTime
+  updatedAt DateTime @updatedAt
 
   @@index([role])
 }
 
 model ArticleIdea {
-  id            String        @id
+  id            String        @id @default(cuid())
   title         String
   slug          String?
   targetKeyword String?
   archetype     String?
   status        ArticleStatus @default(DRAFT)
-  notes         String?
+  notes         String?       @db.Text
   createdAt     DateTime      @default(now())
-  updatedAt     DateTime
+  updatedAt     DateTime      @updatedAt
 
   @@index([status])
 }
 
 model Feedback {
-  id        String   @id
+  id        String   @id @default(cuid())
   userId    String
   category  String   @default("general")
-  text      String
+  text      String   @db.Text
   createdAt DateTime @default(now())
   User      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -66,7 +66,7 @@ model Lesson {
   title     String
   order     Int
   pieceType String
-  introText String
+  introText String @db.Text
   xpReward  Int    @default(15)
   Task      Task[]
 
@@ -74,33 +74,33 @@ model Lesson {
 }
 
 model SeoKeyword {
-  id        String   @id
+  id        String   @id @default(cuid())
   phrase    String   @unique
-  intent    String?
+  intent    String?  @db.Text
   archetype String?
-  notes     String?
+  notes     String?  @db.Text
   priority  Int      @default(1)
   createdAt DateTime @default(now())
-  updatedAt DateTime
+  updatedAt DateTime @updatedAt
 
   @@index([priority])
 }
 
 model SeoPage {
-  id            String   @id
+  id            String   @id @default(cuid())
   slug          String   @unique
   title         String
-  description   String
+  description   String   @db.Text
   ogTitle       String?
-  ogDescription String?
-  updatedAt     DateTime
+  ogDescription String?  @db.Text
+  updatedAt     DateTime @updatedAt
   createdAt     DateTime @default(now())
 
   @@index([slug])
 }
 
 model Session {
-  id           String   @id
+  id           String   @id @default(cuid())
   sessionToken String   @unique
   userId       String
   expires      DateTime
@@ -111,16 +111,16 @@ model Task {
   id              Int     @id @default(autoincrement())
   lessonId        String
   index           Int
-  instruction     String
+  instruction     String  @db.Text
   startingFen     String
   goalType        String
   targetSquare    String
   startSquare     String?
   validMoves      String
-  successMessage  String
-  failureDefault  String
-  failureSpecific String?
-  hintMessage     String
+  successMessage  String  @db.Text
+  failureDefault  String  @db.Text
+  failureSpecific String? @db.Text
+  hintMessage     String  @db.Text
   Lesson          Lesson  @relation(fields: [lessonId], references: [id], onDelete: Cascade)
 
   @@unique([lessonId, index])
@@ -128,7 +128,7 @@ model Task {
 }
 
 model User {
-  id                 String               @id
+  id                 String               @id @default(cuid())
   name               String?
   email              String               @unique
   emailVerified      DateTime?
@@ -136,7 +136,7 @@ model User {
   passwordHash       String?
   xp                 Int                  @default(0)
   createdAt          DateTime             @default(now())
-  updatedAt          DateTime
+  updatedAt          DateTime             @updatedAt
   feedbackGiven      Boolean              @default(false)
   lastActiveAt       DateTime?
   sessionCount       Int                  @default(0)
@@ -145,10 +145,11 @@ model User {
   Feedback           Feedback[]
   Session            Session[]
   UserLessonProgress UserLessonProgress[]
+  aiTasks            AiTask[]
 }
 
 model UserLessonProgress {
-  id          String   @id
+  id          String   @id @default(cuid())
   userId      String
   lessonSlug  String
   completedAt DateTime @default(now())
@@ -172,4 +173,29 @@ enum ArticleStatus {
   OUTLINED
   WRITING
   LIVE
+}
+
+enum AiTaskStatus {
+  PENDING // AI has responded, human not yet processed
+  ACCEPTED // human used it (fully or partially)
+  REJECTED // human decided not to use
+}
+
+model AiTask {
+  id          String       @id @default(cuid())
+  role        String // 'product' | 'seo' | 'writer' | 'designer' | 'dev'
+  scope       String // 'seoPage' | 'keyword' | 'article' | 'freeform'
+  targetId    String? // e.g. SeoPage.id, ArticleIdea.id
+  input       String       @db.Text // what the human asked
+  output      String?      @db.Text // AI answer
+  createdById String
+  createdAt   DateTime     @default(now())
+  reviewedAt  DateTime?
+  status      AiTaskStatus @default(PENDING)
+
+  createdBy User @relation(fields: [createdById], references: [id], onDelete: Cascade)
+
+  @@index([createdById])
+  @@index([status])
+  @@index([role])
 }
