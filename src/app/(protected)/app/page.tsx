@@ -193,6 +193,34 @@ export default async function DashboardPage() {
 
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8">
+        {/* NEW SCHOOL BANNER */}
+        <Link href="/school" className="block mb-6">
+          <div className="bg-gradient-to-r from-emerald-600 to-emerald-700 border border-emerald-500/30 rounded-2xl p-6 hover:from-emerald-500 hover:to-emerald-600 transition-all shadow-lg">
+            <div className="flex items-center justify-between gap-4">
+              <div className="flex-1">
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="text-2xl">🏫</span>
+                  <span className="text-xs font-semibold text-emerald-100 uppercase tracking-wide">
+                    NEW: The Russian School
+                  </span>
+                </div>
+                <h3 className="text-xl font-bold text-white tracking-tight mb-1">
+                  Try the Structured Chess School
+                </h3>
+                <p className="text-emerald-100 text-sm">
+                  9 lessons across 3 levels • Exams • Secret Cards • AI Coach
+                </p>
+              </div>
+              <div className="hidden sm:flex items-center gap-2 text-white font-semibold">
+                Enter School
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </div>
+            </div>
+          </div>
+        </Link>
+        
         {/* Alpha Banner (Sprint 04) */}
         <AlphaBanner />
         
