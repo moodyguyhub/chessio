@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { PlacementResult } from '@/lib/placement/types';
 import { getPlacementResult } from '@/lib/placement/storage';
+import { trackPlacementStarted, trackPlacementRetake } from '@/lib/placement/telemetry';
 import { PlacementRunner, PlacementResultScreen } from '@/components/school/PlacementRunner';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
@@ -38,6 +39,7 @@ export function PlacementPageClient({ exam }: PlacementPageClientProps) {
     if (typeof window !== "undefined") {
       window.localStorage.removeItem("chessio_placement_v1");
     }
+    trackPlacementRetake();
     setResult(null);
     setHasStarted(false);
   };
@@ -110,12 +112,12 @@ export function PlacementPageClient({ exam }: PlacementPageClientProps) {
               {/* Explanation */}
               <div className="rounded-lg border border-neutral-800 bg-neutral-900/50 px-5 py-4">
                 <p className="text-neutral-300 leading-relaxed">
-                  5 short positions, about 5–10 minutes.
+                  5 positions. 5 minutes.
                   <br />
                   <br />
-                  If you pass, we unlock the Chess School immediately.
+                  If you score 4 or 5, Pre-School is optional — we unlock the Chess School immediately.
                   <br />
-                  If not, we&apos;ll guide you to Pre-School first.
+                  If you score 3 or less, we start by rebuilding your foundation.
                 </p>
               </div>
 
@@ -142,7 +144,10 @@ export function PlacementPageClient({ exam }: PlacementPageClientProps) {
               <Button 
                 size="lg" 
                 className="w-full"
-                onClick={() => setHasStarted(true)}
+                onClick={() => {
+                  trackPlacementStarted();
+                  setHasStarted(true);
+                }}
               >
                 Begin Test
               </Button>

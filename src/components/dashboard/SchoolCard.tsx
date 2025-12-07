@@ -81,7 +81,7 @@ export function SchoolCard({ profile }: SchoolCardProps) {
         {isLocked ? (
           <>
             <p className="text-xs text-neutral-400">
-              Finish Pre-School or pass the Placement Test to unlock structured training with levels, exams, and your personal AI Coach.
+              Unlock Chess School by completing Pre-School <strong>or</strong> passing the 5-puzzle Placement Test.
             </p>
             
             <div className="space-y-2 pt-2">
@@ -106,7 +106,7 @@ export function SchoolCard({ profile }: SchoolCardProps) {
         ) : (
           <>
             <p className="text-xs text-neutral-400">
-              You&apos;re ready for serious training! Tackle Levels 1–3 with checks, tactics, endgames, exams, and secret rule cards.
+              <strong>Access granted:</strong> You&apos;ve proven you&apos;re ready. Tackle Levels 1–3 with checks, tactics, endgames, exams, and secret rule cards.
             </p>
             <ul className="space-y-1 text-xs text-neutral-400">
               <li className="flex items-center gap-2">

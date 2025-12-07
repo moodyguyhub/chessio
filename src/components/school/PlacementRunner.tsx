@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
 import { Alert, AlertDescription } from '@/components/ui/Alert';
 import { savePlacementResult } from '@/lib/placement/storage';
+import { trackPlacementCompleted } from '@/lib/placement/telemetry';
 import Link from 'next/link';
 
 interface PlacementRunnerProps {
@@ -94,6 +95,7 @@ export function PlacementRunner({ puzzles, passingScore, onComplete }: Placement
     };
 
     savePlacementResult(result);
+    trackPlacementCompleted(score, total, status);
     onComplete(result);
   };
 
