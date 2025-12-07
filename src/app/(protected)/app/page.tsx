@@ -16,6 +16,7 @@ import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import { PreSchoolFeedbackStrip } from "@/components/feedback/PreSchoolFeedbackStrip";
 import { TodaysGoalCard, AcademyGateCard } from "@/components/preschool/AnimatedCards";
+import Image from "next/image";
 
 export default async function DashboardPage() {
   const session = await auth();
@@ -206,8 +207,21 @@ export default async function DashboardPage() {
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8">
         {/* Chessio Pre-School banner */}
-        <section className="mb-6 rounded-2xl border border-chessio-border bg-chessio-card/80 px-4 py-4 sm:px-6 sm:py-5 shadow-sm flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-start gap-3">
+        {/* Chessio Pre-School banner with Academy teaser */}
+        <section className="mb-6 rounded-2xl border border-chessio-border bg-chessio-card/80 px-4 py-4 sm:px-6 sm:py-5 shadow-sm flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between relative overflow-hidden">
+          {/* Grand hall background - very subtle watermark on right */}
+          <div className="hidden lg:block absolute right-0 top-0 bottom-0 w-64 opacity-[0.06] pointer-events-none">
+            <Image
+              src="/academy/academy-grand-hall.jpg"
+              alt=""
+              fill
+              aria-hidden="true"
+              className="object-cover object-left"
+              sizes="256px"
+            />
+          </div>
+
+          <div className="flex items-start gap-3 relative z-10">
             <div className="mt-1 rounded-full bg-chessio-primary/10 p-2">
               <Sparkles className="h-5 w-5 text-chessio-primary" />
             </div>
@@ -241,7 +255,7 @@ export default async function DashboardPage() {
               </div>
             </div>
           </div>
-          <div className="flex flex-col items-stretch gap-2 sm:items-end">
+          <div className="flex flex-col items-stretch gap-2 sm:items-end relative z-10">
             <Link href="/school">
               <Button size="sm" className="inline-flex items-center gap-1 w-full">
                 Enter Chess School
@@ -307,7 +321,19 @@ export default async function DashboardPage() {
 
         {/* Today's Goal Card (Sprint 03) - Premium Hero with breathing animation */}
         <TodaysGoalCard>
-          <div className="flex items-start justify-between gap-4">
+          <div className="flex items-start justify-between gap-6">
+            {/* Study desk thumbnail - left side, subtle */}
+            <div className="hidden sm:block relative w-24 h-24 flex-shrink-0 rounded-xl overflow-hidden border border-chessio-border-dark/40">
+              <Image
+                src="/academy/academy-study-desk.jpg"
+                alt="A quiet chessboard under a single lamp, notebook and mug beside it"
+                fill
+                className="object-cover opacity-60"
+                sizes="96px"
+              />
+              <div className="absolute inset-0 bg-gradient-to-br from-black/60 via-black/40 to-transparent" />
+            </div>
+
             <div className="flex-1">
               <div className="flex items-center gap-2 mb-2">
                 <span className="text-chessio-primary">🎯</span>

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { LevelMeta } from '@/lib/school/levels';
 import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
@@ -94,12 +95,26 @@ export default function SchoolDashboard({ levels, unlockedLevels }: SchoolDashbo
         </Link>
       </div>
 
-      {/* Title Section */}
-      <div className="text-center space-y-3">
-        <h1 className="text-4xl font-bold tracking-tight">
+      {/* Title Section with Grand Hall backdrop */}
+      <div className="relative text-center space-y-3 py-12 px-6 rounded-3xl border border-chessio-border-dark/40 overflow-hidden">
+        {/* Grand Hall background */}
+        <div className="absolute inset-0 -z-10">
+          <Image
+            src="/academy/academy-grand-hall.jpg"
+            alt=""
+            fill
+            aria-hidden="true"
+            className="object-cover opacity-30"
+            sizes="(min-width: 1024px) 80vw, 100vw"
+          />
+          {/* Strong gradient overlay for text readability */}
+          <div className="absolute inset-0 bg-gradient-to-b from-black via-black/80 to-chessio-bg-dark" />
+        </div>
+
+        <h1 className="text-4xl font-bold tracking-tight text-white relative z-10">
           Chessio School
         </h1>
-        <p className="text-lg text-slate-400 max-w-2xl mx-auto">
+        <p className="text-lg text-neutral-300 max-w-2xl mx-auto relative z-10">
           &ldquo;We do not start with openings. We start with the truth.&rdquo;
         </p>
       </div>

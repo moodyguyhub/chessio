@@ -7,6 +7,7 @@
  * the user must take. It anchors the Dashboard as a war room, not a waiting room.
  * 
  * Phase 2.2: Enhanced with depth gradient and tracking for cinematic feel
+ * Phase 2.3: Added cathedral backdrop for sacred academy atmosphere
  */
 
 "use client";
@@ -15,6 +16,7 @@ import { Card, CardContent } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { motion, useReducedMotion } from "framer-motion";
 import { buttonHover, buttonTap } from "@/lib/motion";
+import Image from "next/image";
 
 export type DutyStatus =
   | 'new_user'          // No progress
@@ -201,6 +203,20 @@ export function ActiveDutyCard({
       data-testid="active-duty-card"
       data-status={status}
     >
+      {/* Cathedral backdrop - desktop only, deeply subtle (Phase 2.3) */}
+      <div className="hidden lg:block absolute inset-0 -z-10 pointer-events-none">
+        <Image
+          src="/academy/academy-cathedral-hero.jpg"
+          alt=""
+          fill
+          aria-hidden="true"
+          className="object-cover opacity-20 mix-blend-soft-light"
+          sizes="(min-width: 1024px) 40vw, 0px"
+        />
+        {/* Strong dark overlay to maintain text readability */}
+        <div className="absolute inset-0 bg-gradient-to-br from-black/80 via-slate-950/90 to-black/90" />
+      </div>
+
       {/* Enhanced overlay gradient for cinematic depth (Phase 2.2) */}
       <div 
         className="pointer-events-none absolute inset-0 opacity-40 mix-blend-soft-light bg-[radial-gradient(circle_at_top,_#4f46e5_0,_transparent_60%)]"

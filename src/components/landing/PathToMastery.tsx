@@ -4,6 +4,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import { staggerContainer, fadeInUp } from "@/lib/motion";
 import { Sparkles, GraduationCap, Users } from "lucide-react";
 import { Badge } from "@/components/ui/Badge";
+import Image from "next/image";
 
 export function PathToMastery() {
   const shouldReduceMotion = useReducedMotion();
@@ -33,16 +34,28 @@ export function PathToMastery() {
       };
 
   return (
-    <div className="max-w-3xl mx-auto space-y-8">
+    <div className="max-w-3xl mx-auto space-y-8 relative">
+      {/* Subtle ladder accent watermark on right side (desktop only) */}
+      <div className="absolute right-0 top-0 bottom-0 w-48 opacity-[0.03] pointer-events-none hidden lg:block">
+        <Image
+          src="/academy/academy-ladder.jpg"
+          alt=""
+          fill
+          aria-hidden="true"
+          className="object-cover object-left"
+          sizes="200px"
+        />
+      </div>
+
       {/* Section Header */}
-      <div className="text-center space-y-2">
+      <div className="text-center space-y-2 relative z-10">
         <h2 className="text-3xl sm:text-4xl font-bold text-neutral-50">The Path to Mastery</h2>
         <p className="text-sm text-neutral-400">Three stages. One curriculum.</p>
       </div>
 
       {/* Vertical Spine with 3 Nodes */}
       <motion.div
-        className="relative border-l-2 border-chessio-border/40 pl-8 space-y-12 mt-12"
+        className="relative border-l-2 border-chessio-border/40 pl-8 space-y-12 mt-12 z-10"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, margin: "-50px" }}

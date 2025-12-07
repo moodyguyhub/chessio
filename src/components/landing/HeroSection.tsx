@@ -3,6 +3,7 @@
 import { motion, useReducedMotion } from "framer-motion";
 import { fadeInUpGentle, staggerContainer, buttonHover, buttonTap } from "@/lib/motion";
 import Link from "next/link";
+import Image from "next/image";
 
 interface HeroSectionProps {
   isLoggedIn: boolean;
@@ -51,7 +52,7 @@ export function HeroSection({ isLoggedIn }: HeroSectionProps) {
         </div>
       </motion.div>
 
-      {/* Right: Ascent Visual with delayed entrance */}
+      {/* Right: Academy Ladder Visual with delayed entrance */}
       <motion.div
         className="relative mx-auto w-full max-w-[400px] md:max-w-none"
         initial="hidden"
@@ -70,14 +71,27 @@ export function HeroSection({ isLoggedIn }: HeroSectionProps) {
         }
       >
         {/* Decorative glow */}
-        <div className="absolute -inset-4 bg-blue-500/10 blur-3xl rounded-full" />
+        <div className="absolute -inset-4 bg-chessio-primary/10 blur-3xl rounded-full" />
 
-        {/* Placeholder container for "Ascent" visual - ladder/steps motif */}
-        <div className="relative bg-gradient-to-br from-slate-900 via-slate-900 to-blue-950/30 border border-slate-800 rounded-2xl shadow-2xl p-8 min-h-[400px] flex items-center justify-center">
-          <div className="space-y-4 text-center">
-            <div className="text-6xl">🏔️</div>
-            <div className="text-sm text-slate-400 font-medium tracking-wide">THE ASCENT</div>
-            <div className="text-xs text-slate-500 max-w-[200px] mx-auto">
+        {/* Academy Ladder Image Container */}
+        <div className="relative overflow-hidden rounded-3xl border border-chessio-border-dark/40 bg-chessio-card-dark shadow-2xl aspect-[4/5]">
+          <Image
+            src="/academy/academy-ladder.jpg"
+            alt="Chess pieces ascending a carved staircase toward the king, representing the path to mastery"
+            fill
+            priority
+            className="object-cover"
+            sizes="(min-width: 768px) 40vw, 90vw"
+          />
+          {/* Dark gradient overlay for depth and text readability */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
+          
+          {/* Overlay text */}
+          <div className="absolute bottom-0 left-0 right-0 p-6 space-y-2">
+            <div className="text-sm text-chessio-primary font-bold tracking-wide uppercase">
+              The Ascent
+            </div>
+            <div className="text-xs text-neutral-300 max-w-[280px]">
               15 levels. One curriculum. From beginner to advanced.
             </div>
           </div>
