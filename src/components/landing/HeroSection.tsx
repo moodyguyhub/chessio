@@ -56,7 +56,7 @@ export function HeroSection({ isLoggedIn }: HeroSectionProps) {
         </div>
       </motion.div>
 
-      {/* Right: Academy Ladder Visual with delayed entrance */}
+      {/* Right: Academy Ladder Visual with delayed entrance + sacred artifact glow */}
       <motion.div
         className="relative mx-auto w-full max-w-[400px] md:max-w-none"
         initial="hidden"
@@ -75,11 +75,40 @@ export function HeroSection({ isLoggedIn }: HeroSectionProps) {
               }
         }
       >
-        {/* Decorative glow */}
-        <div className="absolute -inset-4 bg-chessio-primary/10 blur-3xl rounded-full" />
+        {/* Decorative outer glow - warm candlelight */}
+        <div className="absolute -inset-4 bg-amber-400/8 blur-3xl rounded-full" />
 
-        {/* Academy Ladder Image Container */}
-        <div className="relative overflow-hidden rounded-3xl border border-chessio-border-dark/40 bg-chessio-card-dark shadow-2xl aspect-[4/5]">
+        {/* Academy Ladder Image Container with sacred artifact glow */}
+        <motion.div 
+          className="relative overflow-hidden rounded-3xl border border-amber-200/15 shadow-2xl aspect-[4/5]"
+          style={{
+            background: "linear-gradient(to bottom, #020617, #000000, #020617)",
+            boxShadow: "0 0 60px rgba(251, 191, 36, 0.12)",
+          }}
+          animate={
+            shouldReduceMotion
+              ? undefined
+              : {
+                  boxShadow: [
+                    "0 0 40px rgba(251, 191, 36, 0.10)",
+                    "0 0 60px rgba(251, 191, 36, 0.18)",
+                    "0 0 40px rgba(251, 191, 36, 0.10)",
+                  ],
+                }
+          }
+          transition={
+            shouldReduceMotion
+              ? undefined
+              : {
+                  boxShadow: {
+                    duration: 5,
+                    repeat: Infinity,
+                    repeatType: "reverse",
+                    ease: "easeInOut",
+                  },
+                }
+          }
+        >
           <Image
             src="/academy/academy-ladder.jpg"
             alt="Chess pieces ascending a carved staircase toward the king, representing the path to mastery"
@@ -88,6 +117,17 @@ export function HeroSection({ isLoggedIn }: HeroSectionProps) {
             className="object-cover"
             sizes="(min-width: 768px) 40vw, 90vw"
           />
+          
+          {/* Golden glow emanating from the top (king/staircase) */}
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0"
+            style={{
+              background: "radial-gradient(circle at 50% 10%, rgba(252, 211, 77, 0.35), transparent 55%)",
+              mixBlendMode: "screen",
+            }}
+          />
+          
           {/* Dark gradient overlay for depth and text readability */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
           
@@ -100,7 +140,7 @@ export function HeroSection({ isLoggedIn }: HeroSectionProps) {
               15 levels. One curriculum. From beginner to advanced.
             </div>
           </div>
-        </div>
+        </motion.div>
       </motion.div>
     </div>
   );
