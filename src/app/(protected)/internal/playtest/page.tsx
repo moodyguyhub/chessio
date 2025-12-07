@@ -56,7 +56,7 @@ export default async function PlaytestPage() {
       createdAt: true,
       levelAtTime: true,
       lessonSlug: true,
-      user: {
+      User: {
         select: {
           email: true,
           name: true,
@@ -200,7 +200,7 @@ export default async function PlaytestPage() {
                           })}
                         </td>
                         <td className="py-3 px-4 text-slate-900 font-medium">
-                          {feedback.user.name || feedback.user.email}
+                          {feedback.User.name || feedback.User.email}
                         </td>
                         <td className="py-3 px-4 text-center">
                           <span className="inline-block px-2 py-1 bg-emerald-100 text-emerald-800 rounded text-xs font-medium">
