@@ -1,15 +1,46 @@
 import { MODEL_REASONING, MODEL_CHEAP } from "@/lib/ai-config";
+import { db } from "@/lib/db";
 
 export const runtime = "nodejs";
 
 export default async function AdminDashboard() {
-  // Static placeholders to avoid DB runtime issues in production
-  const pageCount = 0;
-  const keywordCount = 0;
-  const articleCount = 0;
-  const promptCount = 0;
-  const totalTasks = 0;
-  const acceptedTasks = 0;
+  // Fetch live stats from production DB with error fallback
+  let pageCount = 0;
+  let keywordCount = 0;
+  let articleCount = 0;
+  let promptCount = 0;
+  let totalTasks = 0;
+  let acceptedTasks = 0;
+
+  try {
+    const [pages, keywords, articles, prompts, tasks] = await Promise.all([
+      db.seoPage.count(),
+      db.seoKeyword.count(),
+      db.articleIdea.count(),
+      db.aiPromptTemplate.count(),
+      db.aiTask.findMany({
+        where: {
+          createdAt: {
+            gte: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000), // Last 7 days
+          },
+        },
+        select: {
+          status: true,
+        },
+      }),
+    ]);
+
+    pageCount = pages;
+    keywordCount = keywords;
+    articleCount = articles;
+    promptCount = prompts;
+    totalTasks = tasks.length;
+    acceptedTasks = tasks.filter((t) => t.status === "ACCEPTED").length;
+  } catch (error) {
+    console.error("Admin dashboard DB error:", error);
+    // Stats remain at 0 if DB fails
+  }
+
   const acceptanceRate = totalTasks > 0 ? Math.round((acceptedTasks / totalTasks) * 100) : 0;
   
   // For now, estimate model mix (will be accurate once we log model in DB)

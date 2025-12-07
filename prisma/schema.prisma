@@ -6,66 +6,157 @@ datasource db {
   provider = "postgresql"
 }
 
-// ============================================
-// AUTH MODELS (NextAuth Prisma Adapter)
-// ============================================
-
-model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String    @unique
-  emailVerified DateTime?
-  image         String?
-  passwordHash  String? // For credentials auth
-
-  // Gamification
-  xp Int @default(0)
-
-  // Engagement & Retention (Sprint 03)
-  lastActiveAt DateTime? // Last time user was active
-  sessionCount Int       @default(0) // Number of unique daily sessions
-
-  // Beta Voice (XP Bounty)
-  feedbackGiven Boolean @default(false)
-
-  // Admin access (internal only)
-  role String @default("USER") // "USER" | "ADMIN"
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  accounts       Account[]
-  sessions       Session[]
-  lessonProgress UserLessonProgress[]
-  feedback       Feedback[]
-  aiTasks        AiTask[]
-}
-
 model Account {
-  id                String  @id @default(cuid())
+  id                String  @id
   userId            String
   type              String
   provider          String
   providerAccountId String
-  refresh_token     String? @db.Text
-  access_token      String? @db.Text
+  refresh_token     String?
+  access_token      String?
   expires_at        Int?
   token_type        String?
   scope             String?
-  id_token          String? @db.Text
+  id_token          String?
   session_state     String?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  User              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
 }
 
+model AiPromptTemplate {
+  id        String   @id
+  role      String
+  name      String
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime
+
+  @@index([role])
+}
+
+model ArticleIdea {
+  id            String        @id
+  title         String
+  slug          String?
+  targetKeyword String?
+  archetype     String?
+  status        ArticleStatus @default(DRAFT)
+  notes         String?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime
+
+  @@index([status])
+}
+
+model Feedback {
+  id        String   @id
+  userId    String
+  category  String   @default("general")
+  text      String
+  createdAt DateTime @default(now())
+  User      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model Lesson {
+  id        String @id
+  slug      String @unique
+  title     String
+  order     Int
+  pieceType String
+  introText String
+  xpReward  Int    @default(15)
+  Task      Task[]
+
+  @@index([order])
+}
+
+model SeoKeyword {
+  id        String   @id
+  phrase    String   @unique
+  intent    String?
+  archetype String?
+  notes     String?
+  priority  Int      @default(1)
+  createdAt DateTime @default(now())
+  updatedAt DateTime
+
+  @@index([priority])
+}
+
+model SeoPage {
+  id            String   @id
+  slug          String   @unique
+  title         String
+  description   String
+  ogTitle       String?
+  ogDescription String?
+  updatedAt     DateTime
+  createdAt     DateTime @default(now())
+
+  @@index([slug])
+}
+
 model Session {
-  id           String   @id @default(cuid())
+  id           String   @id
   sessionToken String   @unique
   userId       String
   expires      DateTime
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  User         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Task {
+  id              Int     @id @default(autoincrement())
+  lessonId        String
+  index           Int
+  instruction     String
+  startingFen     String
+  goalType        String
+  targetSquare    String
+  startSquare     String?
+  validMoves      String
+  successMessage  String
+  failureDefault  String
+  failureSpecific String?
+  hintMessage     String
+  Lesson          Lesson  @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+
+  @@unique([lessonId, index])
+  @@index([lessonId])
+}
+
+model User {
+  id                 String               @id
+  name               String?
+  email              String               @unique
+  emailVerified      DateTime?
+  image              String?
+  passwordHash       String?
+  xp                 Int                  @default(0)
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime
+  feedbackGiven      Boolean              @default(false)
+  lastActiveAt       DateTime?
+  sessionCount       Int                  @default(0)
+  role               String               @default("USER")
+  Account            Account[]
+  Feedback           Feedback[]
+  Session            Session[]
+  UserLessonProgress UserLessonProgress[]
+}
+
+model UserLessonProgress {
+  id          String   @id
+  userId      String
+  lessonSlug  String
+  completedAt DateTime @default(now())
+  hintsUsed   Int      @default(0)
+  User        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, lessonSlug])
+  @@index([userId])
 }
 
 model VerificationToken {
@@ -76,167 +167,9 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
-// ============================================
-// LESSON MODELS (Level 0 MVP)
-// ============================================
-
-model Lesson {
-  id        String @id // e.g. "level-0-lesson-1-board"
-  slug      String @unique
-  title     String
-  order     Int // Ordering within level
-  pieceType String // "Board", "Rook", "Bishop", etc.
-  introText String @db.Text // 3-sentence explanation
-  xpReward  Int    @default(15)
-
-  tasks Task[]
-
-  @@index([order])
-}
-
-model Task {
-  id       Int    @id @default(autoincrement())
-  lessonId String
-  lesson   Lesson @relation(fields: [lessonId], references: [id], onDelete: Cascade)
-
-  index       Int // 1, 2, 3 within lesson
-  instruction String @db.Text
-
-  startingFen String // FEN for this task's board state
-
-  goalType     String // "move" | "capture" | "select"
-  targetSquare String // e.g. "e8" - the goal square
-  startSquare  String? // e.g. "e1" - where the piece starts (for move tasks)
-
-  validMoves String // JSON array of valid moves, e.g. ["e1-e2", "e1-e3"]
-
-  successMessage  String  @db.Text
-  failureDefault  String  @db.Text
-  failureSpecific String? @db.Text // JSON map for specific wrong moves, e.g. {"e1-h4": "Rooks can't move diagonally!"}
-  hintMessage     String  @db.Text
-
-  @@unique([lessonId, index])
-  @@index([lessonId])
-}
-
-model UserLessonProgress {
-  id         String @id @default(cuid())
-  userId     String
-  lessonSlug String // Matches slug from lessons.ts (source of truth for Level 0)
-
-  completedAt DateTime @default(now())
-  hintsUsed   Int      @default(0)
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@unique([userId, lessonSlug])
-  @@index([userId])
-}
-
-// ============================================
-// BETA VOICE (XP BOUNTY) - Feedback System
-// Sprint 04: Enhanced with context fields
-// ============================================
-
-model Feedback {
-  id          String   @id @default(cuid())
-  userId      String
-  text        String   @db.Text
-  category    String   @default("general") // "bug", "suggestion", "praise", "general"
-  levelAtTime Int      @default(0) // User's level when feedback was given
-  lessonSlug  String? // Optional: lesson/puzzle context
-  createdAt   DateTime @default(now())
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@index([userId])
-  @@index([createdAt])
-}
-
-// ============================================
-// CALM ADMIN - Internal SEO & Content System
-// Not exposed to end users, keeps team operations calm
-// ============================================
-
-model SeoPage {
-  id            String   @id @default(cuid())
-  slug          String   @unique // 'home', 'login', 'about', etc.
-  title         String
-  description   String   @db.Text
-  ogTitle       String?
-  ogDescription String?  @db.Text
-  updatedAt     DateTime @updatedAt
-  createdAt     DateTime @default(now())
-
-  @@index([slug])
-}
-
-model SeoKeyword {
-  id        String   @id @default(cuid())
-  phrase    String   @unique
-  intent    String?  @db.Text // e.g. "chess for anxious beginners"
-  archetype String? // 'Returning Adult' | 'True Beginner' | 'Quiet Worker'
-  notes     String?  @db.Text
-  priority  Int      @default(1)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([priority])
-}
-
-model ArticleIdea {
-  id            String        @id @default(cuid())
-  title         String
-  slug          String?
-  targetKeyword String?
-  archetype     String? // same three archetypes
-  status        ArticleStatus @default(DRAFT)
-  notes         String?       @db.Text // outline, angle, examples
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @updatedAt
-
-  @@index([status])
-}
-
 enum ArticleStatus {
   DRAFT
   OUTLINED
   WRITING
   LIVE
-}
-
-model AiPromptTemplate {
-  id        String   @id @default(cuid())
-  role      String // 'product' | 'seo' | 'writer' | 'designer' | 'dev'
-  name      String // e.g. "Calm SEO Copilot"
-  content   String   @db.Text // the long prompt text
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([role])
-}
-
-model AiTask {
-  id          String       @id @default(cuid())
-  role        String // 'product' | 'seo' | 'writer' | 'designer' | 'dev'
-  scope       String // 'seoPage' | 'keyword' | 'article' | 'freeform'
-  targetId    String? // e.g. SeoPage.id, ArticleIdea.id
-  input       String       @db.Text // what the human asked
-  output      String?      @db.Text // AI answer
-  createdById String
-  createdAt   DateTime     @default(now())
-  reviewedAt  DateTime?
-  status      AiTaskStatus @default(PENDING)
-
-  createdBy User @relation(fields: [createdById], references: [id], onDelete: Cascade)
-
-  @@index([createdById])
-  @@index([status])
-  @@index([role])
-}
-
-enum AiTaskStatus {
-  PENDING // AI has responded, human not yet processed
-  ACCEPTED // human used it (fully or partially)
-  REJECTED // human decided not to use
 }
