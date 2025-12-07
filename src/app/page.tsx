@@ -1,11 +1,9 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { Chessboard } from "@/components/chess";
 import { ChessioLogo } from "@/components/brand/ChessioLogo";
 import { db } from "@/lib/db";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/Card";
-import { Button } from "@/components/ui/Button";
-import { Sparkles, GraduationCap, Users, Lock } from "lucide-react";
+import { Badge } from "@/components/ui/Badge";
+import { Sparkles, GraduationCap, Users } from "lucide-react";
 import { LandingCTA } from "@/components/landing/LandingCTA";
 import { auth } from "@/lib/auth";
 
@@ -75,149 +73,125 @@ export default async function LandingPage() {
 
       {/* Hero Section */}
       <main className="container mx-auto px-4 py-12 md:py-20">
-        <div className="grid lg:grid-cols-2 gap-12 items-center max-w-6xl mx-auto">
+        <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center max-w-6xl mx-auto">
           {/* Left: Text Content */}
-          <div className="text-center lg:text-left">
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight text-neutral-50">
-              <span className="block">Learn chess calmly.</span>
-              <span className="block text-amber-200">One confident move at a time.</span>
+          <div className="space-y-6">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-neutral-50">
+              Stop Playing Random Moves.
             </h1>
-            <p className="mt-4 text-base sm:text-lg text-neutral-400 max-w-xl">
-              Short, guided sessions that start from zero. No timers, no pressure — just you, the board, and one simple idea per lesson.
+            <p className="text-lg sm:text-xl text-neutral-300 leading-relaxed">
+              A structured, 15-level chess academy that takes you from absolute beginner to advanced club player. One path. No noise.
             </p>
-            <div className="mt-8 flex flex-col items-center gap-3 lg:items-start">
-              <LandingCTA isLoggedIn={isLoggedIn} />
+            <p className="text-sm text-neutral-400">
+              Guided by an AI coach who explains ideas, not just lines.
+            </p>
+            <div className="flex flex-col sm:flex-row items-start gap-4 pt-2">
               <Link
-                href="#how-it-works"
-                className="text-sm text-neutral-400 hover:text-neutral-200 transition-colors"
+                href={isLoggedIn ? "/school/placement" : "/login?redirect=/school/placement"}
+                className="inline-flex items-center justify-center rounded-lg bg-chessio-primary px-8 py-3.5 text-base font-semibold text-white shadow-lg hover:bg-chessio-primary/90 transition-all"
+                data-testid="landing-cta-evaluation"
               >
-                See how Chessio works →
+                Start Evaluation
+              </Link>
+              <Link
+                href={isLoggedIn ? "/app" : "/login?redirect=/app"}
+                className="inline-flex items-center justify-center text-sm text-neutral-400 hover:text-neutral-200 transition-colors underline-offset-4 hover:underline"
+              >
+                I don&apos;t know the rules yet →
               </Link>
             </div>
           </div>
 
-          {/* Right: Hero Board */}
-          <div className="relative mx-auto w-full max-w-[400px] lg:max-w-none">
-            {/* Decorative glow blob */}
-            <div className="absolute -inset-4 bg-amber-400/10 blur-3xl rounded-full" />
+          {/* Right: Ascent Visual Placeholder */}
+          <div className="relative mx-auto w-full max-w-[400px] md:max-w-none">
+            {/* Decorative glow */}
+            <div className="absolute -inset-4 bg-blue-500/10 blur-3xl rounded-full" />
             
-            <div className="relative bg-neutral-900 border border-neutral-800 rounded-2xl shadow-lg p-4">
-              <Chessboard 
-                fen="rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1"
-                state={{ isDisabled: true }}
-                highlights={{ "e4": "success", "e2": "hint" }}
-              />
+            {/* Placeholder container for "Ascent" visual - ladder/steps motif */}
+            <div className="relative bg-gradient-to-br from-slate-900 via-slate-900 to-blue-950/30 border border-slate-800 rounded-2xl shadow-2xl p-8 min-h-[400px] flex items-center justify-center">
+              <div className="space-y-4 text-center">
+                <div className="text-6xl">🏔️</div>
+                <div className="text-sm text-slate-400 font-medium tracking-wide">THE ASCENT</div>
+                <div className="text-xs text-slate-500 max-w-[200px] mx-auto">15 levels. One curriculum. From beginner to advanced.</div>
+              </div>
             </div>
           </div>
         </div>
       </main>
 
-      {/* Education ladder choice */}
-      <section className="py-16 bg-neutral-900/50">
+      {/* Path to Mastery - Vertical Ladder */}
+      <section id="path-to-mastery" className="py-16 bg-neutral-900/50">
         <div className="container mx-auto px-4">
-          <h2 className="text-2xl sm:text-3xl font-semibold text-neutral-50 mb-2 font-[family-name:var(--font-nunito)]">
-            Choose your starting point
-          </h2>
-          <p className="text-sm sm:text-base text-neutral-400 mb-8 max-w-2xl">
-            New to chess? Start in Pre-School. Played before or serious about improving? Jump straight into Chess School.
-          </p>
+          <div className="max-w-3xl mx-auto space-y-8">
+            {/* Section Header */}
+            <div className="text-center space-y-2">
+              <h2 className="text-3xl sm:text-4xl font-bold text-neutral-50">
+                The Path to Mastery
+              </h2>
+              <p className="text-sm text-neutral-400">
+                Three stages. One curriculum.
+              </p>
+            </div>
 
-          <div className="grid gap-4 md:grid-cols-3">
-            {/* Pre-School */}
-            <Card className="flex flex-col border-neutral-800 bg-neutral-900/80">
-              <CardHeader className="flex flex-row items-center gap-2 pb-2">
-                <div className="rounded-full bg-amber-400/10 p-2">
-                  <Sparkles className="h-5 w-5 text-amber-400" />
+            {/* Vertical Spine with 3 Nodes */}
+            <div className="relative border-l-2 border-chessio-border/40 pl-8 space-y-12 mt-12">
+              
+              {/* Node 1: Sandbox (Pre-School) */}
+              <div className="relative">
+                <div className="absolute -left-[33px] top-0 flex h-8 w-8 items-center justify-center rounded-full bg-amber-500/10 border-2 border-amber-500/40">
+                  <Sparkles className="h-4 w-4 text-amber-300" />
                 </div>
-                <div>
-                  <CardTitle className="text-sm sm:text-base">Pre-School</CardTitle>
-                  <CardDescription className="text-xs sm:text-[13px]">
-                    Absolute beginners, kids, and sandbox play.
-                  </CardDescription>
+                <div className="space-y-2">
+                  <h3 className="text-xl font-semibold text-neutral-50">
+                    The Sandbox — Pre-School
+                  </h3>
+                  <p className="text-sm text-neutral-400 leading-relaxed">
+                    Mechanics & safety. For total beginners. Learn how the pieces move in a stress-free environment.
+                  </p>
                 </div>
-              </CardHeader>
-              <CardContent className="flex-1 pt-2">
-                <ul className="space-y-1.5 text-xs sm:text-[13px] text-neutral-400">
-                  <li>• Learn how the pieces move</li>
-                  <li>• Simple mates & board familiarity</li>
-                  <li>• Zero pressure, just exploration</li>
-                </ul>
-              </CardContent>
-              <CardFooter>
-                <Link href="/app" className="w-full">
-                  <Button size="sm" variant="outline" className="w-full justify-center">
-                    Enter Pre-School
-                  </Button>
-                </Link>
-              </CardFooter>
-            </Card>
+              </div>
 
-            {/* Chess School */}
-            <Card className="flex flex-col border-amber-400/40 bg-neutral-900/90 shadow-md shadow-amber-400/10">
-              <CardHeader className="flex flex-row items-center gap-2 pb-2">
-                <div className="rounded-full bg-amber-400/10 p-2">
-                  <GraduationCap className="h-5 w-5 text-amber-400" />
+              {/* Node 2: Academy (Levels 1-15) */}
+              <div className="relative">
+                <div className="absolute -left-[33px] top-0 flex h-8 w-8 items-center justify-center rounded-full bg-indigo-500/10 border-2 border-indigo-500/40">
+                  <GraduationCap className="h-4 w-4 text-indigo-300" />
                 </div>
-                <div>
-                  <CardTitle className="text-sm sm:text-base">Chess School</CardTitle>
-                  <CardDescription className="text-xs sm:text-[13px]">
-                    Structured levels, exams & Russian-style coaching.
-                  </CardDescription>
+                <div className="space-y-3">
+                  <div className="flex items-center gap-3">
+                    <h3 className="text-xl font-semibold text-neutral-50">
+                      The Academy — Levels 1–15
+                    </h3>
+                    <Badge variant="secondary" className="text-xs">
+                      Current: Levels 1–3 live
+                    </Badge>
+                  </div>
+                  <p className="text-sm text-neutral-400 leading-relaxed">
+                    The core curriculum. Tactics, endgames, strategy. You do not advance until you pass the evaluations.
+                  </p>
                 </div>
-              </CardHeader>
-              <CardContent className="flex-1 pt-2">
-                <ul className="space-y-1.5 text-xs sm:text-[13px] text-neutral-400">
-                  <li>• Levels 1–3: checks, tactics, endgames</li>
-                  <li>• XP, exams & secret rule cards</li>
-                  <li>• Built-in AI Coach for questions</li>
-                </ul>
-              </CardContent>
-              <CardFooter>
-                <Link href="/school" className="w-full">
-                  <Button size="sm" className="w-full justify-center">
-                    Enter Chess School
-                  </Button>
-                </Link>
-              </CardFooter>
-            </Card>
+              </div>
 
-            {/* Club – coming soon */}
-            <Card className="flex flex-col border-dashed border-neutral-800 bg-neutral-900/60 opacity-80">
-              <CardHeader className="flex flex-row items-center gap-2 pb-2">
-                <div className="rounded-full bg-neutral-700/10 p-2">
-                  <Users className="h-5 w-5 text-neutral-500" />
+              {/* Node 3: Club (Coming Soon) */}
+              <div className="relative">
+                <div className="absolute -left-[33px] top-0 flex h-8 w-8 items-center justify-center rounded-full bg-yellow-500/10 border-2 border-yellow-500/40">
+                  <Users className="h-4 w-4 text-yellow-300" />
                 </div>
-                <div>
-                  <CardTitle className="text-sm sm:text-base">
-                    Chessio Club
-                  </CardTitle>
-                  <CardDescription className="text-xs sm:text-[13px]">
-                    Coming soon – your training dojo.
-                  </CardDescription>
+                <div className="space-y-3">
+                  <div className="flex items-center gap-3">
+                    <h3 className="text-xl font-semibold text-neutral-50">
+                      The Club — Coming Soon
+                    </h3>
+                    <Badge variant="secondary" className="text-xs text-neutral-500">
+                      Coming soon
+                    </Badge>
+                  </div>
+                  <p className="text-sm text-neutral-400 leading-relaxed">
+                    Sparring, tournaments, and study groups for proven students. Apply what you&apos;ve learned.
+                  </p>
                 </div>
-              </CardHeader>
-              <CardContent className="flex-1 pt-2">
-                <ul className="space-y-1.5 text-xs sm:text-[13px] text-neutral-500">
-                  <li>• Study groups & live events</li>
-                  <li>• Sparring games & reviews</li>
-                  <li>• Seasonal challenges & rankings</li>
-                </ul>
-                <p className="text-[11px] text-neutral-600 mt-3">
-                  Want early access? Mention &apos;Club&apos; in any feedback box – we&apos;ll prioritize you.
-                </p>
-              </CardContent>
-              <CardFooter>
-                <Button
-                  size="sm"
-                  variant="outline"
-                  disabled
-                  className="w-full justify-center cursor-not-allowed opacity-60"
-                >
-                  <Lock className="mr-2 h-4 w-4" />
-                  Coming soon
-                </Button>
-              </CardFooter>
-            </Card>
+              </div>
+
+            </div>
           </div>
         </div>
       </section>

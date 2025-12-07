@@ -148,7 +148,7 @@ export default async function DashboardPage() {
   const level2ProgressPercent = level2TotalLessons > 0 ? Math.round((level2CompletedCount / level2TotalLessons) * 100) : 0;
 
   return (
-    <div className="min-h-screen bg-chessio-bg-dark">
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-amber-950/10">
       {/* Header - Sticky Glassmorphism */}
       <header className="sticky top-0 z-50 glass-panel border-b border-chessio-border-dark">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
@@ -261,9 +261,6 @@ export default async function DashboardPage() {
             </p>
           </div>
         </section>
-        
-        {/* Pre-School Feedback Strip */}
-        <PreSchoolFeedbackStrip />
         
         {/* Alpha Banner (Sprint 04) */}
         <AlphaBanner />
@@ -391,7 +388,7 @@ export default async function DashboardPage() {
               <div>
                 <p className="text-amber-100 text-sm font-medium">Level 0</p>
                 <h2 className="text-2xl font-bold text-white tracking-tight mt-1">Learn the Pieces</h2>
-                <p className="text-amber-100/80 text-xs mt-1">Start here if you're new or rusty. {level0Lessons.length} snack-sized lessons.</p>
+                <p className="text-amber-100/80 text-xs mt-1">Start here if you&apos;re new or rusty. {level0Lessons.length} snack-sized lessons.</p>
               </div>
               <div className="text-right">
                 <p className="text-amber-100 text-sm">Progress</p>
@@ -777,6 +774,51 @@ export default async function DashboardPage() {
           </div>
         </div>
         )}
+
+        {/* Academy Gate Card - Bottom Section */}
+        <div className="mt-12 mb-6 max-w-2xl mx-auto">
+          <div className="rounded-2xl border-2 border-blue-500/30 bg-gradient-to-br from-slate-900 to-blue-950/20 p-6 shadow-lg">
+            <div className="flex items-start gap-4">
+              <div className="rounded-full bg-blue-500/10 p-3">
+                <Sparkles className="h-6 w-6 text-blue-400" />
+              </div>
+              <div className="flex-1">
+                <h3 className="text-xl font-bold text-white mb-2">
+                  The Academy Gate
+                </h3>
+                <p className="text-sm text-slate-300 mb-4">
+                  Complete the basic mechanics here to unlock the Chess School curriculum.
+                  {level0Complete && level1Complete ? (
+                    <span className="block mt-2 text-emerald-400 font-medium">
+                      ✓ Pre-School complete! The Academy awaits.
+                    </span>
+                  ) : (
+                    <span className="block mt-2 text-blue-300">
+                      {level0CompletedCount + level1CompletedCount} of {level0TotalLessons + level1TotalLessons} lessons complete
+                    </span>
+                  )}
+                </p>
+                {level0Complete && level1Complete ? (
+                  <Link href="/school">
+                    <Button size="sm" className="inline-flex items-center gap-2">
+                      Go to School
+                      <ArrowRight className="h-4 w-4" />
+                    </Button>
+                  </Link>
+                ) : (
+                  <Badge variant="secondary" className="text-xs">
+                    Unlocked after completing Pre-School
+                  </Badge>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Pre-School Feedback Strip - De-emphasized at bottom */}
+        <div className="mt-8">
+          <PreSchoolFeedbackStrip />
+        </div>
       </main>
 
       {/* Floating Feedback Button */}

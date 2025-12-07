@@ -1,0 +1,81 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - banner [ref=e3]:
+      - navigation [ref=e4]:
+        - link [ref=e5] [cursor=pointer]:
+          - /url: /
+          - img [ref=e6]:
+            - generic [ref=e14]: Chessio
+        - generic [ref=e16]:
+          - link "Log in" [ref=e17] [cursor=pointer]:
+            - /url: /login
+          - link "Start Learning" [ref=e18] [cursor=pointer]:
+            - /url: /register
+    - main [ref=e19]:
+      - generic [ref=e20]:
+        - generic [ref=e21]:
+          - heading "Stop Playing Random Moves." [level=1] [ref=e22]
+          - paragraph [ref=e23]: A structured, 15-level chess academy that takes you from absolute beginner to advanced club player. One path. No noise.
+          - paragraph [ref=e24]: Guided by an AI coach who explains ideas, not just lines.
+          - generic [ref=e25]:
+            - link "Start Evaluation" [ref=e26] [cursor=pointer]:
+              - /url: /login?redirect=/school/placement
+            - link "I don't know the rules yet →" [ref=e27] [cursor=pointer]:
+              - /url: /login?redirect=/app
+        - generic [ref=e31]:
+          - generic [ref=e32]: 🏔️
+          - generic [ref=e33]: THE ASCENT
+          - generic [ref=e34]: 15 levels. One curriculum. From beginner to advanced.
+    - generic [ref=e37]:
+      - generic [ref=e38]:
+        - heading "The Path to Mastery" [level=2] [ref=e39]
+        - paragraph [ref=e40]: Three stages. One curriculum.
+      - generic [ref=e41]:
+        - generic [ref=e42]:
+          - img [ref=e44]
+          - generic [ref=e47]:
+            - heading "The Sandbox — Pre-School" [level=3] [ref=e48]
+            - paragraph [ref=e49]: Mechanics & safety. For total beginners. Learn how the pieces move in a stress-free environment.
+        - generic [ref=e50]:
+          - img [ref=e52]
+          - generic [ref=e55]:
+            - generic [ref=e56]:
+              - heading "The Academy — Levels 1–15" [level=3] [ref=e57]
+              - generic [ref=e58]: "Current: Levels 1–3 live"
+            - paragraph [ref=e59]: The core curriculum. Tactics, endgames, strategy. You do not advance until you pass the evaluations.
+        - generic [ref=e60]:
+          - img [ref=e62]
+          - generic [ref=e67]:
+            - generic [ref=e68]:
+              - heading "The Club — Coming Soon" [level=3] [ref=e69]
+              - generic [ref=e70]: Coming soon
+            - paragraph [ref=e71]: Sparring, tournaments, and study groups for proven students. Apply what you've learned.
+    - generic [ref=e73]:
+      - heading "How It Works" [level=2] [ref=e74]
+      - generic [ref=e75]:
+        - generic [ref=e76]:
+          - generic [ref=e77]: 🎯
+          - heading "1. Learn One Piece at a Time" [level=3] [ref=e78]
+          - paragraph [ref=e79]: Start with the basics. Each lesson focuses on one piece or concept, so you never feel overwhelmed.
+        - generic [ref=e80]:
+          - generic [ref=e81]: ✨
+          - heading "2. Practice with Instant Feedback" [level=3] [ref=e82]
+          - paragraph [ref=e83]: Make moves on an interactive board. Get friendly hints when stuck, never harsh judgments.
+        - generic [ref=e84]:
+          - generic [ref=e85]: 🏆
+          - heading "3. Earn XP & Level Up" [level=3] [ref=e86]
+          - paragraph [ref=e87]: Complete lessons to earn experience points. Watch your skills grow lesson by lesson.
+    - generic [ref=e89]:
+      - heading "Ready to make your first move?" [level=2] [ref=e90]
+      - paragraph [ref=e91]: Join thousands of beginners learning chess the stress-free way.
+      - link "Start your first lesson" [ref=e92] [cursor=pointer]:
+        - /url: /login?redirect=/dashboard
+    - contentinfo [ref=e93]:
+      - paragraph [ref=e95]: ♟️ Chessio — Learn chess, one move at a time.
+  - button "Open Next.js Dev Tools" [ref=e101] [cursor=pointer]:
+    - img [ref=e102]
+  - alert [ref=e105]
+```

@@ -47,7 +47,7 @@ export function PlacementPageClient({ exam }: PlacementPageClientProps) {
   // Show result screen if already taken
   if (result) {
     return (
-      <div className="min-h-screen bg-chessio-bg-dark py-10">
+      <div className="min-h-screen bg-chessio-bg-dark py-10" data-testid="placement-result">
         <div className="container mx-auto px-4">
           {/* Header */}
           <div className="mb-8 flex items-center justify-between">
@@ -67,6 +67,7 @@ export function PlacementPageClient({ exam }: PlacementPageClientProps) {
             <button
               onClick={handleRetake}
               className="text-sm text-neutral-500 hover:text-neutral-300 transition-colors underline"
+              data-testid="placement-retake"
             >
               Retake the test (resets your placement)
             </button>
@@ -148,6 +149,7 @@ export function PlacementPageClient({ exam }: PlacementPageClientProps) {
                   trackPlacementStarted();
                   setHasStarted(true);
                 }}
+                data-testid="placement-begin"
               >
                 Begin Test
               </Button>
@@ -164,7 +166,7 @@ export function PlacementPageClient({ exam }: PlacementPageClientProps) {
 
   // Show runner
   return (
-    <div className="min-h-screen bg-chessio-bg-dark py-10">
+    <div className="min-h-screen bg-chessio-bg-dark py-10" data-testid="placement-running">
       <div className="container mx-auto px-4 max-w-3xl">
         {/* Header */}
         <div className="mb-8 text-center">

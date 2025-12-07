@@ -57,6 +57,7 @@ export function ClubCard({ profile }: ClubCardProps) {
           variant="outline"
           disabled
           className="w-full justify-center cursor-not-allowed opacity-60"
+          data-testid="dashboard-club-cta"
         >
           <Lock className="mr-2 h-4 w-4" />
           Join the waitlist

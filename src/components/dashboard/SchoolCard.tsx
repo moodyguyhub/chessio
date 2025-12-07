@@ -130,7 +130,12 @@ export function SchoolCard({ profile }: SchoolCardProps) {
         {isLocked ? (
           <>
             <Link href="/school/placement" className="w-full">
-              <Button size="sm" variant="primary" className="w-full justify-center">
+              <Button 
+                size="sm" 
+                variant="primary" 
+                className="w-full justify-center"
+                data-testid="dashboard-placement-cta"
+              >
                 Try Placement Test
               </Button>
             </Link>
@@ -140,7 +145,11 @@ export function SchoolCard({ profile }: SchoolCardProps) {
           </>
         ) : (
           <Link href="/school" className="w-full">
-            <Button size="sm" className="w-full justify-center">
+            <Button 
+              size="sm" 
+              className="w-full justify-center"
+              data-testid="dashboard-school-cta"
+            >
               Enter Chess School
             </Button>
           </Link>

@@ -17,14 +17,14 @@ test.describe('Smoke Tests - Critical Paths', () => {
     await expect(page.getByText(/One confident move at a time/i)).toBeVisible();
     
     // Check CTA button
-    await expect(page.getByRole('button', { name: /Start your first lesson/i })).toBeVisible();
+    await expect(page.getByTestId('landing-cta-start-anon')).toBeVisible();
   });
 
   test('navigation to register page works', async ({ page }) => {
     await page.goto('/');
     
-    // Click register link
-    await page.getByRole('link', { name: /Sign up/i }).click();
+    // Click register link (now says 'Start Learning')
+    await page.getByRole('link', { name: /Start Learning/i }).click();
     
     // Should be on register page
     await expect(page).toHaveURL(/\/register/);
@@ -34,8 +34,8 @@ test.describe('Smoke Tests - Critical Paths', () => {
   test('navigation to login page works', async ({ page }) => {
     await page.goto('/');
     
-    // Click login link
-    await page.getByRole('link', { name: /Sign in/i }).click();
+    // Click login link (now says 'Log in')
+    await page.getByRole('link', { name: /Log in/i }).click();
     
     // Should be on login page
     await expect(page).toHaveURL(/\/login/);
@@ -75,7 +75,7 @@ test.describe('Smoke Tests - Critical Paths', () => {
     await expect(page.getByText(/Learn chess calmly/i)).toBeVisible();
     
     // CTA should be reachable
-    const cta = page.getByRole('button', { name: /Start your first lesson/i });
+    const cta = page.getByTestId('landing-cta-start-anon');
     await expect(cta).toBeVisible();
   });
 

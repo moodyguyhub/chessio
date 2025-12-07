@@ -64,7 +64,12 @@ export function PreSchoolCard({ profile }: PreSchoolCardProps) {
 
       <CardFooter>
         <Link href="/app" className="w-full">
-          <Button size="sm" variant="outline" className="w-full justify-center">
+          <Button 
+            size="sm" 
+            variant="outline" 
+            className="w-full justify-center"
+            data-testid="dashboard-pre-school-cta"
+          >
             {preSchoolStatus === "not_started" ? "Start Pre-School" : 
              preSchoolStatus === "in_progress" ? "Continue" : 
              "View Progress"}

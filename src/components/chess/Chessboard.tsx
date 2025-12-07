@@ -111,7 +111,10 @@ export function Chessboard({
   }, [isDisabled, onSquareClick]);
 
   return (
-    <div className="relative aspect-square w-full max-w-[500px]">
+    <div 
+      data-testid="chessboard"
+      className="relative aspect-square w-full max-w-[500px]"
+    >
       {/* File labels (a-h) */}
       <div className="absolute -bottom-6 left-0 right-0 flex justify-around px-1 text-xs text-slate-400 font-medium">
         {(orientation === "white" ? "abcdefgh" : "hgfedcba").split("").map((file) => (

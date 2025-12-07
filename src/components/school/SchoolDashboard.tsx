@@ -117,23 +117,36 @@ export default function SchoolDashboard({ levels, unlockedLevels }: SchoolDashbo
       {/* Alpha Notice */}
       <AlphaNoticeBanner />
 
-      {/* Level List */}
+      {/* Tier 1: Foundation - Level List */}
       <div className="space-y-4">
-        {levels.map((level) => {
-          const isUnlocked = actuallyUnlockedLevels.has(level.id);
-          const isMastered = masteredLevels.has(level.id);
-          const isInProgress = inProgressLevels.has(level.id);
-          
-          return (
-            <LevelCard
-              key={level.id}
-              level={level}
-              isUnlocked={isUnlocked}
-              isMastered={isMastered}
-              isInProgress={isInProgress}
-            />
-          );
-        })}
+        {/* Tier Header */}
+        <div className="space-y-1">
+          <h2 className="text-2xl font-bold text-foreground tracking-tight">
+            Tier 1 — The Foundation
+          </h2>
+          <p className="text-sm text-muted-foreground">
+            Learn the truth of the board: checks, tactics, endgames.
+          </p>
+        </div>
+
+        {/* Level Cards */}
+        <div className="space-y-3">
+          {levels.map((level) => {
+            const isUnlocked = actuallyUnlockedLevels.has(level.id);
+            const isMastered = masteredLevels.has(level.id);
+            const isInProgress = inProgressLevels.has(level.id);
+            
+            return (
+              <LevelCard
+                key={level.id}
+                level={level}
+                isUnlocked={isUnlocked}
+                isMastered={isMastered}
+                isInProgress={isInProgress}
+              />
+            );
+          })}
+        </div>
       </div>
     </div>
   );

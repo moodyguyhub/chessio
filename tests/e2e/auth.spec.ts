@@ -22,7 +22,7 @@ test.describe('Authentication Flow - E2E', () => {
     await page.getByLabel(/confirm password/i).fill(testUser.password);
     
     // Submit form
-    await page.getByRole('button', { name: /sign up/i }).click();
+    await page.getByRole('button', { name: /create account|sign up/i }).click();
     
     // Should redirect to login after successful registration
     await expect(page).toHaveURL(/\/login/, { timeout: 10000 });
@@ -35,7 +35,7 @@ test.describe('Authentication Flow - E2E', () => {
     await page.goto('/register');
     
     // Try to submit without filling fields
-    await page.getByRole('button', { name: /sign up/i }).click();
+    await page.getByRole('button', { name: /create account|sign up/i }).click();
     
     // Should show validation errors
     await expect(page.getByText(/required/i).first()).toBeVisible();
@@ -48,7 +48,7 @@ test.describe('Authentication Flow - E2E', () => {
     await page.getByLabel(/password/i).first().fill('password123');
     await page.getByLabel(/confirm password/i).fill('different123');
     
-    await page.getByRole('button', { name: /sign up/i }).click();
+    await page.getByRole('button', { name: /create account|sign up/i }).click();
     
     await expect(page.getByText(/passwords.*match/i)).toBeVisible();
   });
@@ -60,10 +60,10 @@ test.describe('Authentication Flow - E2E', () => {
     await page.getByLabel(/email/i).fill('test@chessio.app');
     await page.getByLabel(/password/i).fill('password123');
     
-    await page.getByRole('button', { name: /sign in/i }).click();
+    await page.getByRole('button', { name: /log in|sign in/i }).click();
     
-    // Should redirect to dashboard
-    await expect(page).toHaveURL(/\/app/, { timeout: 10000 });
+    // Should redirect to dashboard (unified home)
+    await expect(page).toHaveURL(/\/dashboard/, { timeout: 10000 });
   });
 
   test('login with invalid credentials shows error', async ({ page }) => {
@@ -72,7 +72,7 @@ test.describe('Authentication Flow - E2E', () => {
     await page.getByLabel(/email/i).fill('wrong@test.com');
     await page.getByLabel(/password/i).fill('wrongpassword');
     
-    await page.getByRole('button', { name: /sign in/i }).click();
+    await page.getByRole('button', { name: /log in|sign in/i }).click();
     
     // Should show error message
     await expect(page.getByText(/invalid.*credentials/i)).toBeVisible();
@@ -80,7 +80,7 @@ test.describe('Authentication Flow - E2E', () => {
 
   test('protected routes redirect to login', async ({ page }) => {
     // Try to access protected dashboard without auth
-    await page.goto('/app');
+    await page.goto('/dashboard');
     
     // Should redirect to login
     await expect(page).toHaveURL(/\/login/);
@@ -93,9 +93,9 @@ test.describe('Session Management', () => {
     await page.goto('/login');
     await page.getByLabel(/email/i).fill('test@chessio.app');
     await page.getByLabel(/password/i).fill('password123');
-    await page.getByRole('button', { name: /sign in/i }).click();
+    await page.getByRole('button', { name: /log in|sign in/i }).click();
     
-    await expect(page).toHaveURL(/\/app/);
+    await expect(page).toHaveURL(/\/dashboard/);
     
     // Find and click logout button
     await page.getByRole('button', { name: /sign out/i }).click();
@@ -104,7 +104,7 @@ test.describe('Session Management', () => {
     await expect(page).toHaveURL('/');
     
     // Session should be cleared - trying to access protected route should redirect
-    await page.goto('/app');
+    await page.goto('/dashboard');
     await expect(page).toHaveURL(/\/login/);
   });
 });

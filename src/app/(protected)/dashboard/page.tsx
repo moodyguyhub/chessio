@@ -3,11 +3,11 @@ import { auth } from "@/lib/auth";
 import { getChessioProfile } from "@/lib/dashboard/profile";
 import { getUserXp } from "@/lib/lessons/progress";
 import { getLevelForXp } from "@/lib/gamification";
-import { PreSchoolCard } from "@/components/dashboard/PreSchoolCard";
-import { SchoolCard } from "@/components/dashboard/SchoolCard";
-import { ClubCard } from "@/components/dashboard/ClubCard";
+import { calculateDutyState } from "@/lib/dashboard/duty-state";
+import { getSchoolMapDataServer } from "@/lib/dashboard/school-map";
+import { ActiveDutyCardClient } from "@/components/dashboard/ActiveDutyCardClient";
+import { CampaignMap } from "@/components/dashboard/CampaignMap";
 import { ChessioLogo } from "@/components/brand/ChessioLogo";
-import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 
 export default async function DashboardPage() {
@@ -20,13 +20,19 @@ export default async function DashboardPage() {
   const userId = session.user.id;
   const userName = session.user.name || "Player";
 
-  // Get user profile and XP
+  // Get user profile, XP, and duty state
   const [profile, userXp] = await Promise.all([
     getChessioProfile(userId),
     getUserXp(userId),
   ]);
 
   const levelProgress = getLevelForXp(userXp);
+  
+  // Calculate duty state for ActiveDutyCard
+  const dutyState = await calculateDutyState(userId, profile);
+  
+  // Get school map data for CampaignMap
+  const schoolMapData = await getSchoolMapDataServer(profile);
 
   return (
     <div className="min-h-screen bg-chessio-bg-dark">
@@ -68,7 +74,7 @@ export default async function DashboardPage() {
 
       {/* Main Content */}
       <main className="container mx-auto px-4 py-10">
-        <div className="max-w-5xl mx-auto space-y-8">
+        <div className="max-w-4xl mx-auto space-y-8">
           {/* Welcome Header */}
           <header className="space-y-2">
             <p className="text-sm text-chessio-muted">
@@ -77,43 +83,38 @@ export default async function DashboardPage() {
             <h1 className="text-3xl font-bold text-chessio-text tracking-tight">
               Your Chess Journey
             </h1>
-            <p className="text-sm text-chessio-muted max-w-2xl">
-              Start in the playground, unlock the School, and later join the Club. Choose your path below.
-            </p>
           </header>
 
-          {/* Next Step Suggestion (if available) */}
-          {profile.nextStep && (
-            <div className="rounded-lg border border-chessio-border bg-chessio-card/50 px-4 py-3 flex items-center justify-between">
-              <div>
-                <p className="text-xs text-chessio-muted uppercase tracking-wide font-medium mb-1">
-                  Recommended Next Step
-                </p>
-                <p className="text-sm font-medium text-chessio-text">
-                  {profile.nextStep.label}
-                </p>
-              </div>
-              <Link
-                href={profile.nextStep.href}
-                className="flex items-center gap-1 text-sm font-medium text-chessio-primary hover:text-chessio-primary-dark transition-colors"
-              >
-                Go
-                <ArrowRight className="h-4 w-4" />
-              </Link>
-            </div>
-          )}
+          {/* SECTION 1: Active Duty (The Focal Point) */}
+          <section data-testid="dashboard-hero">
+            <ActiveDutyCardClient
+              status={dutyState.status}
+              userProfile={{ name: userName, tier: dutyState.tier }}
+              currentMission={dutyState.currentMission}
+              actions={dutyState.actions}
+            />
+          </section>
 
-          {/* Track Cards */}
-          <section className="grid gap-5 md:grid-cols-3">
-            <PreSchoolCard profile={profile} />
-            <SchoolCard profile={profile} />
-            <ClubCard profile={profile} />
+          {/* SECTION 2: Campaign Map (The Context) */}
+          <section data-testid="dashboard-map" className="space-y-4">
+            <div className="flex items-center justify-between">
+              <h2 className="text-xl font-semibold tracking-tight text-chessio-text">
+                Your Curriculum
+              </h2>
+              <span className="text-sm text-chessio-muted">
+                {schoolMapData.currentLevel
+                  ? `Level ${schoolMapData.currentLevel} of ${schoolMapData.totalLevels}`
+                  : `0 of ${schoolMapData.totalLevels} levels started`}
+              </span>
+            </div>
+
+            <CampaignMap userProgress={schoolMapData} />
           </section>
 
           {/* Footer note */}
           <div className="text-center pt-6">
             <p className="text-xs text-chessio-muted">
-              Your progress is automatically saved. You can switch between tracks anytime.
+              Your progress is automatically saved. Focus on your current mission above.
             </p>
           </div>
         </div>
