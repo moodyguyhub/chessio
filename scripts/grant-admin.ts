@@ -15,7 +15,7 @@ async function grantAdminToGitHubUsers() {
 
   const result = await prisma.user.updateMany({
     where: {
-      accounts: {
+      Account: {
         some: {
           provider: "github"
         }
