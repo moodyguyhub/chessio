@@ -36,7 +36,9 @@ function LoginForm() {
         return;
       }
 
-      router.push("/app");
+      // Redirect to dashboard (or redirect param if specified)
+      const redirectTo = searchParams.get("redirect") || "/dashboard";
+      router.push(redirectTo);
       router.refresh();
     } catch {
       setError("Something went wrong. Please try again.");

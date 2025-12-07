@@ -84,7 +84,17 @@ export default function SchoolDashboard({ levels, unlockedLevels }: SchoolDashbo
 
   return (
     <div className="space-y-8">
-      {/* Header */}
+      {/* Header with Dashboard link */}
+      <div className="flex items-center justify-between mb-4">
+        <Link
+          href="/dashboard"
+          className="text-sm text-slate-400 hover:text-white transition-colors"
+        >
+          ← Back to Dashboard
+        </Link>
+      </div>
+
+      {/* Title Section */}
       <div className="text-center space-y-3">
         <h1 className="text-4xl font-bold tracking-tight">
           Chessio School

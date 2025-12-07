@@ -152,14 +152,21 @@ export default async function DashboardPage() {
       {/* Header - Sticky Glassmorphism */}
       <header className="sticky top-0 z-50 glass-panel border-b border-chessio-border-dark">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <Link href="/app" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+          <Link href="/dashboard" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
             <ChessioLogo variant="horizontal" className="h-8" />
           </Link>
           
           <div className="flex items-center gap-4">
+            {/* Dashboard Link */}
+            <Link
+              href="/dashboard"
+              className="text-sm font-medium text-slate-300 hover:text-white transition-colors"
+            >
+              Dashboard
+            </Link>
+
             {/* XP Display */}
-            <div className="hidden sm:flex items-center gap-2 text-sm">
-              <span className="px-2.5 py-1 bg-chessio-primary/20 text-chessio-primary rounded-full font-medium text-xs tracking-tight">{levelProgress.label}</span>
+            <div className="hidden sm:flex items-center gap-2 text-sm">\n              <span className="px-2.5 py-1 bg-chessio-primary/20 text-chessio-primary rounded-full font-medium text-xs tracking-tight">{levelProgress.label}</span>
               <div className="w-24 h-2 bg-white/10 rounded-full overflow-hidden">
                 <div 
                   className="h-full bg-chessio-primary transition-all duration-500"

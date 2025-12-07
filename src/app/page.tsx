@@ -6,6 +6,8 @@ import { db } from "@/lib/db";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Sparkles, GraduationCap, Users, Lock } from "lucide-react";
+import { LandingCTA } from "@/components/landing/LandingCTA";
+import { auth } from "@/lib/auth";
 
 export const runtime = "nodejs";
 
@@ -41,7 +43,11 @@ export async function generateMetadata(): Promise<Metadata> {
   }
 }
 
-export default function LandingPage() {
+export default async function LandingPage() {
+  // Check if user is logged in
+  const session = await auth();
+  const isLoggedIn = !!session?.user;
+
   return (
     <div className="min-h-screen bg-chessio-bg-dark">
       {/* Header */}
@@ -80,12 +86,7 @@ export default function LandingPage() {
               Short, guided sessions that start from zero. No timers, no pressure — just you, the board, and one simple idea per lesson.
             </p>
             <div className="mt-8 flex flex-col items-center gap-3 lg:items-start">
-              <Link
-                href="/register"
-                className="inline-flex items-center justify-center rounded-full bg-amber-300 px-6 py-3 text-sm font-medium text-neutral-950 shadow-md hover:bg-amber-200 hover:shadow-lg transition"
-              >
-                Start your first lesson
-              </Link>
+              <LandingCTA isLoggedIn={isLoggedIn} />
               <Link
                 href="#how-it-works"
                 className="text-sm text-neutral-400 hover:text-neutral-200 transition-colors"
@@ -274,12 +275,7 @@ export default function LandingPage() {
           <p className="text-neutral-300 mb-8">
             Join thousands of beginners learning chess the stress-free way.
           </p>
-          <Link
-            href="/register"
-            className="inline-flex items-center justify-center rounded-full bg-amber-300 px-6 py-3 text-sm font-medium text-neutral-950 shadow-md hover:bg-amber-200 hover:shadow-lg transition"
-          >
-            Get Started Free
-          </Link>
+          <LandingCTA isLoggedIn={isLoggedIn} />
         </div>
       </section>
 
