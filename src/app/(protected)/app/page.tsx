@@ -14,6 +14,7 @@ import { ChessioLogo } from "@/components/brand/ChessioLogo";
 import { Sparkles, ArrowRight, Users } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
+import { PreSchoolFeedbackStrip } from "@/components/feedback/PreSchoolFeedbackStrip";
 
 export default async function DashboardPage() {
   const session = await auth();
@@ -248,8 +249,14 @@ export default async function DashboardPage() {
               <Users className="h-4 w-4" />
               Club mode · coming soon
             </Button>
+            <p className="text-xs text-chessio-muted mt-1">
+              Want early access to Chessio Club? After any lesson or exam, use the feedback box and mention &apos;Club&apos; – we&apos;ll read them all.
+            </p>
           </div>
         </section>
+        
+        {/* Pre-School Feedback Strip */}
+        <PreSchoolFeedbackStrip />
         
         {/* Alpha Banner (Sprint 04) */}
         <AlphaBanner />

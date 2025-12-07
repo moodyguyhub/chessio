@@ -6,12 +6,15 @@
 export type FeedbackSource =
   | "lesson"
   | "exam"
-  | "coach_chat";
+  | "coach_chat"
+  | "pre_school";
 
 export type FeedbackDifficulty =
   | "too_easy"
   | "just_right"
   | "too_hard";
+
+export type PreSchoolMood = "lost" | "okay" | "love";
 
 export interface FeedbackPayload {
   level?: number;                // undefined for coach_chat without context
@@ -19,6 +22,7 @@ export interface FeedbackPayload {
   source: FeedbackSource;
   rating?: number;               // 1–5 for exam/overall ratings
   difficulty?: FeedbackDifficulty;
+  mood?: PreSchoolMood;          // for pre_school feedback
   text?: string;
   tags?: string[];               // e.g. ["confusing-instruction", "ui-bug"]
   path?: string;                 // current route

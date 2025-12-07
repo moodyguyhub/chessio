@@ -114,11 +114,11 @@ export default function LandingPage() {
       {/* Education ladder choice */}
       <section className="py-16 bg-neutral-900/50">
         <div className="container mx-auto px-4">
-          <h2 className="text-xl sm:text-2xl font-semibold text-neutral-50 mb-2 font-[family-name:var(--font-nunito)]">
-            Where would you like to start?
+          <h2 className="text-2xl sm:text-3xl font-semibold text-neutral-50 mb-2 font-[family-name:var(--font-nunito)]">
+            Choose your starting point
           </h2>
-          <p className="text-sm text-neutral-400 mb-6 max-w-2xl">
-            Pick the track that matches your current level. You can switch anytime.
+          <p className="text-sm sm:text-base text-neutral-400 mb-8 max-w-2xl">
+            New to chess? Start in Pre-School. Played before or serious about improving? Jump straight into Chess School.
           </p>
 
           <div className="grid gap-4 md:grid-cols-3">
@@ -201,6 +201,9 @@ export default function LandingPage() {
                   <li>• Sparring games & reviews</li>
                   <li>• Seasonal challenges & rankings</li>
                 </ul>
+                <p className="text-[11px] text-neutral-600 mt-3">
+                  Want early access? Mention &apos;Club&apos; in any feedback box – we&apos;ll prioritize you.
+                </p>
               </CardContent>
               <CardFooter>
                 <Button
