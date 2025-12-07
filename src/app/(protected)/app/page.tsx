@@ -11,6 +11,9 @@ import { recordDashboardVisit, getLastActiveDescription } from "@/lib/engagement
 import { getTodaysGoalForUser } from "@/lib/engagement/todays-goal";
 import { logDashboardViewed, logWelcomeBackShown, logSessionStarted } from "@/lib/telemetry";
 import { ChessioLogo } from "@/components/brand/ChessioLogo";
+import { Sparkles, ArrowRight, Users } from "lucide-react";
+import { Button } from "@/components/ui/Button";
+import { Badge } from "@/components/ui/Badge";
 
 export default async function DashboardPage() {
   const session = await auth();
@@ -193,33 +196,60 @@ export default async function DashboardPage() {
 
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8">
-        {/* NEW SCHOOL BANNER */}
-        <Link href="/school" className="block mb-6">
-          <div className="bg-gradient-to-r from-emerald-600 to-emerald-700 border border-emerald-500/30 rounded-2xl p-6 hover:from-emerald-500 hover:to-emerald-600 transition-all shadow-lg">
-            <div className="flex items-center justify-between gap-4">
-              <div className="flex-1">
-                <div className="flex items-center gap-2 mb-2">
-                  <span className="text-2xl">🏫</span>
-                  <span className="text-xs font-semibold text-emerald-100 uppercase tracking-wide">
-                    NEW: The Russian School
-                  </span>
-                </div>
-                <h3 className="text-xl font-bold text-white tracking-tight mb-1">
-                  Try the Structured Chess School
-                </h3>
-                <p className="text-emerald-100 text-sm">
-                  9 lessons across 3 levels • Exams • Secret Cards • AI Coach
-                </p>
+        {/* Chessio Pre-School banner */}
+        <section className="mb-6 rounded-2xl border border-chessio-border bg-chessio-card/80 px-4 py-4 sm:px-6 sm:py-5 shadow-sm flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-start gap-3">
+            <div className="mt-1 rounded-full bg-chessio-primary/10 p-2">
+              <Sparkles className="h-5 w-5 text-chessio-primary" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <h2 className="text-base sm:text-lg font-semibold text-chessio-text">
+                  Chessio Pre-School
+                </h2>
+                <Badge variant="secondary" className="text-[11px]">
+                  Board basics & sandbox
+                </Badge>
               </div>
-              <div className="hidden sm:flex items-center gap-2 text-white font-semibold">
-                Enter School
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
+              <p className="mt-1 text-xs sm:text-sm text-chessio-muted max-w-xl">
+                You&apos;re in the <span className="font-medium">Pre-School playground</span> –
+                perfect for learning the board, piece moves, and simple mates.
+                When you&apos;re ready to train seriously, jump into the{" "}
+                <span className="font-medium">Chess School</span> with levels,
+                exams, and a personal Coach.
+              </p>
+              <div className="mt-2 flex flex-wrap items-center gap-3 text-xs sm:text-sm text-chessio-muted">
+                <span className="inline-flex items-center gap-1">
+                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
+                  School: live now
+                </span>
+                <span className="inline-flex items-center gap-1">
+                  <span className="h-1.5 w-1.5 rounded-full bg-amber-400" />
+                  Club:{" "}
+                  <span className="font-medium">coming soon</span> — study groups &
+                  tournaments
+                </span>
               </div>
             </div>
           </div>
-        </Link>
+          <div className="flex flex-col items-stretch gap-2 sm:items-end">
+            <Link href="/school">
+              <Button size="sm" className="inline-flex items-center gap-1 w-full">
+                Enter Chess School
+                <ArrowRight className="h-4 w-4" />
+              </Button>
+            </Link>
+            <Button
+              variant="outline"
+              size="sm"
+              disabled
+              className="inline-flex items-center gap-1 opacity-70 cursor-not-allowed"
+            >
+              <Users className="h-4 w-4" />
+              Club mode · coming soon
+            </Button>
+          </div>
+        </section>
         
         {/* Alpha Banner (Sprint 04) */}
         <AlphaBanner />

@@ -3,6 +3,9 @@ import type { Metadata } from "next";
 import { Chessboard } from "@/components/chess";
 import { ChessioLogo } from "@/components/brand/ChessioLogo";
 import { db } from "@/lib/db";
+import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/Card";
+import { Button } from "@/components/ui/Button";
+import { Sparkles, GraduationCap, Users, Lock } from "lucide-react";
 
 export const runtime = "nodejs";
 
@@ -107,6 +110,113 @@ export default function LandingPage() {
           </div>
         </div>
       </main>
+
+      {/* Education ladder choice */}
+      <section className="py-16 bg-neutral-900/50">
+        <div className="container mx-auto px-4">
+          <h2 className="text-xl sm:text-2xl font-semibold text-neutral-50 mb-2 font-[family-name:var(--font-nunito)]">
+            Where would you like to start?
+          </h2>
+          <p className="text-sm text-neutral-400 mb-6 max-w-2xl">
+            Pick the track that matches your current level. You can switch anytime.
+          </p>
+
+          <div className="grid gap-4 md:grid-cols-3">
+            {/* Pre-School */}
+            <Card className="flex flex-col border-neutral-800 bg-neutral-900/80">
+              <CardHeader className="flex flex-row items-center gap-2 pb-2">
+                <div className="rounded-full bg-amber-400/10 p-2">
+                  <Sparkles className="h-5 w-5 text-amber-400" />
+                </div>
+                <div>
+                  <CardTitle className="text-sm sm:text-base">Pre-School</CardTitle>
+                  <CardDescription className="text-xs sm:text-[13px]">
+                    Absolute beginners, kids, and sandbox play.
+                  </CardDescription>
+                </div>
+              </CardHeader>
+              <CardContent className="flex-1 pt-2">
+                <ul className="space-y-1.5 text-xs sm:text-[13px] text-neutral-400">
+                  <li>• Learn how the pieces move</li>
+                  <li>• Simple mates & board familiarity</li>
+                  <li>• Zero pressure, just exploration</li>
+                </ul>
+              </CardContent>
+              <CardFooter>
+                <Link href="/app" className="w-full">
+                  <Button size="sm" variant="outline" className="w-full justify-center">
+                    Enter Pre-School
+                  </Button>
+                </Link>
+              </CardFooter>
+            </Card>
+
+            {/* Chess School */}
+            <Card className="flex flex-col border-amber-400/40 bg-neutral-900/90 shadow-md shadow-amber-400/10">
+              <CardHeader className="flex flex-row items-center gap-2 pb-2">
+                <div className="rounded-full bg-amber-400/10 p-2">
+                  <GraduationCap className="h-5 w-5 text-amber-400" />
+                </div>
+                <div>
+                  <CardTitle className="text-sm sm:text-base">Chess School</CardTitle>
+                  <CardDescription className="text-xs sm:text-[13px]">
+                    Structured levels, exams & Russian-style coaching.
+                  </CardDescription>
+                </div>
+              </CardHeader>
+              <CardContent className="flex-1 pt-2">
+                <ul className="space-y-1.5 text-xs sm:text-[13px] text-neutral-400">
+                  <li>• Levels 1–3: checks, tactics, endgames</li>
+                  <li>• XP, exams & secret rule cards</li>
+                  <li>• Built-in AI Coach for questions</li>
+                </ul>
+              </CardContent>
+              <CardFooter>
+                <Link href="/school" className="w-full">
+                  <Button size="sm" className="w-full justify-center">
+                    Enter Chess School
+                  </Button>
+                </Link>
+              </CardFooter>
+            </Card>
+
+            {/* Club – coming soon */}
+            <Card className="flex flex-col border-dashed border-neutral-800 bg-neutral-900/60 opacity-80">
+              <CardHeader className="flex flex-row items-center gap-2 pb-2">
+                <div className="rounded-full bg-neutral-700/10 p-2">
+                  <Users className="h-5 w-5 text-neutral-500" />
+                </div>
+                <div>
+                  <CardTitle className="text-sm sm:text-base">
+                    Chessio Club
+                  </CardTitle>
+                  <CardDescription className="text-xs sm:text-[13px]">
+                    Coming soon – your training dojo.
+                  </CardDescription>
+                </div>
+              </CardHeader>
+              <CardContent className="flex-1 pt-2">
+                <ul className="space-y-1.5 text-xs sm:text-[13px] text-neutral-500">
+                  <li>• Study groups & live events</li>
+                  <li>• Sparring games & reviews</li>
+                  <li>• Seasonal challenges & rankings</li>
+                </ul>
+              </CardContent>
+              <CardFooter>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  disabled
+                  className="w-full justify-center cursor-not-allowed opacity-60"
+                >
+                  <Lock className="mr-2 h-4 w-4" />
+                  Coming soon
+                </Button>
+              </CardFooter>
+            </Card>
+          </div>
+        </div>
+      </section>
 
       {/* How It Works */}
       <section id="how-it-works" className="bg-neutral-900/30 backdrop-blur-sm py-20 border-y border-white/5">
