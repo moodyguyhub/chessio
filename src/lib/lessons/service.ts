@@ -18,7 +18,7 @@ export const lessonService = {
   async getAll() {
     return db.lesson.findMany({
       orderBy: { order: "asc" },
-      include: { tasks: { orderBy: { index: "asc" } } },
+      include: { Task: { orderBy: { index: "asc" } } },
     });
   },
 
@@ -28,7 +28,7 @@ export const lessonService = {
   async getBySlug(slug: string) {
     return db.lesson.findUnique({
       where: { slug },
-      include: { tasks: { orderBy: { index: "asc" } } },
+      include: { Task: { orderBy: { index: "asc" } } },
     });
   },
 
