@@ -696,19 +696,19 @@ export const LEVEL_1_LESSONS: Lesson[] = [
       {
         id: "values-1",
         kind: "move-piece",
-        prompt: "Trade your Knight (3 points) for the Rook (5 points). Good deal! Capture on a8.",
+        prompt: "Trade your Knight (3 points) for the Rook (5 points). First, move the Knight toward a8.",
         initialFen: "r3k3/8/8/8/8/5N2/8/4K3 w - - 0 1",
         expectedMove: { from: "f3", to: "g5" },
         messages: {
-          success: "Wait — that's not the Rook! Knights are worth 3, Rooks are worth 5. Let's try again.",
-          failure: "To capture the Rook, we need to get closer. Move toward it first.",
-          hint: "The Knight needs two moves to reach a8. Let's reposition.",
+          success: "Good! Knights need multiple moves to travel. Knight = 3 points, Rook = 5 points.",
+          failure: "The Knight can't reach a8 yet. Move it closer first.",
+          hint: "Try Ng5 to get the Knight closer to the Rook.",
         },
       },
       {
         id: "values-2",
         kind: "move-piece",
-        prompt: "Now capture the Rook! Move the Knight from g5 to e6, then we can take on a8 next.",
+        prompt: "Getting closer! Move the Knight from g5 to e6, approaching the Rook.",
         initialFen: "r3k3/8/8/6N1/8/8/8/4K3 w - - 0 1",
         expectedMove: { from: "g5", to: "e6" },
         messages: {
