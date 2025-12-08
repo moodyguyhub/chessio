@@ -17,6 +17,7 @@ import { Badge } from "@/components/ui/Badge";
 import { PreSchoolFeedbackStrip } from "@/components/feedback/PreSchoolFeedbackStrip";
 import { TodaysGoalCard, AcademyGateCard } from "@/components/preschool/AnimatedCards";
 import { SoundControls } from "@/components/ui/SoundControls";
+import { ChallengeCard } from "@/components/challenges/ChallengeCard";
 import Image from "next/image";
 
 export default async function DashboardPage() {
@@ -516,6 +517,14 @@ export default async function DashboardPage() {
                 );
               })}
             </div>
+
+            {/* Level 0 Challenge Card */}
+            <ChallengeCard
+              challengeId="level0_challenge"
+              level={0}
+              isUnlocked={level0Complete}
+              isCompleted={false} // TODO: Track challenge completion in DB
+            />
           </div>
         </div>
 
@@ -614,6 +623,14 @@ export default async function DashboardPage() {
                 );
               })}
             </div>
+
+            {/* Level 1 Challenge Card */}
+            <ChallengeCard
+              challengeId="level1_challenge"
+              level={1}
+              isUnlocked={level1Complete}
+              isCompleted={false} // TODO: Track challenge completion in DB
+            />
           </div>
         </div>
         )}
