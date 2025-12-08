@@ -830,10 +830,17 @@ export default async function DashboardPage() {
               </p>
               {level0Complete && level1Complete ? (
                 <Link href="/school">
-                  <Button size="sm" className="inline-flex items-center gap-2">
+                  <button
+                    className="inline-flex items-center gap-2 h-8 px-3 text-xs font-bold rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-950 focus:ring-yellow-500/50 shadow-md hover:shadow-lg hover:scale-[1.02]"
+                    style={{
+                      backgroundColor: '#facc15',
+                      color: '#0f172a',
+                      border: '2px solid rgba(251, 191, 36, 0.5)'
+                    }}
+                  >
                     Go to School
                     <ArrowRight className="h-4 w-4" />
-                  </Button>
+                  </button>
                 </Link>
               ) : (
                 <Badge variant="secondary" className="text-xs">
