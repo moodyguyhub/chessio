@@ -145,18 +145,22 @@ export function PlacementPageClient({ exam }: PlacementPageClientProps) {
               </div>
 
               {/* Action */}
-              <Button 
-                size="lg" 
-                className="w-full"
+              <button
                 onClick={() => {
                   play("ui_click");
                   trackPlacementStarted();
                   setHasStarted(true);
                 }}
+                className="w-full h-12 px-6 text-base font-bold rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-950 focus:ring-yellow-500/50 shadow-lg hover:shadow-xl hover:scale-[1.02]"
+                style={{
+                  backgroundColor: '#facc15',
+                  color: '#0f172a',
+                  border: '2px solid rgba(251, 191, 36, 0.5)'
+                }}
                 data-testid="placement-begin"
               >
                 Begin Test
-              </Button>
+              </button>
 
               <p className="text-xs text-center text-neutral-500">
                 You can retake this test later if needed
