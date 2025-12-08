@@ -96,7 +96,7 @@ export default function SchoolDashboard({ levels, unlockedLevels }: SchoolDashbo
       </div>
 
       {/* Title Section with Grand Hall backdrop */}
-      <div className="relative text-center space-y-3 py-12 px-6 rounded-3xl border border-amber-900/20 overflow-hidden shadow-xl">
+      <div className="relative text-center space-y-4 py-20 px-6 rounded-3xl border border-amber-900/30 overflow-hidden shadow-2xl">
         {/* Grand Hall background */}
         <div className="absolute inset-0 -z-10">
           <Image
@@ -104,18 +104,18 @@ export default function SchoolDashboard({ levels, unlockedLevels }: SchoolDashbo
             alt=""
             fill
             aria-hidden="true"
-            className="object-cover opacity-40"
+            className="object-cover opacity-50"
             sizes="(min-width: 1024px) 80vw, 100vw"
             priority
           />
-          {/* Lightened gradient overlay for text readability while showing image */}
-          <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-slate-950/90" />
+          {/* Even lighter gradient overlay for maximum image visibility */}
+          <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/35 to-slate-950/80" />
         </div>
 
-        <h1 className="text-4xl font-bold tracking-tight text-white relative z-10 drop-shadow-lg">
+        <h1 className="text-5xl font-bold tracking-tight text-white relative z-10 drop-shadow-[0_4px_12px_rgba(0,0,0,0.9)]">
           Chessio School
         </h1>
-        <p className="text-lg text-slate-200 max-w-2xl mx-auto relative z-10 drop-shadow-md">
+        <p className="text-xl text-slate-100 max-w-2xl mx-auto relative z-10 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
           &ldquo;We do not start with openings. We start with the truth.&rdquo;
         </p>
       </div>
