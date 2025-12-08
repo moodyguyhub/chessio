@@ -4,6 +4,7 @@ import { auth, signOut } from "@/lib/auth";
 import { allLessons, getPreviousLesson, getLevel0Lessons, getLevel1Lessons, getPuzzles, getLevel2Lessons } from "@/lib/lessons";
 import { getCompletedLessonSlugs, getUserXp, hasUserGivenFeedback } from "@/lib/lessons/progress";
 import { getLevelForXp, LEVELS } from "@/lib/gamification";
+import { getGraduationState } from "@/lib/progression/graduation";
 import { FeedbackButton } from "@/components/ui/FeedbackButton";
 import { AlphaBanner } from "@/components/ui/AlphaBanner";
 import { OnboardingModal, HowItWorksLink } from "@/components/ui/OnboardingModal";
@@ -18,6 +19,7 @@ import { PreSchoolFeedbackStrip } from "@/components/feedback/PreSchoolFeedbackS
 import { TodaysGoalCard, AcademyGateCard } from "@/components/preschool/AnimatedCards";
 import { SoundControls } from "@/components/ui/SoundControls";
 import { ChallengeCard } from "@/components/challenges/ChallengeCard";
+import { TierProgressionCard } from "@/components/progression/TierProgressionCard";
 import Image from "next/image";
 
 export default async function DashboardPage() {
@@ -30,10 +32,11 @@ export default async function DashboardPage() {
   const userId = session.user.id;
 
   // Get user's XP and completed lessons from progress.ts
-  const [userXp, completedSlugs, feedbackGiven] = await Promise.all([
+  const [userXp, completedSlugs, feedbackGiven, graduationState] = await Promise.all([
     getUserXp(userId),
     getCompletedLessonSlugs(userId),
     hasUserGivenFeedback(userId),
+    getGraduationState(userId),
   ]);
 
   // Record dashboard visit and get engagement stats (Sprint 03)
@@ -497,14 +500,14 @@ export default async function DashboardPage() {
                     {isCompleted ? (
                       <Link
                         href={`/lessons/${lesson.slug}`}
-                        className="shrink-0 px-3 py-2 text-sm font-medium text-orange-400 hover:text-amber-300 transition-colors"
+                        className="shrink-0 px-3 py-2 text-sm font-medium text-emerald-400 hover:text-emerald-300 transition-colors"
                       >
                         Replay
                       </Link>
                     ) : isAvailable ? (
                       <Link
                         href={`/lessons/${lesson.slug}`}
-                        className="shrink-0 px-4 py-2 text-sm font-medium bg-orange-700 text-white rounded-lg hover:bg-orange-800 transition-all hover:scale-[1.02]"
+                        className="shrink-0 px-4 py-2 text-sm font-bold bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-all hover:scale-[1.02] shadow-lg shadow-orange-500/20"
                       >
                         Start
                       </Link>
@@ -532,21 +535,21 @@ export default async function DashboardPage() {
         {userXp > 0 && (
         <div className={`mt-8 bg-chessio-surface-dark border border-chessio-border-dark rounded-2xl overflow-hidden ${!level0Complete ? "opacity-75" : ""}`}>
           {/* Card Header */}
-          <div className="p-6 bg-gradient-to-r from-blue-500 to-blue-600">
+          <div className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-blue-100 text-sm font-medium">Level 1</p>
-                <h2 className="text-2xl font-bold text-white mt-1">Advanced Moves</h2>
+                <p className="text-amber-100 text-sm font-medium">Level 1</p>
+                <h2 className="text-2xl font-bold text-white tracking-tight mt-1">Advanced Moves</h2>
               </div>
               <div className="text-right">
-                <p className="text-blue-100 text-sm">Progress</p>
+                <p className="text-amber-100 text-sm">Progress</p>
                 <p className="text-2xl font-bold text-white">{level1ProgressPercent}%</p>
               </div>
             </div>
             {/* Progress bar */}
-            <div className="mt-4 w-full h-2 bg-blue-400/30 rounded-full overflow-hidden">
+            <div className="mt-4 w-full h-2 bg-blue-900/30 rounded-full overflow-hidden">
               <div 
-                className="h-full bg-white transition-all duration-500"
+                className="h-full bg-blue-500 transition-all duration-500"
                 style={{ width: `${level1ProgressPercent}%` }}
               />
             </div>
@@ -566,7 +569,7 @@ export default async function DashboardPage() {
                     key={lesson.slug}
                     className={`flex items-center gap-3 p-4 rounded-xl border transition-all ${
                       isCompleted
-                        ? "bg-blue-900/20 border-blue-500/20"
+                        ? "bg-blue-950/40 border-blue-700/20"
                         : isAvailable
                         ? "bg-slate-800/50 border-white/5 hover:border-blue-500/20 hover:scale-[1.01]"
                         : "bg-slate-800/30 border-white/5 opacity-60"
@@ -576,7 +579,7 @@ export default async function DashboardPage() {
                     <div
                       className={`w-10 h-10 shrink-0 rounded-full flex items-center justify-center text-lg ${
                         isCompleted
-                          ? "bg-blue-500 text-white"
+                          ? "bg-blue-600 text-white"
                           : isAvailable
                           ? "bg-blue-900/30 text-blue-400"
                           : "bg-slate-700 text-slate-500"
@@ -593,7 +596,7 @@ export default async function DashboardPage() {
                         {lesson.title}
                       </h4>
                       <p className={`text-sm ${
-                        isLocked ? "text-slate-600" : "text-blue-400"
+                        isLocked ? "text-slate-600" : "text-orange-400"
                       }`}>
                         +{lesson.xpReward} XP
                       </p>
@@ -610,7 +613,7 @@ export default async function DashboardPage() {
                     ) : isAvailable ? (
                       <Link
                         href={`/lessons/${lesson.slug}`}
-                        className="shrink-0 px-4 py-2 text-sm font-medium bg-chessio-primary text-slate-950 rounded-lg hover:bg-chessio-primary/90 transition-all hover:scale-[1.02]"
+                        className="shrink-0 px-4 py-2 text-sm font-bold bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-all hover:scale-[1.02] shadow-lg shadow-orange-500/20"
                       >
                         Start Lesson
                       </Link>
@@ -639,21 +642,21 @@ export default async function DashboardPage() {
         {level0Complete && (
         <div className={`mt-8 bg-chessio-surface-dark border border-chessio-border-dark rounded-2xl overflow-hidden ${!level1Complete ? "opacity-75" : ""}`}>
           {/* Card Header */}
-          <div className="p-6 bg-gradient-to-r from-purple-500 to-purple-600">
+          <div className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-purple-100 text-sm font-medium">Practice</p>
-                <h2 className="text-2xl font-bold text-white mt-1">Puzzles</h2>
+                <p className="text-amber-100 text-sm font-medium">Practice</p>
+                <h2 className="text-2xl font-bold text-white tracking-tight mt-1">Puzzles</h2>
               </div>
               <div className="text-right">
-                <p className="text-purple-100 text-sm">Progress</p>
+                <p className="text-amber-100 text-sm">Progress</p>
                 <p className="text-2xl font-bold text-white">{puzzlesProgressPercent}%</p>
               </div>
             </div>
             {/* Progress bar */}
-            <div className="mt-4 w-full h-2 bg-purple-400/30 rounded-full overflow-hidden">
+            <div className="mt-4 w-full h-2 bg-purple-900/30 rounded-full overflow-hidden">
               <div 
-                className="h-full bg-white transition-all duration-500"
+                className="h-full bg-purple-500 transition-all duration-500"
                 style={{ width: `${puzzlesProgressPercent}%` }}
               />
             </div>
@@ -673,7 +676,7 @@ export default async function DashboardPage() {
                     key={lesson.slug}
                     className={`flex items-center gap-3 p-4 rounded-xl border transition-all ${
                       isCompleted
-                        ? "bg-purple-900/20 border-purple-500/20"
+                        ? "bg-purple-950/40 border-purple-700/20"
                         : isAvailable
                         ? "bg-slate-800/50 border-white/5 hover:border-purple-500/20 hover:scale-[1.01]"
                         : "bg-slate-800/30 border-white/5 opacity-60"
@@ -683,7 +686,7 @@ export default async function DashboardPage() {
                     <div
                       className={`w-10 h-10 shrink-0 rounded-full flex items-center justify-center text-lg ${
                         isCompleted
-                          ? "bg-purple-500 text-white"
+                          ? "bg-purple-600 text-white"
                           : isAvailable
                           ? "bg-purple-900/30 text-purple-400"
                           : "bg-slate-700 text-slate-500"
@@ -700,7 +703,7 @@ export default async function DashboardPage() {
                         {lesson.title}
                       </h4>
                       <p className={`text-sm ${
-                        isLocked ? "text-slate-600" : "text-purple-400"
+                        isLocked ? "text-slate-600" : "text-orange-400"
                       }`}>
                         +{lesson.xpReward} XP
                       </p>
@@ -717,7 +720,7 @@ export default async function DashboardPage() {
                     ) : isAvailable ? (
                       <Link
                         href={`/lessons/${lesson.slug}`}
-                        className="shrink-0 px-4 py-2 text-sm font-medium bg-chessio-primary text-slate-950 rounded-lg hover:bg-chessio-primary/90 transition-all hover:scale-[1.02]"
+                        className="shrink-0 px-4 py-2 text-sm font-bold bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-all hover:scale-[1.02] shadow-lg shadow-orange-500/20"
                       >
                         Start Lesson
                       </Link>
@@ -738,11 +741,11 @@ export default async function DashboardPage() {
         {level1Complete && (
         <div className={`mt-8 bg-chessio-surface-dark border border-chessio-border-dark rounded-2xl overflow-hidden ${!puzzlesComplete ? "opacity-75" : ""}`}>
           {/* Card Header */}
-          <div className="p-6 bg-gradient-to-r from-orange-700 to-orange-800">
+          <div className="p-6">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-amber-100 text-sm font-medium">Level 2</p>
-                <h2 className="text-2xl font-bold text-white mt-1">Edge Cases</h2>
+                <h2 className="text-2xl font-bold text-white tracking-tight mt-1">Edge Cases</h2>
               </div>
               <div className="text-right">
                 <p className="text-amber-100 text-sm">Progress</p>
@@ -752,7 +755,7 @@ export default async function DashboardPage() {
             {/* Progress bar */}
             <div className="mt-4 w-full h-2 bg-orange-900/30 rounded-full overflow-hidden">
               <div 
-                className="h-full bg-white transition-all duration-500"
+                className="h-full bg-orange-500 transition-all duration-500"
                 style={{ width: `${level2ProgressPercent}%` }}
               />
             </div>
@@ -799,7 +802,7 @@ export default async function DashboardPage() {
                         {lesson.title}
                       </h4>
                       <p className={`text-sm ${
-                        isLocked ? "text-slate-600" : "text-chessio-primary"
+                        isLocked ? "text-slate-600" : "text-orange-400"
                       }`}>
                         +{lesson.xpReward} XP
                       </p>
@@ -816,7 +819,7 @@ export default async function DashboardPage() {
                     ) : isAvailable ? (
                       <Link
                         href={`/lessons/${lesson.slug}`}
-                        className="shrink-0 px-4 py-2 text-sm font-medium bg-chessio-primary text-slate-950 rounded-lg hover:bg-chessio-primary/90 transition-all hover:scale-[1.02]"
+                        className="shrink-0 px-4 py-2 text-sm font-bold bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-all hover:scale-[1.02] shadow-lg shadow-orange-500/20"
                       >
                         Start
                       </Link>
@@ -832,6 +835,13 @@ export default async function DashboardPage() {
           </div>
         </div>
         )}
+
+        {/* Tier Progression Card - Shows "Path Ahead" after School content */}
+        <div className="mt-8">
+          <TierProgressionCard 
+            hasCompletedLevel3={graduationState.hasCompletedSchool}
+          />
+        </div>
 
         {/* Academy Gate Card - Bottom Section with unlock animation */}
         <AcademyGateCard isUnlocked={level0Complete && level1Complete}>

@@ -132,24 +132,26 @@ model Task {
 }
 
 model User {
-  id                 String               @id @default(cuid())
-  name               String?
-  email              String               @unique
-  emailVerified      DateTime?
-  image              String?
-  passwordHash       String?
-  xp                 Int                  @default(0)
-  createdAt          DateTime             @default(now())
-  updatedAt          DateTime             @updatedAt
-  feedbackGiven      Boolean              @default(false)
-  lastActiveAt       DateTime?
-  sessionCount       Int                  @default(0)
-  role               String               @default("USER")
-  Account            Account[]
-  Feedback           Feedback[]
-  Session            Session[]
-  UserLessonProgress UserLessonProgress[]
-  aiTasks            AiTask[]
+  id                       String               @id @default(cuid())
+  name                     String?
+  email                    String               @unique
+  emailVerified            DateTime?
+  image                    String?
+  passwordHash             String?
+  xp                       Int                  @default(0)
+  createdAt                DateTime             @default(now())
+  updatedAt                DateTime             @updatedAt
+  feedbackGiven            Boolean              @default(false)
+  lastActiveAt             DateTime?
+  sessionCount             Int                  @default(0)
+  role                     String               @default("USER")
+  hasSeenSchoolGraduation  Boolean              @default(false)
+  hasAttemptedClubPreview  Boolean              @default(false)
+  Account                  Account[]
+  Feedback                 Feedback[]
+  Session                  Session[]
+  UserLessonProgress       UserLessonProgress[]
+  aiTasks                  AiTask[]
 }
 
 model UserLessonProgress {

@@ -18,18 +18,22 @@ interface ChallengeCardProps {
 export function ChallengeCard({ challengeId, level, isUnlocked, isCompleted = false }: ChallengeCardProps) {
   const levelColors = {
     0: {
-      gradient: "from-amber-500 to-orange-600",
-      bg: "bg-amber-900/20",
-      border: "border-amber-500/20",
+      borderGlow: "border-amber-500/30",
+      bg: "bg-slate-900/50",
+      bgCompleted: "bg-amber-950/30",
+      borderCompleted: "border-amber-700/30",
       text: "text-amber-400",
       icon: "🎓",
+      accentColor: "text-amber-400",
     },
     1: {
-      gradient: "from-blue-500 to-indigo-600",
-      bg: "bg-blue-900/20",
-      border: "border-blue-500/20",
+      borderGlow: "border-blue-500/30",
+      bg: "bg-slate-900/50",
+      bgCompleted: "bg-blue-950/30",
+      borderCompleted: "border-blue-700/30",
       text: "text-blue-400",
       icon: "🎓",
+      accentColor: "text-blue-400",
     },
   };
 
@@ -39,21 +43,18 @@ export function ChallengeCard({ challengeId, level, isUnlocked, isCompleted = fa
   return (
     <div className="mt-4 pt-4 border-t border-chessio-border-dark/50">
       <div
-        className={`relative overflow-hidden rounded-2xl border ${
+        className={`relative overflow-hidden rounded-xl border transition-all ${
           isCompleted
-            ? `${colors.bg} ${colors.border}`
+            ? `${colors.bgCompleted} ${colors.borderCompleted}`
             : isUnlocked
-            ? "bg-gradient-to-r " + colors.gradient
+            ? `${colors.bg} ${colors.borderGlow} hover:border-amber-500/50`
             : "bg-slate-800/30 border-white/5 opacity-60"
         }`}
       >
-        {/* Background pattern */}
+        {/* Subtle glow effect when unlocked */}
         {isUnlocked && !isCompleted && (
-          <div className="absolute inset-0 opacity-10">
-            <div className="absolute inset-0" style={{
-              backgroundImage: "radial-gradient(circle at 2px 2px, white 1px, transparent 0)",
-              backgroundSize: "24px 24px",
-            }} />
+          <div className="absolute inset-0 opacity-5">
+            <div className="absolute top-0 left-0 w-full h-32 bg-gradient-to-b from-amber-500/20 to-transparent" />
           </div>
         )}
 
@@ -61,12 +62,12 @@ export function ChallengeCard({ challengeId, level, isUnlocked, isCompleted = fa
           <div className="flex items-start gap-4">
             {/* Chip Avatar */}
             <div
-              className={`w-16 h-16 shrink-0 rounded-full flex items-center justify-center text-3xl ${
+              className={`w-16 h-16 shrink-0 rounded-full flex items-center justify-center text-3xl border ${
                 isCompleted
-                  ? "bg-amber-500"
+                  ? "bg-amber-950/50 border-amber-700/40 text-amber-400"
                   : isUnlocked
-                  ? "bg-white/20 backdrop-blur-sm"
-                  : "bg-slate-700"
+                  ? "bg-slate-800/50 border-amber-500/30"
+                  : "bg-slate-700 border-slate-600"
               }`}
             >
               {isCompleted ? colors.icon : isUnlocked ? chipEmoji : "🔒"}
@@ -105,19 +106,19 @@ export function ChallengeCard({ challengeId, level, isUnlocked, isCompleted = fa
                 <div className="flex flex-wrap gap-2 mb-4">
                   {level === 0 ? (
                     <>
-                      <span className="text-xs px-2 py-1 bg-white/10 text-white/80 rounded">
+                      <span className="text-xs px-2 py-1 bg-slate-800/60 border border-amber-500/20 text-amber-100 rounded">
                         ⚔️ Capture 3 pieces
                       </span>
-                      <span className="text-xs px-2 py-1 bg-white/10 text-white/80 rounded">
+                      <span className="text-xs px-2 py-1 bg-slate-800/60 border border-amber-500/20 text-amber-100 rounded">
                         👑 Keep your Queen safe
                       </span>
                     </>
                   ) : (
                     <>
-                      <span className="text-xs px-2 py-1 bg-white/10 text-white/80 rounded">
+                      <span className="text-xs px-2 py-1 bg-slate-800/60 border border-blue-500/20 text-blue-100 rounded">
                         📊 Get a 3-point lead
                       </span>
-                      <span className="text-xs px-2 py-1 bg-white/10 text-white/80 rounded">
+                      <span className="text-xs px-2 py-1 bg-slate-800/60 border border-blue-500/20 text-blue-100 rounded">
                         ⚡ Don&apos;t blunder
                       </span>
                     </>
@@ -129,10 +130,10 @@ export function ChallengeCard({ challengeId, level, isUnlocked, isCompleted = fa
               {isUnlocked ? (
                 <Link
                   href={`/challenge/${challengeId}`}
-                  className={`inline-block px-5 py-2.5 text-sm font-bold rounded-lg transition-all hover:scale-[1.02] ${
+                  className={`inline-block px-5 py-2.5 text-sm font-bold rounded-lg transition-all hover:scale-[1.02] shadow-lg ${
                     isCompleted
-                      ? `${colors.text} hover:${colors.text}/80`
-                      : "bg-white/20 backdrop-blur-sm text-white hover:bg-white/30"
+                      ? "bg-amber-900/30 text-amber-400 hover:bg-amber-900/40 border border-amber-700/30"
+                      : "bg-orange-500 text-white hover:bg-orange-600 shadow-orange-500/20"
                   }`}
                 >
                   {isCompleted ? "Play Again" : "Start Challenge"}

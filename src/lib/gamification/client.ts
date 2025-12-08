@@ -1,13 +1,9 @@
-// Core XP functions (using centralized config)
-export {
-  calculateLevel,
-  getLevelProgress,
-  awardXp,
-  getUserXpStats,
-  calculateLessonXp,
-} from "./xp";
+/**
+ * Client-safe gamification exports
+ * This file ONLY exports constants and types, no database-touching functions
+ */
 
-// Centralized configuration
+// Centralized configuration (constants only, no DB functions)
 export {
   // Level definitions
   LEVELS,

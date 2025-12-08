@@ -37,7 +37,21 @@ This prevents accidental Edge deployment which breaks Prisma connections.
 
 - Use the **Prisma singleton** from `src/lib/db.ts` — never instantiate PrismaClient directly.
 - Connection pooling handled by the adapter.
-- For local dev: run `npx prisma dev` to start the local Prisma Postgres server.
+- **Local dev:** Point `.env` DATABASE_URL to your hosted Postgres (same as production).
+- **DO NOT** use `npx prisma dev` for normal development (only for throwaway experiments).
+
+### Database Setup
+
+```bash
+# .env should contain your hosted Postgres URL
+DATABASE_URL="postgresql://USER:PASSWORD@HOST:PORT/DATABASE?schema=public"
+
+# Apply schema
+npx prisma db push
+npx prisma generate
+```
+
+> **Rationale:** Using the same hosted database locally and in production eliminates port confusion, ensures schema parity, and simplifies migrations.
 
 ---
 

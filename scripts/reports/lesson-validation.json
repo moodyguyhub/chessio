@@ -1,0 +1,706 @@
+[
+  {
+    "taskId": "task1_run_from_rook",
+    "lessonId": "level-1-lesson-1-check",
+    "level": 1,
+    "type": "SimplifiedFEN",
+    "severity": "needsHumanReview",
+    "details": "Task uses simplified FEN (missing one or both kings). This is OK for teaching positions but chess.js validation is limited."
+  },
+  {
+    "taskId": "task1_run_from_rook",
+    "lessonId": "level-1-lesson-1-check",
+    "level": 1,
+    "type": "InvalidFEN",
+    "severity": "error",
+    "details": "Cannot parse FEN even after normalization: Error: Invalid FEN: piece data is invalid (too many squares in rank)"
+  },
+  {
+    "taskId": "task2_block_with_pawn",
+    "lessonId": "level-1-lesson-1-check",
+    "level": 1,
+    "type": "SimplifiedFEN",
+    "severity": "needsHumanReview",
+    "details": "Task uses simplified FEN (missing one or both kings). This is OK for teaching positions but chess.js validation is limited."
+  },
+  {
+    "taskId": "task2_block_with_pawn",
+    "lessonId": "level-1-lesson-1-check",
+    "level": 1,
+    "type": "InvalidFEN",
+    "severity": "error",
+    "details": "Cannot parse FEN even after normalization: Error: Invalid FEN: piece data is invalid (too many squares in rank)"
+  },
+  {
+    "taskId": "task3_capture_the_attacker",
+    "lessonId": "level-1-lesson-1-check",
+    "level": 1,
+    "type": "SimplifiedFEN",
+    "severity": "needsHumanReview",
+    "details": "Task uses simplified FEN (missing one or both kings). This is OK for teaching positions but chess.js validation is limited."
+  },
+  {
+    "taskId": "task3_capture_the_attacker",
+    "lessonId": "level-1-lesson-1-check",
+    "level": 1,
+    "type": "InvalidFEN",
+    "severity": "error",
+    "details": "Cannot parse FEN even after normalization: Error: Invalid FEN: piece data is invalid (too many squares in rank)"
+  },
+  {
+    "taskId": "task4_choose_best_defense",
+    "lessonId": "level-1-lesson-1-check",
+    "level": 1,
+    "type": "SimplifiedFEN",
+    "severity": "needsHumanReview",
+    "details": "Task uses simplified FEN (missing one or both kings). This is OK for teaching positions but chess.js validation is limited."
+  },
+  {
+    "taskId": "task4_choose_best_defense",
+    "lessonId": "level-1-lesson-1-check",
+    "level": 1,
+    "type": "InvalidFEN",
+    "severity": "error",
+    "details": "Cannot parse FEN even after normalization: Error: Invalid FEN: piece data is invalid (too many squares in rank)"
+  },
+  {
+    "taskId": "task5_double_check",
+    "lessonId": "level-1-lesson-1-check",
+    "level": 1,
+    "type": "SimplifiedFEN",
+    "severity": "needsHumanReview",
+    "details": "Task uses simplified FEN (missing one or both kings). This is OK for teaching positions but chess.js validation is limited."
+  },
+  {
+    "taskId": "task5_double_check",
+    "lessonId": "level-1-lesson-1-check",
+    "level": 1,
+    "type": "InvalidFEN",
+    "severity": "error",
+    "details": "Cannot parse FEN even after normalization: Error: Invalid FEN: piece data is invalid (too many squares in rank)"
+  },
+  {
+    "taskId": "task2_helper_mate_kiss_of_death",
+    "lessonId": "level-1-lesson-2-checkmate",
+    "level": 1,
+    "type": "NoMateInOneExists",
+    "severity": "error",
+    "details": "Task claims mate-in-1 but no legal move delivers checkmate"
+  },
+  {
+    "taskId": "task2_helper_mate_kiss_of_death",
+    "lessonId": "level-1-lesson-2-checkmate",
+    "level": 1,
+    "type": "IncorrectMateMove",
+    "severity": "error",
+    "details": "correctMove \"f2f7\" does not result in checkmate"
+  },
+  {
+    "taskId": "task2_helper_mate_kiss_of_death",
+    "lessonId": "level-1-lesson-2-checkmate",
+    "level": 1,
+    "type": "IllegalCorrectMove",
+    "severity": "error",
+    "details": "correctMove \"f2f7\" is illegal: Error: Invalid move: f2f7"
+  },
+  {
+    "taskId": "task3_ladder_mate",
+    "lessonId": "level-1-lesson-2-checkmate",
+    "level": 1,
+    "type": "NoMateInOneExists",
+    "severity": "error",
+    "details": "Task claims mate-in-1 but no legal move delivers checkmate"
+  },
+  {
+    "taskId": "task3_ladder_mate",
+    "lessonId": "level-1-lesson-2-checkmate",
+    "level": 1,
+    "type": "IncorrectMateMove",
+    "severity": "error",
+    "details": "correctMove \"a2a8\" does not result in checkmate"
+  },
+  {
+    "taskId": "task4_find_mate_not_just_check",
+    "lessonId": "level-1-lesson-2-checkmate",
+    "level": 1,
+    "type": "NoMateInOneExists",
+    "severity": "error",
+    "details": "Task claims mate-in-1 but no legal move delivers checkmate"
+  },
+  {
+    "taskId": "task4_find_mate_not_just_check",
+    "lessonId": "level-1-lesson-2-checkmate",
+    "level": 1,
+    "type": "IncorrectMateMove",
+    "severity": "error",
+    "details": "correctMove \"g2g7\" does not result in checkmate"
+  },
+  {
+    "taskId": "task4_find_mate_not_just_check",
+    "lessonId": "level-1-lesson-2-checkmate",
+    "level": 1,
+    "type": "IllegalCorrectMove",
+    "severity": "error",
+    "details": "correctMove \"g2g7\" is illegal: Error: Invalid move: g2g7"
+  },
+  {
+    "taskId": "task5_avoid_stalemate_and_mate",
+    "lessonId": "level-1-lesson-2-checkmate",
+    "level": 1,
+    "type": "MultipleMateInOne",
+    "severity": "warn",
+    "details": "Found 3 mate-in-1 moves (Qe8#, Qg7#, Qh7#) but only 1 accepted. Punishes \"too right\"."
+  },
+  {
+    "taskId": "task5_avoid_stalemate_and_mate",
+    "lessonId": "level-1-lesson-2-checkmate",
+    "level": 1,
+    "type": "SingleSolutionButMultipleGood",
+    "severity": "warn",
+    "details": "Task claims single solution but these moves also mate: Qe8#, Qh7#"
+  },
+  {
+    "taskId": "task1_simple_stalemate_blunder",
+    "lessonId": "level-1-lesson-3-stalemate",
+    "level": 1,
+    "type": "MultipleMateInOne",
+    "severity": "warn",
+    "details": "Found 2 mate-in-1 moves (Qd8#, Qg7#) but only 0 accepted. Punishes \"too right\"."
+  },
+  {
+    "taskId": "task1_simple_stalemate_blunder",
+    "lessonId": "level-1-lesson-3-stalemate",
+    "level": 1,
+    "type": "IncorrectMateMove",
+    "severity": "error",
+    "details": "correctMove \"f6f7\" does not result in checkmate"
+  },
+  {
+    "taskId": "task1_simple_stalemate_blunder",
+    "lessonId": "level-1-lesson-3-stalemate",
+    "level": 1,
+    "type": "SingleSolutionButMultipleGood",
+    "severity": "warn",
+    "details": "Task claims single solution but these moves also mate: Qd8#, Qg7#"
+  },
+  {
+    "taskId": "task2_convert_to_mate",
+    "lessonId": "level-1-lesson-3-stalemate",
+    "level": 1,
+    "type": "MultipleMateInOne",
+    "severity": "warn",
+    "details": "Found 5 mate-in-1 moves (Qf8#, Qh7#, Kf7#, Kh6#, Kf6#) but only 1 accepted. Punishes \"too right\"."
+  },
+  {
+    "taskId": "task2_convert_to_mate",
+    "lessonId": "level-1-lesson-3-stalemate",
+    "level": 1,
+    "type": "SingleSolutionButMultipleGood",
+    "severity": "warn",
+    "details": "Task claims single solution but these moves also mate: Qf8#, Kf7#, Kh6#, Kf6#"
+  },
+  {
+    "taskId": "task3_defensive_stalemate_resource",
+    "lessonId": "level-1-lesson-3-stalemate",
+    "level": 1,
+    "type": "SimplifiedFEN",
+    "severity": "needsHumanReview",
+    "details": "Task uses simplified FEN (missing one or both kings). This is OK for teaching positions but chess.js validation is limited."
+  },
+  {
+    "taskId": "task3_defensive_stalemate_resource",
+    "lessonId": "level-1-lesson-3-stalemate",
+    "level": 1,
+    "type": "InvalidFEN",
+    "severity": "error",
+    "details": "Cannot parse FEN even after normalization: Error: Invalid FEN: piece data is invalid (too many squares in rank)"
+  },
+  {
+    "taskId": "task4_only_move_avoids_stalemate",
+    "lessonId": "level-1-lesson-3-stalemate",
+    "level": 1,
+    "type": "NoMateInOneExists",
+    "severity": "error",
+    "details": "Task claims mate-in-1 but no legal move delivers checkmate"
+  },
+  {
+    "taskId": "task4_only_move_avoids_stalemate",
+    "lessonId": "level-1-lesson-3-stalemate",
+    "level": 1,
+    "type": "IncorrectMateMove",
+    "severity": "error",
+    "details": "correctMove \"g1f2\" does not result in checkmate"
+  },
+  {
+    "taskId": "task4_only_move_avoids_stalemate",
+    "lessonId": "level-1-lesson-3-stalemate",
+    "level": 1,
+    "type": "IncorrectMateMove",
+    "severity": "error",
+    "details": "correctMove \"g1h2\" does not result in checkmate"
+  },
+  {
+    "taskId": "task5_classic_corner_stalemate_pattern",
+    "lessonId": "level-1-lesson-3-stalemate",
+    "level": 1,
+    "type": "BlackToMoveTask",
+    "severity": "needsHumanReview",
+    "details": "Task requires black to move. Verify board orientation handles this correctly (current implementation shows white at bottom)"
+  },
+  {
+    "taskId": "task5_classic_corner_stalemate_pattern",
+    "lessonId": "level-1-lesson-3-stalemate",
+    "level": 1,
+    "type": "NoMateInOneExists",
+    "severity": "error",
+    "details": "Task claims mate-in-1 but no legal move delivers checkmate"
+  },
+  {
+    "taskId": "task5_classic_corner_stalemate_pattern",
+    "lessonId": "level-1-lesson-3-stalemate",
+    "level": 1,
+    "type": "IncorrectMateMove",
+    "severity": "error",
+    "details": "correctMove \"h2h7\" does not result in checkmate"
+  },
+  {
+    "taskId": "task5_classic_corner_stalemate_pattern",
+    "lessonId": "level-1-lesson-3-stalemate",
+    "level": 1,
+    "type": "IllegalCorrectMove",
+    "severity": "error",
+    "details": "correctMove \"h2h7\" is illegal: Error: Invalid move: h2h7"
+  },
+  {
+    "taskId": "task1_knight_fork_king_queen",
+    "lessonId": "level-2-lesson-1-fork",
+    "level": 2,
+    "type": "SimplifiedFEN",
+    "severity": "needsHumanReview",
+    "details": "Task uses simplified FEN (missing one or both kings). This is OK for teaching positions but chess.js validation is limited."
+  },
+  {
+    "taskId": "task1_knight_fork_king_queen",
+    "lessonId": "level-2-lesson-1-fork",
+    "level": 2,
+    "type": "InvalidFEN",
+    "severity": "error",
+    "details": "Cannot parse FEN even after normalization: Error: Invalid FEN: piece data does not contain 8 '/'-delimited rows"
+  },
+  {
+    "taskId": "task2_knight_fork_king_rook",
+    "lessonId": "level-2-lesson-1-fork",
+    "level": 2,
+    "type": "SimplifiedFEN",
+    "severity": "needsHumanReview",
+    "details": "Task uses simplified FEN (missing one or both kings). This is OK for teaching positions but chess.js validation is limited."
+  },
+  {
+    "taskId": "task2_knight_fork_king_rook",
+    "lessonId": "level-2-lesson-1-fork",
+    "level": 2,
+    "type": "InvalidFEN",
+    "severity": "error",
+    "details": "Cannot parse FEN even after normalization: Error: Invalid FEN: piece data does not contain 8 '/'-delimited rows"
+  },
+  {
+    "taskId": "task3_pawn_fork_two_pieces",
+    "lessonId": "level-2-lesson-1-fork",
+    "level": 2,
+    "type": "SimplifiedFEN",
+    "severity": "needsHumanReview",
+    "details": "Task uses simplified FEN (missing one or both kings). This is OK for teaching positions but chess.js validation is limited."
+  },
+  {
+    "taskId": "task3_pawn_fork_two_pieces",
+    "lessonId": "level-2-lesson-1-fork",
+    "level": 2,
+    "type": "InvalidFEN",
+    "severity": "error",
+    "details": "Cannot parse FEN even after normalization: Error: Invalid FEN: piece data is invalid (too many squares in rank)"
+  },
+  {
+    "taskId": "task4_queen_fork_king_piece",
+    "lessonId": "level-2-lesson-1-fork",
+    "level": 2,
+    "type": "SimplifiedFEN",
+    "severity": "needsHumanReview",
+    "details": "Task uses simplified FEN (missing one or both kings). This is OK for teaching positions but chess.js validation is limited."
+  },
+  {
+    "taskId": "task4_queen_fork_king_piece",
+    "lessonId": "level-2-lesson-1-fork",
+    "level": 2,
+    "type": "InvalidFEN",
+    "severity": "error",
+    "details": "Cannot parse FEN even after normalization: Error: Invalid FEN: piece data does not contain 8 '/'-delimited rows"
+  },
+  {
+    "taskId": "task5_fork_vs_simple_capture",
+    "lessonId": "level-2-lesson-1-fork",
+    "level": 2,
+    "type": "SimplifiedFEN",
+    "severity": "needsHumanReview",
+    "details": "Task uses simplified FEN (missing one or both kings). This is OK for teaching positions but chess.js validation is limited."
+  },
+  {
+    "taskId": "task5_fork_vs_simple_capture",
+    "lessonId": "level-2-lesson-1-fork",
+    "level": 2,
+    "type": "InvalidFEN",
+    "severity": "error",
+    "details": "Cannot parse FEN even after normalization: Error: Invalid FEN: piece data does not contain 8 '/'-delimited rows"
+  },
+  {
+    "taskId": "task1_absolute_pin_to_king",
+    "lessonId": "level-2-lesson-2-pin",
+    "level": 2,
+    "type": "SimplifiedFEN",
+    "severity": "needsHumanReview",
+    "details": "Task uses simplified FEN (missing one or both kings). This is OK for teaching positions but chess.js validation is limited."
+  },
+  {
+    "taskId": "task1_absolute_pin_to_king",
+    "lessonId": "level-2-lesson-2-pin",
+    "level": 2,
+    "type": "InvalidFEN",
+    "severity": "error",
+    "details": "Cannot parse FEN even after normalization: Error: Invalid FEN: piece data does not contain 8 '/'-delimited rows"
+  },
+  {
+    "taskId": "task2_relative_pin_to_queen",
+    "lessonId": "level-2-lesson-2-pin",
+    "level": 2,
+    "type": "SimplifiedFEN",
+    "severity": "needsHumanReview",
+    "details": "Task uses simplified FEN (missing one or both kings). This is OK for teaching positions but chess.js validation is limited."
+  },
+  {
+    "taskId": "task2_relative_pin_to_queen",
+    "lessonId": "level-2-lesson-2-pin",
+    "level": 2,
+    "type": "InvalidFEN",
+    "severity": "error",
+    "details": "Cannot parse FEN even after normalization: Error: Invalid FEN: piece data does not contain 8 '/'-delimited rows"
+  },
+  {
+    "taskId": "task3_exploit_pinned_piece",
+    "lessonId": "level-2-lesson-2-pin",
+    "level": 2,
+    "type": "SimplifiedFEN",
+    "severity": "needsHumanReview",
+    "details": "Task uses simplified FEN (missing one or both kings). This is OK for teaching positions but chess.js validation is limited."
+  },
+  {
+    "taskId": "task3_exploit_pinned_piece",
+    "lessonId": "level-2-lesson-2-pin",
+    "level": 2,
+    "type": "InvalidFEN",
+    "severity": "error",
+    "details": "Cannot parse FEN even after normalization: Error: Invalid FEN: piece data does not contain 8 '/'-delimited rows"
+  },
+  {
+    "taskId": "task4_break_pin_by_attack",
+    "lessonId": "level-2-lesson-2-pin",
+    "level": 2,
+    "type": "BlackToMoveTask",
+    "severity": "needsHumanReview",
+    "details": "Task requires black to move. Verify board orientation handles this correctly (current implementation shows white at bottom)"
+  },
+  {
+    "taskId": "task5_break_pin_by_king_move",
+    "lessonId": "level-2-lesson-2-pin",
+    "level": 2,
+    "type": "IllegalCorrectMove",
+    "severity": "error",
+    "details": "correctMove \"e1f2\" is illegal: Error: Invalid move: e1f2"
+  },
+  {
+    "taskId": "task1_rook_skewer_king_queen",
+    "lessonId": "level-2-lesson-3-skewer",
+    "level": 2,
+    "type": "SimplifiedFEN",
+    "severity": "needsHumanReview",
+    "details": "Task uses simplified FEN (missing one or both kings). This is OK for teaching positions but chess.js validation is limited."
+  },
+  {
+    "taskId": "task1_rook_skewer_king_queen",
+    "lessonId": "level-2-lesson-3-skewer",
+    "level": 2,
+    "type": "InvalidFEN",
+    "severity": "error",
+    "details": "Cannot parse FEN even after normalization: Error: Invalid FEN: piece data does not contain 8 '/'-delimited rows"
+  },
+  {
+    "taskId": "task2_bishop_skewer_diagonal",
+    "lessonId": "level-2-lesson-3-skewer",
+    "level": 2,
+    "type": "SimplifiedFEN",
+    "severity": "needsHumanReview",
+    "details": "Task uses simplified FEN (missing one or both kings). This is OK for teaching positions but chess.js validation is limited."
+  },
+  {
+    "taskId": "task2_bishop_skewer_diagonal",
+    "lessonId": "level-2-lesson-3-skewer",
+    "level": 2,
+    "type": "InvalidFEN",
+    "severity": "error",
+    "details": "Cannot parse FEN even after normalization: Error: Invalid FEN: piece data does not contain 8 '/'-delimited rows"
+  },
+  {
+    "taskId": "task3_skewer_win_rook",
+    "lessonId": "level-2-lesson-3-skewer",
+    "level": 2,
+    "type": "SimplifiedFEN",
+    "severity": "needsHumanReview",
+    "details": "Task uses simplified FEN (missing one or both kings). This is OK for teaching positions but chess.js validation is limited."
+  },
+  {
+    "taskId": "task3_skewer_win_rook",
+    "lessonId": "level-2-lesson-3-skewer",
+    "level": 2,
+    "type": "InvalidFEN",
+    "severity": "error",
+    "details": "Cannot parse FEN even after normalization: Error: Invalid FEN: piece data does not contain 8 '/'-delimited rows"
+  },
+  {
+    "taskId": "task4_defend_against_skewer",
+    "lessonId": "level-2-lesson-3-skewer",
+    "level": 2,
+    "type": "SimplifiedFEN",
+    "severity": "needsHumanReview",
+    "details": "Task uses simplified FEN (missing one or both kings). This is OK for teaching positions but chess.js validation is limited."
+  },
+  {
+    "taskId": "task4_defend_against_skewer",
+    "lessonId": "level-2-lesson-3-skewer",
+    "level": 2,
+    "type": "InvalidFEN",
+    "severity": "error",
+    "details": "Cannot parse FEN even after normalization: Error: Invalid FEN: piece data is invalid (too many squares in rank)"
+  },
+  {
+    "taskId": "task5_skewer_endgame",
+    "lessonId": "level-2-lesson-3-skewer",
+    "level": 2,
+    "type": "SimplifiedFEN",
+    "severity": "needsHumanReview",
+    "details": "Task uses simplified FEN (missing one or both kings). This is OK for teaching positions but chess.js validation is limited."
+  },
+  {
+    "taskId": "task5_skewer_endgame",
+    "lessonId": "level-2-lesson-3-skewer",
+    "level": 2,
+    "type": "InvalidFEN",
+    "severity": "error",
+    "details": "Cannot parse FEN even after normalization: Error: Invalid FEN: piece data does not contain 8 '/'-delimited rows"
+  },
+  {
+    "taskId": "task3_avoid_stalemate",
+    "lessonId": "level-3-lesson-3-king-and-pawn",
+    "level": 3,
+    "type": "NoMateInOneExists",
+    "severity": "error",
+    "details": "Task claims mate-in-1 but no legal move delivers checkmate"
+  },
+  {
+    "taskId": "task3_avoid_stalemate",
+    "lessonId": "level-3-lesson-3-king-and-pawn",
+    "level": 3,
+    "type": "IncorrectMateMove",
+    "severity": "error",
+    "details": "correctMove \"f1e1\" does not result in checkmate"
+  },
+  {
+    "taskId": "task3_avoid_stalemate",
+    "lessonId": "level-3-lesson-3-king-and-pawn",
+    "level": 3,
+    "type": "IncorrectMateMove",
+    "severity": "error",
+    "details": "correctMove \"f1g1\" does not result in checkmate"
+  },
+  {
+    "taskId": "task4_edge_pawn_corner",
+    "lessonId": "level-3-lesson-3-king-and-pawn",
+    "level": 3,
+    "type": "NoMaterialGain",
+    "severity": "warn",
+    "details": "correctMove \"g1h1\" doesn't win material (gain: 0)"
+  },
+  {
+    "taskId": "task5_convert_advantage",
+    "lessonId": "level-3-lesson-3-king-and-pawn",
+    "level": 3,
+    "type": "NoMaterialGain",
+    "severity": "warn",
+    "details": "correctMove \"d2e3\" doesn't win material (gain: 0)"
+  },
+  {
+    "taskId": "task5_convert_advantage",
+    "lessonId": "level-3-lesson-3-king-and-pawn",
+    "level": 3,
+    "type": "NoMaterialGain",
+    "severity": "warn",
+    "details": "correctMove \"d2c3\" doesn't win material (gain: 0)"
+  },
+  {
+    "taskId": "task1_take_opposition",
+    "lessonId": "level-3-lesson-2-opposition",
+    "level": 3,
+    "type": "NoMaterialGain",
+    "severity": "warn",
+    "details": "correctMove \"e1e2\" doesn't win material (gain: 0)"
+  },
+  {
+    "taskId": "task1_take_opposition",
+    "lessonId": "level-3-lesson-2-opposition",
+    "level": 3,
+    "type": "NoMaterialGain",
+    "severity": "warn",
+    "details": "correctMove \"e1e3\" doesn't win material (gain: 0)"
+  },
+  {
+    "taskId": "task1_take_opposition",
+    "lessonId": "level-3-lesson-2-opposition",
+    "level": 3,
+    "type": "IllegalCorrectMove",
+    "severity": "error",
+    "details": "correctMove \"e1e3\" is illegal: Error: Invalid move: e1e3"
+  },
+  {
+    "taskId": "task2_do_not_give_back",
+    "lessonId": "level-3-lesson-2-opposition",
+    "level": 3,
+    "type": "IllegalCorrectMove",
+    "severity": "error",
+    "details": "correctMove \"d3d4\" is illegal: Error: Invalid move: d3d4"
+  },
+  {
+    "taskId": "task3_step_forward_with_support",
+    "lessonId": "level-3-lesson-2-opposition",
+    "level": 3,
+    "type": "NoMaterialGain",
+    "severity": "warn",
+    "details": "correctMove \"e2e3\" doesn't win material (gain: 0)"
+  },
+  {
+    "taskId": "task3_step_forward_with_support",
+    "lessonId": "level-3-lesson-2-opposition",
+    "level": 3,
+    "type": "IllegalCorrectMove",
+    "severity": "error",
+    "details": "correctMove \"e2e3\" is illegal: Error: Invalid move: e2e3"
+  },
+  {
+    "taskId": "task4_shouldering",
+    "lessonId": "level-3-lesson-2-opposition",
+    "level": 3,
+    "type": "IllegalCorrectMove",
+    "severity": "error",
+    "details": "correctMove \"d4c5\" is illegal: Error: Invalid move: d4c5"
+  },
+  {
+    "taskId": "task4_shouldering",
+    "lessonId": "level-3-lesson-2-opposition",
+    "level": 3,
+    "type": "IllegalCorrectMove",
+    "severity": "error",
+    "details": "correctMove \"d4e5\" is illegal: Error: Invalid move: d4e5"
+  },
+  {
+    "taskId": "task5_opposition_to_win",
+    "lessonId": "level-3-lesson-2-opposition",
+    "level": 3,
+    "type": "NoMaterialGain",
+    "severity": "warn",
+    "details": "correctMove \"e3d4\" doesn't win material (gain: 0)"
+  },
+  {
+    "taskId": "task5_opposition_to_win",
+    "lessonId": "level-3-lesson-2-opposition",
+    "level": 3,
+    "type": "NoMaterialGain",
+    "severity": "warn",
+    "details": "correctMove \"e3f4\" doesn't win material (gain: 0)"
+  },
+  {
+    "taskId": "task1_enter_the_box",
+    "lessonId": "level-3-lesson-1-pawn-square",
+    "level": 3,
+    "type": "SimplifiedFEN",
+    "severity": "needsHumanReview",
+    "details": "Task uses simplified FEN (missing one or both kings). This is OK for teaching positions but chess.js validation is limited."
+  },
+  {
+    "taskId": "task1_enter_the_box",
+    "lessonId": "level-3-lesson-1-pawn-square",
+    "level": 3,
+    "type": "InvalidFEN",
+    "severity": "error",
+    "details": "Cannot parse FEN even after normalization: Error: Invalid FEN: piece data is invalid (too many squares in rank)"
+  },
+  {
+    "taskId": "task2_too_far_must_run",
+    "lessonId": "level-3-lesson-1-pawn-square",
+    "level": 3,
+    "type": "SimplifiedFEN",
+    "severity": "needsHumanReview",
+    "details": "Task uses simplified FEN (missing one or both kings). This is OK for teaching positions but chess.js validation is limited."
+  },
+  {
+    "taskId": "task2_too_far_must_run",
+    "lessonId": "level-3-lesson-1-pawn-square",
+    "level": 3,
+    "type": "InvalidFEN",
+    "severity": "error",
+    "details": "Cannot parse FEN even after normalization: Error: Invalid FEN: piece data is invalid (too many squares in rank)"
+  },
+  {
+    "taskId": "task3_one_tempo_matters",
+    "lessonId": "level-3-lesson-1-pawn-square",
+    "level": 3,
+    "type": "SimplifiedFEN",
+    "severity": "needsHumanReview",
+    "details": "Task uses simplified FEN (missing one or both kings). This is OK for teaching positions but chess.js validation is limited."
+  },
+  {
+    "taskId": "task3_one_tempo_matters",
+    "lessonId": "level-3-lesson-1-pawn-square",
+    "level": 3,
+    "type": "InvalidFEN",
+    "severity": "error",
+    "details": "Cannot parse FEN even after normalization: Error: Invalid FEN: piece data is invalid (too many squares in rank)"
+  },
+  {
+    "taskId": "task4_defend_or_run",
+    "lessonId": "level-3-lesson-1-pawn-square",
+    "level": 3,
+    "type": "SimplifiedFEN",
+    "severity": "needsHumanReview",
+    "details": "Task uses simplified FEN (missing one or both kings). This is OK for teaching positions but chess.js validation is limited."
+  },
+  {
+    "taskId": "task4_defend_or_run",
+    "lessonId": "level-3-lesson-1-pawn-square",
+    "level": 3,
+    "type": "InvalidFEN",
+    "severity": "error",
+    "details": "Cannot parse FEN even after normalization: Error: Invalid FEN: piece data is invalid (too many squares in rank)"
+  },
+  {
+    "taskId": "task5_two_pawns_racing",
+    "lessonId": "level-3-lesson-1-pawn-square",
+    "level": 3,
+    "type": "SimplifiedFEN",
+    "severity": "needsHumanReview",
+    "details": "Task uses simplified FEN (missing one or both kings). This is OK for teaching positions but chess.js validation is limited."
+  },
+  {
+    "taskId": "task5_two_pawns_racing",
+    "lessonId": "level-3-lesson-1-pawn-square",
+    "level": 3,
+    "type": "InvalidFEN",
+    "severity": "error",
+    "details": "Cannot parse FEN even after normalization: Error: Invalid FEN: piece data is invalid (too many squares in rank)"
+  }
+]

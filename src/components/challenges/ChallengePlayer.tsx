@@ -133,7 +133,14 @@ export function ChallengePlayer({ config, onExit }: ChallengePlayerProps) {
 
   // Handle retry
   const handleRetry = () => {
-    router.refresh(); // Reload to reset state
+    // Reset all game state
+    engine.reset();
+    setFen(config.startingFEN);
+    setState(engine.getState());
+    setSelectedSquare(null);
+    setHighlights({});
+    setIsAnimating(false);
+    setScreen("intro");
   };
 
   // Handle continue after success

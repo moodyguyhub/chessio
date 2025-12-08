@@ -21,7 +21,8 @@
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "test:all": "npm run test:sanity && npm run test:unit && npm run test:integration && npm run test:e2e",
-    "test:school-data": "tsx scripts/test-school-data.ts"
+    "test:school-data": "tsx scripts/test-school-data.ts",
+    "validate:lessons": "tsx scripts/validate-lessons.ts"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"
