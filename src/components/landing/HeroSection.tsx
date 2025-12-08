@@ -40,7 +40,7 @@ export function HeroSection({ isLoggedIn }: HeroSectionProps) {
             <Link
               href={isLoggedIn ? "/school/placement" : "/login?redirect=/school/placement"}
               onClick={() => play("ui_click")}
-              className="inline-flex items-center justify-center rounded-lg px-8 py-3.5 text-base font-bold shadow-lg hover:shadow-xl transition-all border-2"
+              className="inline-flex items-center justify-center rounded-lg px-6 py-2.5 text-sm font-bold shadow-lg hover:shadow-xl transition-all border-2"
               style={{
                 backgroundColor: '#facc15',
                 color: '#0f172a',
