@@ -96,7 +96,7 @@ export default function SchoolDashboard({ levels, unlockedLevels }: SchoolDashbo
       </div>
 
       {/* Title Section with Grand Hall backdrop */}
-      <div className="relative text-center space-y-3 py-12 px-6 rounded-3xl border border-chessio-border-dark/40 overflow-hidden">
+      <div className="relative text-center space-y-3 py-12 px-6 rounded-3xl border border-amber-900/20 overflow-hidden shadow-xl">
         {/* Grand Hall background */}
         <div className="absolute inset-0 -z-10">
           <Image
@@ -104,17 +104,18 @@ export default function SchoolDashboard({ levels, unlockedLevels }: SchoolDashbo
             alt=""
             fill
             aria-hidden="true"
-            className="object-cover opacity-30"
+            className="object-cover opacity-40"
             sizes="(min-width: 1024px) 80vw, 100vw"
+            priority
           />
-          {/* Strong gradient overlay for text readability */}
-          <div className="absolute inset-0 bg-gradient-to-b from-black via-black/80 to-chessio-bg-dark" />
+          {/* Lightened gradient overlay for text readability while showing image */}
+          <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-slate-950/90" />
         </div>
 
-        <h1 className="text-4xl font-bold tracking-tight text-white relative z-10">
+        <h1 className="text-4xl font-bold tracking-tight text-white relative z-10 drop-shadow-lg">
           Chessio School
         </h1>
-        <p className="text-lg text-neutral-300 max-w-2xl mx-auto relative z-10">
+        <p className="text-lg text-slate-200 max-w-2xl mx-auto relative z-10 drop-shadow-md">
           &ldquo;We do not start with openings. We start with the truth.&rdquo;
         </p>
       </div>
