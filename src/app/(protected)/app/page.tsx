@@ -261,10 +261,17 @@ export default async function DashboardPage() {
           </div>
           <div className="flex flex-col items-stretch gap-2 sm:items-end relative z-10">
             <Link href="/school">
-              <Button size="sm" className="inline-flex items-center gap-1 w-full">
+              <button
+                className="inline-flex items-center gap-1 w-full h-8 px-3 text-xs font-bold rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-950 focus:ring-yellow-500/50 shadow-md hover:shadow-lg hover:scale-[1.02]"
+                style={{
+                  backgroundColor: '#facc15',
+                  color: '#0f172a',
+                  border: '2px solid rgba(251, 191, 36, 0.5)'
+                }}
+              >
                 Enter Chess School
                 <ArrowRight className="h-4 w-4" />
-              </Button>
+              </button>
             </Link>
             <Button
               variant="outline"

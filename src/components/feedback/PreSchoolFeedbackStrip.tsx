@@ -91,13 +91,18 @@ export function PreSchoolFeedbackStrip() {
 
       {/* Submit button and status */}
       <div className="flex items-center justify-between gap-2 mt-3">
-        <Button
-          size="sm"
+        <button
           onClick={handleSubmit}
           disabled={!mood || status === "submitting" || status === "success"}
+          className="h-8 px-3 text-xs font-bold rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-950 focus:ring-yellow-500/50 disabled:opacity-50 disabled:pointer-events-none shadow-md hover:shadow-lg hover:scale-[1.02]"
+          style={{
+            backgroundColor: '#facc15',
+            color: '#0f172a',
+            border: '2px solid rgba(251, 191, 36, 0.5)'
+          }}
         >
           {status === "submitting" ? "Sending..." : "Send feedback"}
-        </Button>
+        </button>
         
         {status === "success" && (
           <span className="text-xs text-emerald-400 font-medium">
