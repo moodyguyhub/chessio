@@ -5,18 +5,22 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { markSchoolGraduationSeen } from "@/lib/progression/graduation";
-import { withErrorHandling, apiSuccess } from "@/lib/api-errors";
 
 export const runtime = "nodejs";
 
-export const POST = withErrorHandling(async (req) => {
-  const session = await auth();
-  
-  if (!session?.user?.id) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+export async function POST() {
+  try {
+    const session = await auth();
+    
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    await markSchoolGraduationSeen(session.user.id);
+
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    console.error("[graduation] Error:", error);
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
-
-  await markSchoolGraduationSeen(session.user.id);
-
-  return apiSuccess({ success: true });
-}, "mark-graduation-seen");
+}
