@@ -213,8 +213,8 @@ export default async function DashboardPage() {
         {/* Chessio Pre-School banner */}
         {/* Chessio Pre-School banner with Academy teaser */}
         <section className="mb-6 rounded-2xl border border-chessio-border bg-chessio-card/80 px-4 py-4 sm:px-6 sm:py-5 shadow-sm flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between relative overflow-hidden">
-          {/* Grand hall background - very subtle watermark on right */}
-          <div className="hidden lg:block absolute right-0 top-0 bottom-0 w-64 opacity-[0.06] pointer-events-none">
+          {/* Grand hall background - subtle watermark on right */}
+          <div className="hidden lg:block absolute right-0 top-0 bottom-0 w-64 opacity-[0.12] pointer-events-none">
             <Image
               src="/academy/academy-grand-hall.jpg"
               alt=""
@@ -222,7 +222,9 @@ export default async function DashboardPage() {
               aria-hidden="true"
               className="object-cover object-left"
               sizes="256px"
+              priority
             />
+            <div className="absolute inset-0 bg-gradient-to-l from-transparent via-transparent to-slate-950/80" />
           </div>
 
           <div className="flex items-start gap-3 relative z-10">
@@ -334,15 +336,16 @@ export default async function DashboardPage() {
         <TodaysGoalCard>
           <div className="flex items-start justify-between gap-6">
             {/* Study desk thumbnail - left side, more visible on desktop */}
-            <div className="hidden md:block relative w-32 h-32 flex-shrink-0 rounded-xl overflow-hidden border border-chessio-border-dark/60 shadow-lg">
+            <div className="hidden md:block relative w-32 h-32 flex-shrink-0 rounded-xl overflow-hidden border border-amber-900/30 shadow-lg ring-1 ring-amber-500/10">
               <Image
                 src="/academy/academy-study-desk.jpg"
                 alt="A quiet chessboard under a single lamp, notebook and mug beside it"
                 fill
-                className="object-cover opacity-75"
+                className="object-cover opacity-90"
                 sizes="128px"
+                priority
               />
-              <div className="absolute inset-0 bg-gradient-to-br from-black/50 via-black/30 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-br from-black/20 via-transparent to-black/20" />
             </div>
 
             <div className="flex-1">
