@@ -340,18 +340,21 @@ export function ActiveDutyCard({
               whileHover={shouldReduceMotion ? undefined : buttonHover}
               whileTap={shouldReduceMotion ? undefined : buttonTap}
             >
-              <Button
+              <button
                 onClick={() => {
                   play("ui_click");
                   actions.onPrimary();
                 }}
-                variant="primary"
-                size="lg"
-                className="w-full h-11 lg:h-12 font-medium"
+                className="w-full h-11 lg:h-12 font-bold text-sm rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-950 focus:ring-yellow-500/50 shadow-lg hover:shadow-xl hover:scale-[1.02]"
+                style={{
+                  backgroundColor: '#facc15',
+                  color: '#0f172a',
+                  border: '2px solid rgba(251, 191, 36, 0.5)'
+                }}
                 data-testid="duty-primary-cta"
               >
                 {actions.primaryLabel}
-              </Button>
+              </button>
             </motion.div>
 
             {/* Secondary Action - mobile only */}
