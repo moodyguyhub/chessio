@@ -777,12 +777,12 @@ export const PUZZLES: Lesson[] = [
         id: "puzzle-3-rook-corner",
         kind: "move-piece",
         prompt: "White to move. Trap the King in the corner!",
-        initialFen: "k7/8/K7/1R6/8/8/8/8 w - - 0 1", // King a6, Rook b5, Black King a8
+        initialFen: "k7/1K6/8/1R6/8/8/8/8 w - - 0 1", // King b7, Rook b5, Black King a8
         expectedMove: { from: "b5", to: "b8" },
         messages: {
-          success: "Checkmate! The Rook delivers mate, protected by your King on a6.",
-          failure: "The Black King is almost trapped. Deliver the final blow!",
-          hint: "Move the Rook to b8. Your King on a6 protects it from capture!",
+          success: "Checkmate! The Rook delivers mate on b8. The King on b7 controls a7 and a8!",
+          failure: "The Black King is trapped in the corner. Find the finishing move!",
+          hint: "Move the Rook to b8. Your King on b7 prevents the Black King from escaping or capturing!",
         },
       },
       {
