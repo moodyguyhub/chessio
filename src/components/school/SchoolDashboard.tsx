@@ -104,12 +104,12 @@ export default function SchoolDashboard({ levels, unlockedLevels }: SchoolDashbo
             alt=""
             fill
             aria-hidden="true"
-            className="object-cover opacity-50"
+            className="object-cover opacity-60"
             sizes="(min-width: 1024px) 80vw, 100vw"
             priority
           />
-          {/* Even lighter gradient overlay for maximum image visibility */}
-          <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/35 to-slate-950/80" />
+          {/* Warm gradient overlay - removes blue tint while maintaining readability */}
+          <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/25 to-black/70" />
         </div>
 
         <h1 className="text-5xl font-bold tracking-tight text-white relative z-10 drop-shadow-[0_4px_12px_rgba(0,0,0,0.9)]">
@@ -123,10 +123,17 @@ export default function SchoolDashboard({ levels, unlockedLevels }: SchoolDashbo
       {/* Placement Test CTA */}
       <div className="flex justify-center">
         <Link href="/school/placement">
-          <Button className="gap-2 bg-chessio-primary hover:bg-chessio-primary/90 text-slate-950 font-semibold shadow-lg">
+          <button
+            className="inline-flex items-center gap-2 h-10 px-6 text-sm font-bold rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-950 focus:ring-yellow-500/50 shadow-lg hover:shadow-xl hover:scale-[1.02]"
+            style={{
+              backgroundColor: '#facc15',
+              color: '#0f172a',
+              border: '2px solid rgba(251, 191, 36, 0.5)'
+            }}
+          >
             <Trophy className="h-4 w-4" />
             Take Placement Test
-          </Button>
+          </button>
         </Link>
       </div>
 
