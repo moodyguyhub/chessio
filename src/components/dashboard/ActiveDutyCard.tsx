@@ -345,7 +345,7 @@ export function ActiveDutyCard({
                   play("ui_click");
                   actions.onPrimary();
                 }}
-                className="w-full h-11 lg:h-12 font-bold text-sm rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-950 focus:ring-yellow-500/50 shadow-lg hover:shadow-xl hover:scale-[1.02]"
+                className="w-full h-10 px-4 font-bold text-sm rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-950 focus:ring-yellow-500/50 shadow-lg hover:shadow-xl hover:scale-[1.02]"
                 style={{
                   backgroundColor: '#facc15',
                   color: '#0f172a',
